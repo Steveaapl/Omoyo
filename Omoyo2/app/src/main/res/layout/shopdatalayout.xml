@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="match_parent"
     android:layout_marginTop="5dp"
-    android:layout_gravity="center_vertical|center_horizontal"
-    android:gravity="center_horizontal|center_vertical"
     android:background="@android:color/white"
     >
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="75dp"
         android:id="@+id/linearlayoutshoppage1"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:background="@color/appcolor"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="2dp"
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            >
         <ImageView
             android:id="@+id/iconshoppage1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:src="@mipmap/ic_launcher"
+            android:layout_marginRight="1dp"
             android:layout_gravity="center_vertical|start|left"
             />
         <TextView
@@ -27,38 +35,51 @@
             android:text="@string/shoppagetext"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="9"
+            android:layout_weight="8"
             android:textColor="@android:color/white"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center_horizontal|center_vertical"
             />
+        </LinearLayout>
+
     </LinearLayout>
     <LinearLayout
+        android:layout_marginTop="2dp"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="75dp"
         android:id="@+id/linearlayoutshoppage2"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:background="@color/appcolor"
-        >
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+    >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            >
         <ImageView
             android:id="@+id/iconshoppage2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center_vertical|start|left"
+            android:layout_marginRight="1dp"
             />
         <TextView
             android:id="@+id/textshoppage2"
             android:text="@string/shoppagetext"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="9"
+            android:layout_weight="8"
             android:textColor="@android:color/white"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center_horizontal|center_vertical"
             />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

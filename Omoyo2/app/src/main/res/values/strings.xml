@@ -10,7 +10,7 @@
     <string name="categoryitem">iPhone , iPad , iMac , Apple Watch , MacBook , MacPro </string>
     <string name="serchboxhint">Search Shop\'s     </string>
     <string name="status">Open</string>
-    <string name="shoppagetext">iPhone 7 is coming this summer</string>
+    <string name="shoppagetext">iPhone 7 </string>
     <string name="shopcaption">This is the first Apple store in the history of planet to be powered by virtual reality to give it\'s customer a better experience</string>
     <string name="title_activity_shoppage">shoppage</string>
 </resources>

@@ -46,6 +46,14 @@ public class shoppageadapter extends RecyclerView.Adapter {
             super(view);
             LinearLayout linearlayout1=ButterKnife.findById(view,R.id.linearlayoutshoppage1);
             LinearLayout linearlayout2=ButterKnife.findById(view,R.id.linearlayoutshoppage2);
+            TextView textview1=ButterKnife.findById(view,R.id.textshoppage1);
+            TextView textview2=ButterKnife.findById(view,R.id.textshoppage2);
+            textview1.setMaxWidth(Omoyo.screendisplay.getWidth()*2/5);
+            textview2.setMaxWidth(Omoyo.screendisplay.getWidth() * 2 / 5);
+            ImageView imageview1=ButterKnife.findById(view,R.id.iconshoppage1);
+            ImageView imageview2=ButterKnife.findById(view,R.id.iconshoppage2);
+            imageview1.setMaxWidth(Omoyo.screendisplay.getWidth()/10);
+            imageview2.setMaxWidth(Omoyo.screendisplay.getWidth()/10);
             linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
             linearlayout2.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
         }
