@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
@@ -43,10 +44,10 @@ public class shoppageadapter extends RecyclerView.Adapter {
 
         public CustomViewHolder(View view) {
             super(view);
-            ImageButton imageButton1= ButterKnife.findById(view,R.id.imagebutton1);
-            ImageButton imagebutton2=ButterKnife.findById(view,R.id.imagebutton2);
-            imageButton1.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
-            imagebutton2.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
+            LinearLayout linearlayout1=ButterKnife.findById(view,R.id.linearlayoutshoppage1);
+            LinearLayout linearlayout2=ButterKnife.findById(view,R.id.linearlayoutshoppage2);
+            linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
+            linearlayout2.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
         }
     }
 }

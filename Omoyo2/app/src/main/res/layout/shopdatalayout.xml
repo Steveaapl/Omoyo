@@ -7,19 +7,58 @@
     android:gravity="center_horizontal|center_vertical"
     android:background="@android:color/white"
     >
-    <ImageButton
-    android:id="@+id/imagebutton1"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:src="@mipmap/ic_launcher"
-    android:layout_gravity="center_vertical|start|left"
-    />
-
-    <ImageButton
-        android:id="@+id/imagebutton2"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@mipmap/ic_launcher"
-        android:layout_gravity="center_vertical|end|right"
-        />
+        android:id="@+id/linearlayoutshoppage1"
+        android:orientation="horizontal"
+        android:background="@color/appcolor"
+        >
+        <ImageView
+            android:id="@+id/iconshoppage1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center_vertical|start|left"
+            />
+        <TextView
+            android:id="@+id/textshoppage1"
+            android:text="@string/shoppagetext"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:textColor="@android:color/white"
+            android:textSize="10dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_horizontal|center_vertical"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/linearlayoutshoppage2"
+        android:orientation="horizontal"
+        android:background="@color/appcolor"
+        >
+        <ImageView
+            android:id="@+id/iconshoppage2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center_vertical|start|left"
+            />
+        <TextView
+            android:id="@+id/textshoppage2"
+            android:text="@string/shoppagetext"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:textColor="@android:color/white"
+            android:textSize="10dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center_horizontal|center_vertical"
+            />
+    </LinearLayout>
 </LinearLayout>
