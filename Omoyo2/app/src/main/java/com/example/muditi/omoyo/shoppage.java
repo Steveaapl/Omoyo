@@ -3,6 +3,8 @@ package com.example.muditi.omoyo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -27,6 +33,8 @@ public class shoppage extends ActionBarActivity {
     CollapsingToolbarLayout collapsingtoolbar;
 @Bind(R.id.recycleview)
     RecyclerView recyclerView;
+    @Bind(R.id.appbar)
+    AppBarLayout appbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +51,7 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setExpandedTitleColor(Color.WHITE);
         collapsingtoolbar.setExpandedTitleTextAppearance(R.style.collapsebartitleexpanding);
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.mipmap.ic_launcher);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-              int   mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                collapsingtoolbar.setContentScrimColor(mutedColor);
-            }
-        });
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(new shoppageadapter());
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
@@ -61,6 +61,24 @@ public class shoppage extends ActionBarActivity {
                 onBackPressed();
             }
         });
+        Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/omoyo.jpg").asBitmap()
+                .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(),250) {
+
+                    @Override
+                    public void onResourceReady(Bitmap bitmap,
+                                                GlideAnimation<? super Bitmap> arg1) {
+                        appbar.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                int mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                                collapsingtoolbar.setContentScrimColor(mutedColor);
+                            }
+                        });
+                    }
+                });
     }
 
     @Override
