@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewCompat;
@@ -67,6 +68,7 @@ public class shoppage extends ActionBarActivity {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
                                                 GlideAnimation<? super Bitmap> arg1) {
+
                         appbar.setBackgroundDrawable(new BitmapDrawable(
                                 getResources(), bitmap));
 
@@ -77,8 +79,22 @@ public class shoppage extends ActionBarActivity {
                                 collapsingtoolbar.setContentScrimColor(mutedColor);
                             }
                         });
+
+                    }
+
+                    @Override
+                    public void onLoadStarted(Drawable placeholder) {
+                        super.onLoadStarted(placeholder);
+                       Omoyo.toast("Started",getApplicationContext());
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        Omoyo.toast(e.getMessage(),getApplicationContext());
                     }
                 });
+
     }
 
     @Override
