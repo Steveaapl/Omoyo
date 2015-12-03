@@ -9,7 +9,7 @@
     >
     <ImageButton
     android:id="@+id/imagebutton1"
-    android:layout_width="200dp"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:src="@mipmap/ic_launcher"
     android:layout_gravity="center_vertical|start|left"
@@ -17,7 +17,7 @@
 
     <ImageButton
         android:id="@+id/imagebutton2"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@mipmap/ic_launcher"
         android:layout_gravity="center_vertical|end|right"
