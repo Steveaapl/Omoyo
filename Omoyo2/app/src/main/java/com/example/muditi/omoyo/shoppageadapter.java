@@ -1,11 +1,15 @@
 package com.example.muditi.omoyo;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by muditi on 03-12-2015.
@@ -18,7 +22,7 @@ public class shoppageadapter extends RecyclerView.Adapter {
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.slidemenulistlayout, null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shopdatalayout, null);
 
         CustomViewHolder viewHolder = new CustomViewHolder(view);
         return viewHolder;
@@ -26,7 +30,7 @@ public class shoppageadapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 50;
+        return 20;
     }
 
     @Override
@@ -35,13 +39,12 @@ public class shoppageadapter extends RecyclerView.Adapter {
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected ImageView imageView;
-        protected TextView textView;
+
 
         public CustomViewHolder(View view) {
             super(view);
-            this.imageView = (ImageView) view.findViewById(R.id.image);
-            this.textView = (TextView) view.findViewById(R.id.itemname);
+            ImageButton imageButton1= ButterKnife.findById(view,R.id.imagebutton1);
+            ImageButton imagebutton2=ButterKnife.findById(view,R.id.imagebutton2);
         }
     }
 }
