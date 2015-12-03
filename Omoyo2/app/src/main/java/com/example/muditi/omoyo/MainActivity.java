@@ -3,10 +3,14 @@ package com.example.muditi.omoyo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.DragEvent;
@@ -19,7 +23,12 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,6 +43,28 @@ public class MainActivity extends ActionBarActivity {
     HorizontalScrollView horizontalscrollview;
     @Bind(R.id.drawerlayout)
     DrawerLayout drawerlayout;
+    @Bind(R.id.relativelayoutgridlayout1)
+    RelativeLayout relativelayoutgridlayout1;
+    @Bind(R.id.relativelayoutgridlayout2)
+    RelativeLayout relativelayoutgridlayout2;
+    @Bind(R.id.relativelayoutgridlayout3)
+    RelativeLayout relativelayoutgridlayout3;
+    @Bind(R.id.relativelayoutgridlayout4)
+    RelativeLayout relativelayoutgridlayout4;
+    @Bind(R.id.relativelayoutgridlayout5)
+    RelativeLayout relativelayoutgridlayout5;
+    @Bind(R.id.relativelayouthorizantalscroll1)
+    RelativeLayout relativelayouthorizontalscroll1;
+    @Bind(R.id.relativelayouthorizantalscroll2)
+    RelativeLayout relativelayouthorizontalscroll2;
+    @Bind(R.id.relativelayouthorizantalscroll3)
+    RelativeLayout relativelayouthorizontalscroll3;
+    @Bind(R.id.relativelayouthorizantalscroll4)
+    RelativeLayout relativelayouthorizontalscroll4;
+    @Bind(R.id.relativelayouthorizantalscroll5)
+    RelativeLayout relativelayouthorizontalscroll5;
+    @Bind(R.id.relativelayouthorizantalscroll6)
+    RelativeLayout relativelayouthorizontalscroll6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +107,50 @@ public class MainActivity extends ActionBarActivity {
         //horizontalscrollview.scrollTo(160,0);
 
        // new lightpop().show(this.getSupportFragmentManager(),"Hello");
+        Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/omoyo.jpg").asBitmap()
+                .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(),250) {
 
+                    @Override
+                    public void onResourceReady(Bitmap bitmap,
+                                                GlideAnimation<? super Bitmap> arg1) {
+
+                        relativelayoutgridlayout1.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayoutgridlayout2.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayoutgridlayout3.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayoutgridlayout4.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayoutgridlayout5.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayouthorizontalscroll1.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayouthorizontalscroll2.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayouthorizontalscroll3.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayouthorizontalscroll4.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayouthorizontalscroll5.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+                        relativelayouthorizontalscroll6.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), bitmap));
+
+                    }
+
+                    @Override
+                    public void onLoadStarted(Drawable placeholder) {
+                        super.onLoadStarted(placeholder);
+                        //  Omoyo.toast("Started",getApplicationContext());
+                    }
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        // Omoyo.toast(e.getMessage(),getApplicationContext());
+                    }
+                });
     }
 
     @Override

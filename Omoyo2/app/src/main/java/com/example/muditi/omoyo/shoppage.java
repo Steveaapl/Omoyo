@@ -85,13 +85,13 @@ public class shoppage extends ActionBarActivity {
                     @Override
                     public void onLoadStarted(Drawable placeholder) {
                         super.onLoadStarted(placeholder);
-                       Omoyo.toast("Started",getApplicationContext());
+                     //  Omoyo.toast("Started",getApplicationContext());
                     }
 
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         super.onLoadFailed(e, errorDrawable);
-                        Omoyo.toast(e.getMessage(),getApplicationContext());
+                       // Omoyo.toast(e.getMessage(),getApplicationContext());
                     }
                 });
 
