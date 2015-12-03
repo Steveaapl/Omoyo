@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_gravity="end|top"
+    android:gravity="end|top"
+    >
+<EditText
+    android:id="@+id/searchboxedittext"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:hint="@string/serchboxhint"
+    android:textColor="@color/appcolor"
+    android:gravity="end"
+    android:layout_gravity="end"
+    android:focusableInTouchMode="true"
+    android:focusable="false"
+    />
+</LinearLayout>

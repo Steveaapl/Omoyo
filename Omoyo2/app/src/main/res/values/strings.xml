@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Omoyo!</string>
+    <string name="subtitle">location..</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="shopname">Apple Store 117 New Delhi India</string>
+    <string name="shopitem">iPhone , iPad , iMac , Apple Watch , MacBook , MacPro </string>
+    <string name="categoryofshop">Apple Product\'s</string>
+    <string name="numberofshop">1007</string>
+    <string name="categoryitem">iPhone , iPad , iMac , Apple Watch , MacBook , MacPro </string>
+    <string name="serchboxhint">Search Shop\'s     </string>
+    <string name="status">Open</string>
+    <string name="shopcaption">This is the first Apple store in the history of planet to be powered by virtual reality to give it\'s customer a better experience</string>
+    <string name="title_activity_shoppage">shoppage</string>
+</resources>

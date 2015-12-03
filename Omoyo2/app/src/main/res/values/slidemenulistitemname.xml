@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="slidemenulistitemname">
+        <item>Ongoing Offer\'s</item>
+        <item>Phone Number</item>
+        <item>Location</item>
+        <item>Last 2 days History</item>
+        <item>Last 2 days Favourites </item>
+        <item>Last 2 Calls </item>
+        <item>Last 2 Messages</item>
+        <item>Are you a Shop ?</item>
+        <item>Notification Point</item>
+        <item>Subscribe for update</item>
+        <item>Want Help ?</item>
+        <item>Contact Us</item>
+        <item>Rate Us</item>
+        <item>Share the story</item>
+        <item>Who we are \?</item>
+        <item>Our ambitious Ambition</item>
+        <item>Logout</item>
+    </string-array>
+</resources>
