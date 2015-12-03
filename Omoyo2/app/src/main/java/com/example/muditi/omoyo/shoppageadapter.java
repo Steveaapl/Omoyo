@@ -45,6 +45,8 @@ public class shoppageadapter extends RecyclerView.Adapter {
             super(view);
             ImageButton imageButton1= ButterKnife.findById(view,R.id.imagebutton1);
             ImageButton imagebutton2=ButterKnife.findById(view,R.id.imagebutton2);
+            imageButton1.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
+            imagebutton2.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
         }
     }
 }

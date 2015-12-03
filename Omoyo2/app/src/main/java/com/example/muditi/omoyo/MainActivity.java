@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
@@ -38,6 +39,10 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Display display=getWindowManager().getDefaultDisplay();
+        Omoyo.screendisplay=display;
+        Omoyo.widthofscreen=display.getWidth();
+        Omoyo.heightofscreen=display.getHeight();
       //  drawerlayout.openDrawer(Gravity.LEFT);
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setTitleTextColor(Color.WHITE);
