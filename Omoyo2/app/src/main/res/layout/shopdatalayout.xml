@@ -10,7 +10,7 @@
         android:layout_height="75dp"
         android:id="@+id/linearlayoutshoppage1"
         android:orientation="vertical"
-        android:background="@color/appcolor"
+        android:background="@drawable/shoppagedatastyle"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
         android:layout_marginTop="2dp"
@@ -50,7 +50,7 @@
         android:layout_height="75dp"
         android:id="@+id/linearlayoutshoppage2"
         android:orientation="vertical"
-        android:background="@color/appcolor"
+        android:background="@drawable/shoppagedatastyle"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
     >
@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:orientation="horizontal"
+
             >
         <ImageView
             android:id="@+id/iconshoppage2"
