@@ -93,9 +93,22 @@ public class shoppage extends ActionBarActivity {
                     @Override
                     public void onLoadFailed(Exception e, Drawable errorDrawable) {
                         super.onLoadFailed(e, errorDrawable);
-                       // Omoyo.toast(e.getMessage(),getApplicationContext());
+                        // Omoyo.toast(e.getMessage(),getApplicationContext());
                     }
                 });
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+              //  Omoyo.toast(""+newState,getApplicationContext());
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+             //   Omoyo.toast("X:"+dx+"Y:"+dy,getApplicationContext());
+            }
+        });
 //systembar
         SystemBarTintManager systembar=new SystemBarTintManager(this);
         systembar.setStatusBarTintEnabled(true);

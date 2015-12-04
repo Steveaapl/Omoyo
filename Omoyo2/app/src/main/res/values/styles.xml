@@ -20,4 +20,5 @@
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
+    <style
 </resources>
