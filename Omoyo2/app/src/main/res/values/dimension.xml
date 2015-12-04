@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="shopPagesubtitletextsize">16dp</dimen>
+    <dimen name="shoppagesubtitletextmarginleft">50dp</dimen>
+    <dimen name="shoppagesubtitletextmarginbottom">100dp</dimen>
+</resources>
