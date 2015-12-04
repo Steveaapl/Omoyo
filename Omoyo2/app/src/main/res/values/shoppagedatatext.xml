@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="shoppagedatatext">
-        <item>Call</item>
-        <item>Sms</item>
+        <item>CALL</item>
+        <item>SMS</item>
         <item>Get the Address</item>
-        <item>GoogleMap</item>
+        <item>Address on Google Map</item>
+        <item>Notification Subscription</item>
+        <item>Add to Favorites</item>
         <item>Timing</item>
         <item>Description</item>
         <item>item\'s</item>

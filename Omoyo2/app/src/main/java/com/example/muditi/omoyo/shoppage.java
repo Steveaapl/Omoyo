@@ -56,7 +56,7 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setExpandedTitleTextAppearance(R.style.collapsebartitleexpanding);
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(new shoppageadapter());
+        recyclerView.setAdapter(new shoppageadapter(getApplicationContext()));
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
