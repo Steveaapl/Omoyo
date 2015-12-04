@@ -25,7 +25,7 @@ public class shoppageadapter extends RecyclerView.Adapter {
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shopdatalayout, null);
 
-        CustomViewHolder viewHolder = new CustomViewHolder(view);
+        CustomViewHolder viewHolder = new CustomViewHolder(view,i);
         return viewHolder;
     }
 
@@ -41,21 +41,33 @@ public class shoppageadapter extends RecyclerView.Adapter {
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
 
-
-        public CustomViewHolder(View view) {
+int position;
+        public CustomViewHolder(View view,int position) {
             super(view);
+            this.position=position;
             LinearLayout linearlayout1=ButterKnife.findById(view,R.id.linearlayoutshoppage1);
             LinearLayout linearlayout2=ButterKnife.findById(view,R.id.linearlayoutshoppage2);
             TextView textview1=ButterKnife.findById(view,R.id.textshoppage1);
             TextView textview2=ButterKnife.findById(view,R.id.textshoppage2);
-            textview1.setMaxWidth(Omoyo.screendisplay.getWidth()*2/5);
+            textview1.setMaxWidth(Omoyo.screendisplay.getWidth() * 2 / 5);
             textview2.setMaxWidth(Omoyo.screendisplay.getWidth() * 2 / 5);
             ImageView imageview1=ButterKnife.findById(view,R.id.iconshoppage1);
             ImageView imageview2=ButterKnife.findById(view,R.id.iconshoppage2);
-            imageview1.setMaxWidth(Omoyo.screendisplay.getWidth()/10);
-            imageview2.setMaxWidth(Omoyo.screendisplay.getWidth()/10);
-            linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
+            imageview1.setMaxWidth(Omoyo.screendisplay.getWidth() / 10);
+            imageview2.setMaxWidth(Omoyo.screendisplay.getWidth() / 10);
+            linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
             linearlayout2.setMinimumWidth(Omoyo.screendisplay.getWidth()/2);
+            switch(position){
+                case 3:
+                    linearlayout2.setVisibility(View.GONE);
+                    break;
+                case 4:
+                    linearlayout2.setVisibility(View.GONE);
+                    break;
+                case 5:
+                    linearlayout2.setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 }

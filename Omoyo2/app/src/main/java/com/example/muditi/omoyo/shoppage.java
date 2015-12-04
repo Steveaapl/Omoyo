@@ -17,11 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,7 +55,6 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setExpandedTitleColor(Color.WHITE);
         collapsingtoolbar.setExpandedTitleTextAppearance(R.style.collapsebartitleexpanding);
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(new shoppageadapter());
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
@@ -63,7 +65,7 @@ public class shoppage extends ActionBarActivity {
             }
         });
         Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/omoyo.jpg").asBitmap()
-                .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(),250) {
+                .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(), 250) {
 
                     @Override
                     public void onResourceReady(Bitmap bitmap,
@@ -85,7 +87,7 @@ public class shoppage extends ActionBarActivity {
                     @Override
                     public void onLoadStarted(Drawable placeholder) {
                         super.onLoadStarted(placeholder);
-                     //  Omoyo.toast("Started",getApplicationContext());
+                        //  Omoyo.toast("Started",getApplicationContext());
                     }
 
                     @Override
@@ -94,7 +96,10 @@ public class shoppage extends ActionBarActivity {
                        // Omoyo.toast(e.getMessage(),getApplicationContext());
                     }
                 });
-
+//systembar
+        SystemBarTintManager systembar=new SystemBarTintManager(this);
+        systembar.setStatusBarTintEnabled(true);
+        systembar.setStatusBarTintColor(getResources().getColor(R.color.appcolor));
     }
 
     @Override
