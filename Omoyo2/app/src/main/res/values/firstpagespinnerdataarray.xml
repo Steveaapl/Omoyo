@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="firstpagespinnerdata">
+        <item>Ghazibad</item>
+        <item>Delhi</item>
+        <item>Agra</item>
+        <item>Lucknow</item>
+        <item>Gurgon</item>
+        <item>Hedrabad</item>
+    </string-array>
+</resources>

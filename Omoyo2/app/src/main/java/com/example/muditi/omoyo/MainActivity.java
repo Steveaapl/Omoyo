@@ -102,6 +102,18 @@ public class MainActivity extends ActionBarActivity {
                     startActivity(new Intent(getApplicationContext(),shoppage.class));
                     drawerlayout.closeDrawer(Gravity.LEFT);
                 }
+                if(position==1){
+                    startActivity(new Intent(getApplicationContext(),shoplist.class));
+                    drawerlayout.closeDrawer(Gravity.LEFT);
+                }
+                if(position==2){
+                    startActivity(new Intent(getApplicationContext(),subshopcategory.class));
+                    drawerlayout.closeDrawer(Gravity.LEFT);
+                }
+                if(position==3){
+                    startActivity(new Intent(getApplicationContext(),firstpage.class));
+                    drawerlayout.closeDrawer(Gravity.LEFT);
+                }
             }
         });
         //horizontalscrollview.scrollTo(160,0);

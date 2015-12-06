@@ -16,6 +16,7 @@
     android:background="@color/appcolor"
     android:fitsSystemWindows="true"
     >
+
 <android.support.design.widget.CollapsingToolbarLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,28 +28,29 @@
     android:fitsSystemWindows="true"
     >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_collapseMode="parallax"
+        android:fitsSystemWindows="true"
+        >
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/shoppagesubtitle"
+        android:layout_marginTop="220dp"
+        android:layout_marginLeft="110dp"
+        />
+    </LinearLayout>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:popupTheme="@style/Theme.AppCompat.Light"
-        app:layout_collapseMode="parallax"
-        android:fitsSystemWindows="true"
-        android:layout_gravity="top"
-        android:gravity="top"
-        />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_collapseMode="pin" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/shopPagesubtitletextsize"
-        android:textColor="@android:color/white"
-        app:layout_collapseMode="parallax"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="200dp"
-        android:layout_marginEnd="10dp"
-        app:theme="@style/AppTheme"
-        android:text="@string/status"/>
+
 
 </android.support.design.widget.CollapsingToolbarLayout>
 </android.support.design.widget.AppBarLayout>

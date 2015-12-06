@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -57,6 +58,7 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(new shoppageadapter(getApplicationContext()));
+
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +66,7 @@ public class shoppage extends ActionBarActivity {
                 onBackPressed();
             }
         });
-        Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/omoyo.jpg").asBitmap()
+        Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/nabula.gif").asBitmap()
                 .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(), 250) {
 
                     @Override
@@ -78,7 +80,8 @@ public class shoppage extends ActionBarActivity {
                             @Override
                             public void onGenerated(Palette palette) {
                                 int mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                                collapsingtoolbar.setContentScrimColor(mutedColor);
+                                collapsingtoolbar.setContentScrimColor(palette.getDarkMutedColor(R.color.appcolor));
+                                collapsingtoolbar.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.appcolor));
                             }
                         });
 
@@ -96,6 +99,12 @@ public class shoppage extends ActionBarActivity {
                         // Omoyo.toast(e.getMessage(),getApplicationContext());
                     }
                 });
+        Glide.with(this).load("https://s3-us-west-2.amazonaws.com/omoyo/nabula.gif").asGif().into(new SimpleTarget<GifDrawable>() {
+            @Override
+            public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
+
+            }
+        });
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -118,7 +127,7 @@ public class shoppage extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_shoppage, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
