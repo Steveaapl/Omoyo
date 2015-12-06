@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:background="@android:color/holo_red_dark"
+    android:id="@+id/parentoflayout"
     android:layout_height="match_parent">
 <ImageView
     android:id="@+id/iconof"
@@ -18,7 +18,7 @@
         android:layout_weight="8"
         android:layout_gravity="center_vertical|center_horizontal"
         android:gravity="center_horizontal|center_vertical"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="20sp"
         android:text="@string/shoppagetext"
         />

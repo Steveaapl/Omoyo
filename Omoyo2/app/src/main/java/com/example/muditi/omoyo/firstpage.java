@@ -35,7 +35,7 @@ public class firstpage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
-        linearlayoutforlocation.setBackgroundColor(Color.argb(100, 255, 255, 255));
+    //    linearlayoutforlocation.setBackgroundColor(Color.argb(100,0,0, 0));
         ArrayAdapter adapterforcity=new firstpagespinneradapter("City",getApplicationContext(),R.layout.firstpagespinnerlayout,getResources().getStringArray(R.array.firstpagespinnerdata));
        spinnerforcity.setAdapter(adapterforcity);
         ArrayAdapter adapterforarea=new firstpagespinneradapter("Area",getApplicationContext(),R.layout.firstpagespinnerlayout,getResources().getStringArray(R.array.firstpagespinnerdata));
@@ -43,16 +43,15 @@ public class firstpage extends Activity {
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-if(position==0){
-   Omoyo.spinnerfirstpagecheck=1;
-}
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+Omoyo.toast("Nothing",getApplicationContext());
             }
         });
+
     }
 
     @Override
