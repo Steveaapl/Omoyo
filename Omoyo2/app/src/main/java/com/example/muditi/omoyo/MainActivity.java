@@ -65,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
     RelativeLayout relativelayouthorizontalscroll5;
     @Bind(R.id.relativelayouthorizantalscroll6)
     RelativeLayout relativelayouthorizontalscroll6;
+    String location;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +80,8 @@ public class MainActivity extends ActionBarActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setSubtitleTextColor(Color.WHITE);
-        toolbar.setSubtitle(getResources().getString(R.string.subtitle));
+        location=Omoyo.shared.getString("area","Ghaziabad")+","+Omoyo.shared.getString("city","Ghaziabad");
+        toolbar.setSubtitle(location);
         toolbar.showOverflowMenu();
         View view=getLayoutInflater().inflate(R.layout.serachbox, null);
         final EditText searchboxedittext=ButterKnife.findById(view, R.id.searchboxedittext);

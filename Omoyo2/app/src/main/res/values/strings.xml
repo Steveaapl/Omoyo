@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Omoyo!</string>
+    <string name="app_name">OMOYo!</string>
     <string name="subtitle">location..</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -21,6 +21,9 @@
     <string name="done">DONE</string>
     <string name="spinnerforcity">Select your City</string>
     <string name="spinnerforarea">Select your Area</string>
+    <string name="termandcondition">Privacy Policy and Terms and Conditions</string>
+    <string name="agree">By continuing you agree to the</string>
+    <string name="existinguser">Existing user \? LOGIN</string>
     <string name="shoppagedetalofsomeitem">This is the first Apple store in the history of planet to be powered by virtual reality to give it\'s customer a better experience.Story of Apple -Story begin from Adam go through Newton and now in hand of Tim ,and ya there is no sign of End.</string>
     <string name="title_activity_shoplist">shoplist</string>
     <string name="title_activity_subshopcategory">subshopcategory</string>

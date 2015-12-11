@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 
 /**
@@ -20,9 +22,9 @@ import butterknife.ButterKnife;
 public class firstpagespinneradapter extends ArrayAdapter<String> {
 Context context;
     int id;
-    String[] data;
+    ArrayList<String> data;
     String wht;
-    public firstpagespinneradapter(String what,Context context,int id,String[] object){
+    public firstpagespinneradapter(String what,Context context,int id,ArrayList<String> object){
         super(context,id,object);
         this.context=context;
         this.data=object;
@@ -40,7 +42,7 @@ Context context;
             RelativeLayout relativeLayout=ButterKnife.findById(view,R.id.relativelayoutoffirstpage);
             relativeLayout.setVisibility(View.GONE);
             TextView textView=ButterKnife.findById(view,R.id.spinnertext);
-            textView.setText(data[position]);
+            textView.setText(data.get(position));
         }
         else{
             TextView textView=ButterKnife.findById(view,R.id.spinnertext);
@@ -60,10 +62,13 @@ Context context;
             RelativeLayout relativeLayout=ButterKnife.findById(view,R.id.relativelayoutoffirstpage);
             relativeLayout.setVisibility(View.GONE);
             TextView textView=ButterKnife.findById(view,R.id.spinnertext);
-            textView.setText(data[position]);
+            textView.setText(data.get(position));
         if(position==0){
-            textView.setTextSize(10);
-
+            textView.setTextSize((float)(0.1));
+textView.setVisibility(View.INVISIBLE);
+        }
+        else{
+            textView.setTextSize(25);
         }
         return view;
     }
@@ -74,21 +79,17 @@ Context context;
         View view=inflate.inflate(id,parent,false);
         LinearLayout linear=ButterKnife.findById(view, R.id.parentoflayout);
         linear.setBackgroundResource(R.drawable.firstpagespinnerround);
-        if(position!=0 || Omoyo.spinnerfirstpagecheck==2){
+        if(position!=0 )
+        {
             TextView textView=ButterKnife.findById(view,R.id.spinnertext);
-            textView.setText(data[position]);
+            textView.setText(data.get(position));
           //  Omoyo.toast(position+"if:" + Omoyo.spinnerfirstpagecheck, context);
         }
         else{
-                if(Omoyo.spinnerfirstpagecheck==0 || Omoyo.spinnerfirstpagecheck==1) {
-                    TextView textView = ButterKnife.findById(view, R.id.spinnertext);
-                    textView.setText("Select " + this.wht);
-                    if(Omoyo.spinnerfirstpagecheck==1)
-                    Omoyo.spinnerfirstpagecheck=2;
-                    else
-                        Omoyo.spinnerfirstpagecheck=1;
 
-                }
+                    TextView textView = ButterKnife.findById(view, R.id.spinnertext);
+                    textView.setText("Select Your " + this.wht);
+
           //  Omoyo.toast(position+"else:"+Omoyo.spinnerfirstpagecheck,context);
 
         }

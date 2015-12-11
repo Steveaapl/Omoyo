@@ -4,18 +4,22 @@
     android:layout_height="match_parent"
     android:background="@color/appcolor"
     android:backgroundTint="@color/appcolor"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.muditi.omoyo.firstpage"
     >
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.muditi.omoyo.firstpage">
+android:fitsSystemWindows="true"
+    >
     <LinearLayout
         android:id="@+id/parentlinearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
+        android:fitsSystemWindows="true"
         >
         <ImageView
             android:layout_width="match_parent"
@@ -42,13 +46,15 @@
             >
         <LinearLayout
             android:id="@+id/linearlayoutforlocation"
+            android:alpha="0"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="210dp"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:orientation="vertical"
             android:background="@drawable/firstpagelocation"
+            android:visibility="invisible"
             >
             <Spinner
                 android:id="@+id/spinnerforcity"
@@ -70,6 +76,7 @@
                 android:layout_marginRight="2dp"
                 android:layout_weight="1"></Spinner>
             <Button
+                android:id="@+id/doneselectingarea"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -86,13 +93,71 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical"
             >
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                ></LinearLayout>
+                android:layout_height="140dp"
+                android:orientation="vertical"
+                >
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/processbarfirstpagenetwork"
+                    android:theme="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                    android:max="200"
+                    android:visibility="visible"
+                    />
+                <LinearLayout
+                    android:id="@+id/linearlayoutfirstpagetermandcondition"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    android:layout_weight="2">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:background="@null"
+                        android:text="@string/existinguser"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:layout_gravity="top|center_horizontal"
+                        android:gravity="top|center_horizontal"
+                        android:layout_marginBottom="20dp"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        >
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:background="@null"
+                            android:text="@string/agree"
+                            android:textColor="@android:color/white"
+                            android:textSize="13sp"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:layout_marginBottom="10dp"
+                            />
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:background="@null"
+                            android:text="@string/termandcondition"
+                            android:textColor="@android:color/white"
+                            android:textSize="13sp"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:gravity="center_horizontal|center_vertical"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
         </LinearLayout>
     </LinearLayout>
