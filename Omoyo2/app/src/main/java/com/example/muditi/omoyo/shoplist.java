@@ -45,8 +45,8 @@ public class shoplist extends ActionBarActivity {
         toolbar.setTitle(getResources().getString(R.string.categoryofshop));
         toolbar.setSubtitleTextColor(Color.WHITE);
         toolbar.setSubtitle(getResources().getString(R.string.subtitle));
-        toolbar.showOverflowMenu();
-       // setSupportActionBar(toolbar);
+        //toolbar.showOverflowMenu();
+        setSupportActionBar(toolbar);
         try
         {
             jsonarray = new JSONArray(Omoyo.shared.getString("ads","f"));
