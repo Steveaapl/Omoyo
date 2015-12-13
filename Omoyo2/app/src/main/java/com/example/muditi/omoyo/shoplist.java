@@ -45,7 +45,7 @@ public class shoplist extends ActionBarActivity {
         toolbar.setTitle(getResources().getString(R.string.categoryofshop));
         toolbar.setSubtitleTextColor(Color.WHITE);
         toolbar.setSubtitle(getResources().getString(R.string.subtitle));
-        //toolbar.showOverflowMenu();
+        toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
         try
         {
