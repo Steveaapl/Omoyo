@@ -47,13 +47,8 @@ public class shoplist extends ActionBarActivity {
         toolbar.setSubtitle(getResources().getString(R.string.subtitle));
         toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
-
-
-
-
-
-
-        try {
+        try
+        {
             jsonarray = new JSONArray(Omoyo.shared.getString("ads","f"));
             for(int i=0;i<jsonarray.length();i++){
                 jsonobject=jsonarray.getJSONObject(i);
@@ -61,13 +56,13 @@ public class shoplist extends ActionBarActivity {
                 for(int k=0;k<jsonarray.length();k++){
                     jsonobject=jsonarray.getJSONObject(k);
                     String url=jsonobject.getString("url");
-                    Glide.with(getApplicationContext()).load(url).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    Glide.with(getApplicationContext()).load(url).asBitmap().into(new SimpleTarget<Bitmap>(){
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation){
                             LayoutInflater inflate = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
                             View view=inflate.inflate(R.layout.shoppageviewadder, null);
-                            LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.linearlayoutasadder);
-                            RelativeLayout relativeLayout=ButterKnife.findById(view,R.id.relativelayoutgridlayout);
+                            LinearLayout linearLayout2 =    ButterKnife.findById(view, R.id.linearlayoutasadder);
+                            RelativeLayout relativeLayout=  ButterKnife.findById(view,R.id.relativelayoutgridlayout);
                             relativeLayout.setBackgroundDrawable(new BitmapDrawable(
                                     getResources(),resource));
                             LinearLayout adderlayout2 = (LinearLayout) findViewById(R.id.linearlayoutadder);
