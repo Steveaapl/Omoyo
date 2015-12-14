@@ -50,7 +50,7 @@ public class shoplist extends ActionBarActivity {
         try
         {
             jsonarray = new JSONArray(Omoyo.shared.getString("ads","f"));
-            for(int i=0;i<jsonarray.length();i++){
+            for(int i=0;i<jsonarray.length();i++) {
                 jsonobject=jsonarray.getJSONObject(i);
                 jsonarray =jsonobject.getJSONArray("url");
                 for(int k=0;k<jsonarray.length();k++){
