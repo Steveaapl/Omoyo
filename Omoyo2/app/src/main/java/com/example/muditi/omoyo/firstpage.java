@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,27 +65,26 @@ public class firstpage extends Activity {
     ObjectAnimator areaselectionanimation;
     ArrayList<String> listforcity =new ArrayList<>();
     ArrayList<String> listforarea =new ArrayList<>();
-    String city,area;
+    String city_id,area_id;
     @Bind(R.id.doneselectingarea)
     Button done;
+    HashMap<String,String> hash=new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
-        Omoyo.shared=getSharedPreferences("Omoyocity", Context.MODE_PRIVATE);
+        Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
         Omoyo.edit=Omoyo.shared.edit();
-    //    linearlayoutforlocation.setBackgroundColor(Color.argb(100,0,0, 0));
-
-//        ArrayAdapter adapterforarea=new firstpagespinneradapter("Area",getApplicationContext(),R.layout.firstpagespinnerlayout,getResources().getStringArray(R.array.firstpagespinnerdata));
-  //     spinnerforarea.setAdapter(adapterforarea);
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-if(position!=0){
-area=listforarea.get(position);
-    Omoyo.check=1;
-}
+              if(position!=0){
+                  area_id=hash.get(listforarea.get(position));
+                  Omoyo.edit.putString("area",listforarea.get(position));
+                  Omoyo.edit.commit();
+                  Omoyo.check=1;
+                            }
             }
 
             @Override
@@ -97,9 +97,10 @@ area=listforarea.get(position);
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position!=0){
-                    city=listforcity.get(position);
-                    arealoader(city);
-                 //   Omoyo.toast(city,getApplicationContext());
+                    city_id=hash.get(listforcity.get(position));
+                    Omoyo.edit.putString("city",listforcity.get(position));
+                    Omoyo.edit.commit();
+                    arealoader(city_id);
                 }
             }
 
@@ -112,17 +113,15 @@ done.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
         if(Omoyo.check==1) {
-           final String location=city.replace(" ","").toLowerCase()+"#"+area.replace(" ","").toLowerCase();
-          //  Omoyo.toast(location,getApplicationContext());
             Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
             Omoyo.edit=Omoyo.shared.edit();
-            Omoyo.edit.putString("city",city);
-            Omoyo.edit.putString("area", area);
+            Omoyo.edit.putString("city_id",city_id);
+            Omoyo.edit.putString("area_id", area_id);
             Omoyo.edit.commit();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    loadadsimages(location);
+                    locationloader();
                 }
             }).start();
 
@@ -187,13 +186,13 @@ cityloader();
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadadsimages(String location){
+    public void locationloader(){
         OkHttpClient okhttp=new OkHttpClient();
-        String json=String.format("{\"location\" : \"%s\"}",location);
+        String json=String.format("{\"city_id\" : \"%s\",\"area_id\" : \"%s\"}", city_id, area_id);
        // Omoyo.toast(json,getApplicationContext());
         final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
         RequestBody requestbody=RequestBody.create(JSON, json);
-        Request request=new Request.Builder().url("http://192.168.0.120:15437/bitmapforads/").post(requestbody).build();
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/location/").post(requestbody).build();
         Call call=okhttp.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -210,9 +209,8 @@ cityloader();
             public void onResponse(Response response) throws IOException  {
                          if(response.isSuccessful()){
                             final  String data=response.body().string();
-                             Omoyo.edit.putString("ads", data);
+                             Omoyo.edit.putString("location", data);
                              Omoyo.edit.commit();
-
 runOnUiThread(new Runnable() {
     @Override
     public void run() {
@@ -226,17 +224,15 @@ runOnUiThread(new Runnable() {
         });
     }
 
-    public void arealoader(String city){
+    public void arealoader(String city_id){
         OkHttpClient okhttp=new OkHttpClient();
-        String json = String.format("{\"city\" : \"%s\"}", city);
+        String json = String.format("{\"city_id\" : \"%s\"}", city_id);
         final MediaType JSON
                 = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestbody=RequestBody.create(JSON, json);
-        Request request=new Request.Builder().url("http://192.168.0.120:15437/getarea/").post(requestbody).build();
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/getarea/").post(requestbody).build();
         Call call = okhttp.newCall(request);
-
         call.enqueue(new Callback() {
-
             @Override
             public void onFailure(Request request, final IOException e) {
                 runOnUiThread(new Runnable() {
@@ -265,11 +261,9 @@ runOnUiThread(new Runnable() {
                                 jsonarray = new JSONArray(data);
                                 for (int i = 0; i < jsonarray.length(); i++) {
                                     jsonobject = jsonarray.getJSONObject(i);
-                                    jsonarray = jsonobject.getJSONArray("area");
-                                    for (int k = 0; k < jsonarray.length(); k++) {
-                                        jsonobject = jsonarray.getJSONObject(k);
-                                        listforarea.add(jsonobject.getString("area"));
-                                    }
+                                    String value=jsonobject.getString("area_name").substring(0,1).toUpperCase()+jsonobject.getString("area_name").substring(1, jsonobject.getString("area_name").length());
+                                    hash.put(value, jsonobject.getString("area_id"));
+                                    listforarea.add(value);
                                 }
                             } catch (JSONException jsonex) {
 
@@ -293,7 +287,7 @@ runOnUiThread(new Runnable() {
     public void cityloader(){
         OkHttpClient okhttp=new OkHttpClient();
 
-        Request request=new Request.Builder().url("http://192.168.0.120:15437/getcity/").build();
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/getcity/").build();
 
         Call call = okhttp.newCall(request);
 
@@ -322,7 +316,9 @@ runOnUiThread(new Runnable() {
                                 jsonarray = new JSONArray(data);
                                 for(int i=0 ; i<jsonarray.length() ; i++){
                                     jsonobject=jsonarray.getJSONObject(i);
-                                    listforcity.add(jsonobject.getString("city"));
+                                    String value=jsonobject.getString("city_name").substring(0,1).toUpperCase()+jsonobject.getString("city_name").substring(1, jsonobject.getString("city_name").length());
+                                    hash.put(value,jsonobject.getString("city_id"));
+                                    listforcity.add(value);
                                 }
                             }
                             catch(JSONException jsonex){

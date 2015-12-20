@@ -12,60 +12,61 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
 public class MainActivity extends ActionBarActivity {
-@Bind(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
-@Bind(R.id.slidemenu)
+    @Bind(R.id.slidemenu)
     ListView slidemenu;
     @Bind(R.id.hozintalscroolview)
     HorizontalScrollView horizontalscrollview;
     @Bind(R.id.drawerlayout)
     DrawerLayout drawerlayout;
-    @Bind(R.id.relativelayoutgridlayout1)
-    RelativeLayout relativelayoutgridlayout1;
-    @Bind(R.id.relativelayoutgridlayout2)
-    RelativeLayout relativelayoutgridlayout2;
-    @Bind(R.id.relativelayoutgridlayout3)
-    RelativeLayout relativelayoutgridlayout3;
-    @Bind(R.id.relativelayoutgridlayout4)
-    RelativeLayout relativelayoutgridlayout4;
-    @Bind(R.id.relativelayoutgridlayout5)
-    RelativeLayout relativelayoutgridlayout5;
-    @Bind(R.id.relativelayouthorizantalscroll1)
-    RelativeLayout relativelayouthorizontalscroll1;
-    @Bind(R.id.relativelayouthorizantalscroll2)
-    RelativeLayout relativelayouthorizontalscroll2;
-    @Bind(R.id.relativelayouthorizantalscroll3)
-    RelativeLayout relativelayouthorizontalscroll3;
-    @Bind(R.id.relativelayouthorizantalscroll4)
-    RelativeLayout relativelayouthorizontalscroll4;
-    @Bind(R.id.relativelayouthorizantalscroll5)
-    RelativeLayout relativelayouthorizontalscroll5;
-    @Bind(R.id.relativelayouthorizantalscroll6)
-    RelativeLayout relativelayouthorizontalscroll6;
+    @Bind(R.id.gridlayout)
+    GridLayout gridlayout;
+    @Bind(R.id.adslayout)
+    LinearLayout adslayout;
     String location;
+    int count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,12 +76,11 @@ public class MainActivity extends ActionBarActivity {
         Omoyo.screendisplay=display;
         Omoyo.widthofscreen=display.getWidth();
         Omoyo.heightofscreen=display.getHeight();
-      //  drawerlayout.openDrawer(Gravity.LEFT);
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setSubtitleTextColor(Color.WHITE);
-        location=Omoyo.shared.getString("area","Ghaziabad")+","+Omoyo.shared.getString("city","Ghaziabad");
+        location=Omoyo.shared.getString("area","Modinager")+","+Omoyo.shared.getString("city","Ghaziabad");
         toolbar.setSubtitle(location);
         toolbar.showOverflowMenu();
         View view=getLayoutInflater().inflate(R.layout.serachbox, null);
@@ -92,8 +92,6 @@ public class MainActivity extends ActionBarActivity {
                 searchboxedittext.setFocusable(true);
             }
         });
-       // toolbar.addView(view);
-      //  toolbar.setNavigationOnClickListener(null);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         slidemenu.setAdapter(new slidemenuadapter(getApplicationContext()));
@@ -118,53 +116,9 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         });
-        //horizontalscrollview.scrollTo(160,0);
-
-       // new lightpop().show(this.getSupportFragmentManager(),"Hello");
-        Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/omoyo.jpg").asBitmap()
-                .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(),250) {
-
-                    @Override
-                    public void onResourceReady(Bitmap bitmap,
-                                                GlideAnimation<? super Bitmap> arg1) {
-
-                        relativelayoutgridlayout1.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayoutgridlayout2.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayoutgridlayout3.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayoutgridlayout4.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayoutgridlayout5.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayouthorizontalscroll1.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayouthorizontalscroll2.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayouthorizontalscroll3.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayouthorizontalscroll4.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayouthorizontalscroll5.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-                        relativelayouthorizontalscroll6.setBackgroundDrawable(new BitmapDrawable(
-                                getResources(), bitmap));
-
-                    }
-
-                    @Override
-                    public void onLoadStarted(Drawable placeholder) {
-                        super.onLoadStarted(placeholder);
-                        //  Omoyo.toast("Started",getApplicationContext());
-                    }
-
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        super.onLoadFailed(e, errorDrawable);
-                        // Omoyo.toast(e.getMessage(),getApplicationContext());
-                    }
-                });
+        //request for category
+categoryloader();
+adsloader();
     }
 
     @Override
@@ -191,5 +145,204 @@ if(home==R.id.home){
         return super.onOptionsItemSelected(item);
     }
 
+    public void adsloader(){
+        try {
+            String defaultlocation=String.format("[{\"location_id\" : \"%s\"}]","1008");
+            JSONObject jsonObject = new JSONObject(Omoyo.shared.getString("location", defaultlocation));
+            final  String location_id=jsonObject.getString("location_id");
+            OkHttpClient okhttp=new OkHttpClient();
+            String json=String.format("{\"location_id\" : \"%s\"}", location_id);
+            final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+            RequestBody requestbody=RequestBody.create(JSON, json);
+            Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/ads/").post(requestbody).build();
+            Call call=okhttp.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Omoyo.toast("Error in the network", getApplicationContext());
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        Omoyo.shoploader(getApplicationContext());
+                        final String data = response.body().string();
+                        Omoyo.edit.putString("ads", data);
+                        Omoyo.edit.commit();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                        JSONArray jsonArray = new JSONArray(data);
+                                    for(int i=0;i<jsonArray.length();i++){
+                                        JSONObject jsonObject=jsonArray.getJSONObject(i);
+                                        LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                                        View view = inflate.inflate(R.layout.adslayout, null);
+                                        LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.adslinearlayout);
+                                        final  RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayouthorizantalscroll);
+                                        TextView textshopcaption=ButterKnife.findById(view,R.id.textshopcaption);
+                                        textshopcaption.setText(jsonObject.getString("ads_description"));
+                                        TextView textitem=ButterKnife.findById(view,R.id.textitem);
+                                       final  TextView textshopid=ButterKnife.findById(view,R.id.textshopid);
+                                        textshopid.setText(jsonObject.getString("shop_id"));
+                                        StringBuilder stringBuilder=new StringBuilder();
+                                        JSONArray jsonArray1=jsonObject.getJSONArray("ads_item");
+                                        for(int k=0;k<jsonArray1.length();k++)
+                                        {
+
+                                              stringBuilder.append(jsonArray1.getJSONObject(k).getString("item")+"      ");
+                                        }
+                                        textitem.setText(stringBuilder.toString());
+                                        stringBuilder.delete(0, stringBuilder.length());
+                                        Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                                relativeLayout.setBackgroundDrawable(new BitmapDrawable(
+                                                        getResources(), resource));
+                                            }
+                                        });
+                                        linearLayout2.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Omoyo.edit.putString("shopvisit",textshopid.getText().toString());
+                                                Omoyo.edit.commit();
+                                                Omoyo.currentShopId=textshopid.getText().toString();
+                                            }
+                                        });
+                                        adslayout.addView(linearLayout2);
+                                    }
+                                }
+                                catch(JSONException e){
+
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        catch(JSONException jsone){
+
+        }
+    }
+public void categoryloader(){
+        OkHttpClient okhttp=new OkHttpClient();
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/category/").build();
+        Call call=okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Omoyo.toast("Error in the network", getApplicationContext());
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String data = response.body().string();
+                    Omoyo.edit.putString("category", data);
+                    Omoyo.edit.commit();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONArray jsonarray = new JSONArray(data);
+                                for (int i = 0; i < jsonarray.length(); i++) {
+                                    JSONObject jsonobject = jsonarray.getJSONObject(i);
+                                    categoryshopcountloader(jsonobject);
+                                }
+
+                            } catch (JSONException jsonexc) {
+                                Log.d("Error", jsonexc.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+        });
+}
+    public void categoryshopcountloader(final JSONObject category) {
+        try {
+            OkHttpClient okhttp = new OkHttpClient();
+            String json = String.format("{\"category_id\" : \"%s\"}", category.getString("category_id"));
+            final MediaType JSON = MediaType.parse("application/json;charset=utf-8");
+            RequestBody requestbody = RequestBody.create(JSON, json);
+            Request request = new Request.Builder().url("http://" + getResources().getString(R.string.ip) + "/categoryshopcount/").post(requestbody).build();
+            Call call = okhttp.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Omoyo.toast("Error in loader",getApplicationContext());
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+
+                    final String data = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                           // Omoyo.toast(data,getApplicationContext());
+                            try {
+                                JSONObject jsonobjectcount =new JSONObject(data);
+                                String numberOfShop = jsonobjectcount.getString("count");
+                                LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View view = inflate.inflate(R.layout.shoppageviewadder, null);
+                                LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.linearlayoutasadder);
+                                final  RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayoutgridlayout);
+                                TextView textshopcount=ButterKnife.findById(view,R.id.shopcount);
+                                textshopcount.setText(numberOfShop);
+                                TextView textcategoryname=ButterKnife.findById(view,R.id.categoryname);
+                                String value=category.getString("category_name").substring(0,1).toUpperCase()+category.getString("category_name").substring(1, category.getString("category_name").length());
+                                textcategoryname.setText(value);
+                                StringBuilder builder=new StringBuilder();
+                                try {
+                                    JSONArray jsonArray =category.getJSONArray("category_item");
+                                    for (int k = 0; k < jsonArray.length(); k++) {
+                                        String valueofitem=jsonArray.getJSONObject(k).getString("item").substring(0,1).toUpperCase()+jsonArray.getJSONObject(k).getString("item").substring(1,jsonArray.getJSONObject(k).getString("item").length());
+                                        builder.append(valueofitem+"       ");
+                                    }
+                                    TextView textitem=ButterKnife.findById(view,R.id.itemincategory);
+                                    textitem.setText(builder.toString());
+                                    builder.delete(0, builder.length());
+                                }
+                                catch(JSONException e){
+
+                                }
+
+                            Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/category/category.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    relativeLayout.setBackgroundDrawable(new BitmapDrawable(
+                                            getResources(), resource));
+                                }
+                            });
+                                gridlayout.addView(linearLayout2);
+                            } catch (JSONException e) {
+                         Omoyo.toast("Error in json",getApplicationContext());
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        catch(JSONException e){
+            Log.d("E:",e.getMessage());
+        }
+    }
 
 }

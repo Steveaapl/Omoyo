@@ -1,80 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:id="@+id/linearlayoutasadder"
-    android:layout_width="match_parent"
+    android:id="@+id/adslinearlayout"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_marginRight="1dp"
-        android:id="@+id/relativelayoutgridlayout"
-        android:layout_width="match_parent"
+        android:id="@+id/relativelayouthorizantalscroll"
+        android:layout_width="300dp"
         android:layout_height="220dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="0dp"
         android:background="@android:color/black"
-        android:layout_marginLeft="1dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="1dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal"
             android:gravity="top"
-            android:layout_gravity="top"
             >
+            <TextView
+                android:id="@+id/textshopname"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
+                android:textSize="13sp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@android:color/white"
+                android:text="@string/shopname"
+                />
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:src="@mipmap/ic_launcher"
-                android:layout_gravity="start"
+                android:layout_gravity="end|center_horizontal|center_vertical"
                 />
-            <TextView
-                android:id="@+id/shopcount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:textSize="15sp"
-                android:gravity="end"
-                android:textColor="@android:color/white"
-                android:text="@string/numberofshop"
-                />
-
 
         </LinearLayout>
         <LinearLayout
-            android:gravity="bottom|end"
-            android:layout_gravity="bottom|end"
+            android:gravity="bottom"
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="70dp">
             <TextView
-                android:id="@+id/categoryname"
+                android:id="@+id/textshopid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:textSize="13sp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@android:color/white"
+                android:text="@string/shopname"
+                />
+
+            <TextView
+                android:id="@+id/textshopcaption"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:textSize="13sp"
                 android:gravity="center_horizontal|center_vertical"
                 android:textColor="@android:color/white"
-                android:text="@string/categoryofshop"
+                android:text="@string/shopcaption"
                 android:layout_marginLeft="2dp"
                 />
             <TextView
-                android:id="@+id/itemincategory"
+                android:id="@+id/textitem"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:textSize="12sp"
                 android:gravity="center_horizontal|center_vertical"
                 android:textColor="@android:color/white"
-                android:text="@string/categoryitem"
+                android:text="@string/shopitem"
                 android:layout_marginLeft="2dp"
                 />
         </LinearLayout>
     </RelativeLayout>
+
+
 
 </LinearLayout>

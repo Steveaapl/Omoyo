@@ -28,4 +28,5 @@
     <string name="title_activity_shoplist">shoplist</string>
     <string name="title_activity_subshopcategory">subshopcategory</string>
     <string name="title_activity_firstpage">firstpage</string>
+    <string name="ip">192.168.0.113:15437</string>
 </resources>

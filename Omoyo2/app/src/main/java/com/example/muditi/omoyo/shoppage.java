@@ -27,6 +27,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -47,7 +50,7 @@ public class shoppage extends ActionBarActivity {
         ButterKnife.bind(this);
         //toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.showOverflowMenu();
-        collapsingtoolbar.setTitle(getResources().getString(R.string.shopname));
+        loadShopName();
         setSupportActionBar(toolbar);
         toolbar.setSubtitle(getResources().getString(R.string.status));
         toolbar.setTitleTextColor(Color.WHITE);
@@ -58,7 +61,6 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(new shoppageadapter(getApplicationContext()));
-
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,4 +147,20 @@ public class shoppage extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    protected void loadShopName(){
+        if(Omoyo.shared.contains("shop")){
+            try {
+                collapsingtoolbar.setTitle(new JSONObject(Omoyo.shared.getString("shop","shop")).getString("shop_name"));
+            }
+            catch(JSONException e){
+
+            }
+        }
+        else{
+            Omoyo.shoploader(getApplicationContext());
+            loadShopName();
+        }
+    }
+
 }
