@@ -27,6 +27,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,7 +51,12 @@ public class shoppage extends ActionBarActivity {
         ButterKnife.bind(this);
         //toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.showOverflowMenu();
-        loadShopName();
+        try {
+            collapsingtoolbar.setTitle(new JSONArray(Omoyo.shared.getString("shop", "shop")).getJSONObject(0).getString("shop_name"));
+        }
+        catch(JSONException e){
+
+        }
         setSupportActionBar(toolbar);
         toolbar.setSubtitle(getResources().getString(R.string.status));
         toolbar.setTitleTextColor(Color.WHITE);
@@ -68,9 +74,8 @@ public class shoppage extends ActionBarActivity {
                 onBackPressed();
             }
         });
-        Glide.with(getApplicationContext()).load("https://s3-us-west-2.amazonaws.com/omoyo/nabula.gif").asBitmap()
+        Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/shop/shop.jpg").asBitmap()
                 .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(), 250) {
-
                     @Override
                     public void onResourceReady(Bitmap bitmap,
                                                 GlideAnimation<? super Bitmap> arg1) {
@@ -101,12 +106,6 @@ public class shoppage extends ActionBarActivity {
                         // Omoyo.toast(e.getMessage(),getApplicationContext());
                     }
                 });
-        Glide.with(this).load("https://s3-us-west-2.amazonaws.com/omoyo/nabula.gif").asGif().into(new SimpleTarget<GifDrawable>() {
-            @Override
-            public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
-
-            }
-        });
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -148,19 +147,6 @@ public class shoppage extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void loadShopName(){
-        if(Omoyo.shared.contains("shop")){
-            try {
-                collapsingtoolbar.setTitle(new JSONObject(Omoyo.shared.getString("shop","shop")).getString("shop_name"));
-            }
-            catch(JSONException e){
 
-            }
-        }
-        else{
-            Omoyo.shoploader(getApplicationContext());
-            loadShopName();
-        }
-    }
 
 }

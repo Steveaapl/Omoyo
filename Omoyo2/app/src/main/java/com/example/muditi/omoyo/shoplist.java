@@ -1,6 +1,7 @@
 package com.example.muditi.omoyo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -49,27 +51,44 @@ public class shoplist extends ActionBarActivity {
         setSupportActionBar(toolbar);
         try
         {
-            jsonarray = new JSONArray(Omoyo.shared.getString("ads","f"));
+            jsonarray = new JSONArray(Omoyo.shared.getString("shoplist","f"));
             for(int i=0;i<jsonarray.length();i++) {
-                jsonobject=jsonarray.getJSONObject(i);
-                jsonarray =jsonobject.getJSONArray("url");
-                for(int k=0;k<jsonarray.length();k++){
-                    jsonobject=jsonarray.getJSONObject(k);
-                    String url=jsonobject.getString("url");
-                    Glide.with(getApplicationContext()).load(url).asBitmap().into(new SimpleTarget<Bitmap>(){
+                    jsonobject=jsonarray.getJSONObject(i);
+                    String url="http://192.168.0.113:15437/bitmap/shop/shop.jpg";
+                    LayoutInflater inflate = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View view=inflate.inflate(R.layout.shoppageviewadder, null);
+                    LinearLayout linearLayout2 =    ButterKnife.findById(view, R.id.linearlayoutasadder);
+                    final  RelativeLayout relativeLayout=  ButterKnife.findById(view, R.id.relativelayoutgridlayout);
+                    Glide.with(getApplicationContext()).load(url).asBitmap().into(new SimpleTarget<Bitmap>() {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation){
-                            LayoutInflater inflate = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-                            View view=inflate.inflate(R.layout.shoppageviewadder, null);
-                            LinearLayout linearLayout2 =    ButterKnife.findById(view, R.id.linearlayoutasadder);
-                            RelativeLayout relativeLayout=  ButterKnife.findById(view,R.id.relativelayoutgridlayout);
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+
                             relativeLayout.setBackgroundDrawable(new BitmapDrawable(
-                                    getResources(),resource));
-                            LinearLayout adderlayout2 = (LinearLayout) findViewById(R.id.linearlayoutadder);
-                            adderlayout2.addView(linearLayout2);
+                                    getResources(), resource));
+
                         }
                     });
-                }
+                    TextView textshopname=ButterKnife.findById(view,R.id.categoryname);
+                    textshopname.setText(jsonobject.getString("shop_name"));
+                    TextView textshopitem=ButterKnife.findById(view, R.id.itemincategory);
+                    StringBuilder stringBuilder=new StringBuilder();
+                    JSONArray jsonArray1=jsonobject.getJSONArray("shop_item");
+                    for(int k=0;k<jsonArray1.length();k++)
+                       {
+                         stringBuilder.append(jsonArray1.getJSONObject(k).getString("item")+"      ");
+                       }
+                     textshopitem.setText(stringBuilder.toString());
+                    stringBuilder.delete(0, stringBuilder.length());
+                    linearLayout2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Omoyo.edit.putString("shop",jsonobject.toString());
+                        Omoyo.edit.commit();
+                        startActivity(new Intent(getApplicationContext(), shoppage.class));
+                    }
+                    });
+                    LinearLayout adderlayout2 = (LinearLayout) findViewById(R.id.linearlayoutadder);
+                    adderlayout2.addView(linearLayout2);
             }
         }
         catch(JSONException jsonexp){

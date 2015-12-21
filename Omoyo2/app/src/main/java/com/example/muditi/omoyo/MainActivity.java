@@ -2,6 +2,7 @@ package com.example.muditi.omoyo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -98,20 +99,20 @@ public class MainActivity extends ActionBarActivity {
         slidemenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
-                    startActivity(new Intent(getApplicationContext(),shoppage.class));
+                if (position == 0) {
+                    startActivity(new Intent(getApplicationContext(), shoppage.class));
                     drawerlayout.closeDrawer(Gravity.LEFT);
                 }
-                if(position==1){
-                    startActivity(new Intent(getApplicationContext(),shoplist.class));
+                if (position == 1) {
+                    startActivity(new Intent(getApplicationContext(), shoplist.class));
                     drawerlayout.closeDrawer(Gravity.LEFT);
                 }
-                if(position==2){
-                    startActivity(new Intent(getApplicationContext(),subshopcategory.class));
+                if (position == 2) {
+                    startActivity(new Intent(getApplicationContext(), subshopcategory.class));
                     drawerlayout.closeDrawer(Gravity.LEFT);
                 }
-                if(position==3){
-                    startActivity(new Intent(getApplicationContext(),firstpage.class));
+                if (position == 3) {
+                    startActivity(new Intent(getApplicationContext(), firstpage.class));
                     drawerlayout.closeDrawer(Gravity.LEFT);
                 }
             }
@@ -119,6 +120,10 @@ public class MainActivity extends ActionBarActivity {
         //request for category
 categoryloader();
 adsloader();
+        //grid layout
+
+
+
     }
 
     @Override
@@ -194,7 +199,6 @@ if(home==R.id.home){
                                         JSONArray jsonArray1=jsonObject.getJSONArray("ads_item");
                                         for(int k=0;k<jsonArray1.length();k++)
                                         {
-
                                               stringBuilder.append(jsonArray1.getJSONObject(k).getString("item")+"      ");
                                         }
                                         textitem.setText(stringBuilder.toString());
@@ -209,9 +213,8 @@ if(home==R.id.home){
                                         linearLayout2.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Omoyo.edit.putString("shopvisit",textshopid.getText().toString());
-                                                Omoyo.edit.commit();
                                                 Omoyo.currentShopId=textshopid.getText().toString();
+                                                shoploader();
                                             }
                                         });
                                         adslayout.addView(linearLayout2);
@@ -293,6 +296,8 @@ public void categoryloader(){
                 public void onResponse(Response response) throws IOException {
 
                     final String data = response.body().string();
+
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -331,6 +336,25 @@ public void categoryloader(){
                                             getResources(), resource));
                                 }
                             });
+                                //categoryclick
+                                linearLayout2.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                       try{
+                                           if(category.getString("sub_category")=="true") {
+                                               subcategoryloader(category.getString("category_id"));
+                                           }
+                                           else  {
+                                                shopListLoader(category.getString("category_id"));
+                                           }
+                                        }
+                                       catch(JSONException e){
+
+                                       }
+                                    }
+                                });
+
+
                                 gridlayout.addView(linearLayout2);
                             } catch (JSONException e) {
                          Omoyo.toast("Error in json",getApplicationContext());
@@ -344,5 +368,102 @@ public void categoryloader(){
             Log.d("E:",e.getMessage());
         }
     }
+    public  void shoploader(){
+        OkHttpClient okhttp=new OkHttpClient();
+        String json=String.format("{\"shop_id\" : \"%s\"}", Omoyo.currentShopId);
+        final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+        RequestBody requestbody=RequestBody.create(JSON, json);
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/shop/").post(requestbody).build();
+        Call call=okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
 
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String data = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(getApplicationContext(), shoppage.class));
+                        }
+                    });
+                    Omoyo.edit.putString("shop", data);
+                    Omoyo.edit.commit();
+                }
+            }
+        });
+    }
+    private void subcategoryloader(final  String category_id){
+            OkHttpClient okhttp=new OkHttpClient();
+        String json = String.format("{\"category_id\" : \"%s\"}", category_id);
+        final MediaType JSON = MediaType.parse("application/json;charset=utf-8");
+        RequestBody requestbody = RequestBody.create(JSON, json);
+        Request request = new Request.Builder().url("http://" + getResources().getString(R.string.ip) + "/subcategory/").post(requestbody).build();
+            Call call=okhttp.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Omoyo.toast("Error in the network", getApplicationContext());
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        final String data = response.body().string();
+                        Omoyo.edit.putString("subcategory", data);
+                        Omoyo.edit.commit();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(getApplicationContext(), subshopcategory.class);
+                                intent.putExtra("category_id", category_id);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }
+            });
+
+    }
+private void shopListLoader(final String category_id)
+{
+    OkHttpClient okhttp=new OkHttpClient();
+    String json=String.format("{\"category_id\" : \"%s\"}", category_id);
+    final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+    RequestBody requestbody=RequestBody.create(JSON, json);
+    Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/shoplist/").post(requestbody).build();
+    Call call=okhttp.newCall(request);
+    call.enqueue(new Callback() {
+        @Override
+        public void onFailure(Request request, IOException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Omoyo.toast("Error in Network",getApplicationContext());
+                }
+            });
+        }
+
+        @Override
+        public void onResponse(Response response) throws IOException {
+if(response.isSuccessful()){
+    final String data=response.body().string();
+    Omoyo.edit.putString("shoplist", data);
+    Omoyo.edit.commit();
+    Intent intent =new Intent(getApplicationContext(),shoplist.class);
+    intent.putExtra("category_id",category_id);
+    startActivity(intent);
+}
+        }
+    });
+}
 }

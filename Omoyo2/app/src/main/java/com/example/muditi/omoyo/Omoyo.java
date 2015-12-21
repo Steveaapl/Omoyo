@@ -32,7 +32,7 @@ public class Omoyo {
     public static void  toast(String message,Context context){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
     }
-    public static void shoploader(Context context){
+    public static void shoploader(final Context context){
         OkHttpClient okhttp=new OkHttpClient();
         String json=String.format("{\"shop_id\" : \"%s\"}", Omoyo.currentShopId);
         final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
@@ -51,6 +51,7 @@ public class Omoyo {
                     String data = response.body().string();
                     Omoyo.edit.putString("shop", data);
                     Omoyo.edit.commit();
+
                 }
             }
         });

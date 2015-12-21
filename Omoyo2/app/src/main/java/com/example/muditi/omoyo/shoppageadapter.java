@@ -11,6 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.ButterKnife;
 
 /**
@@ -22,9 +26,23 @@ Context context;
     CustomViewHolder viewholder;
     View view;
     int count=0;
+    JSONObject jsonobject;
+    String item;
     public shoppageadapter(Context context){
-this.context=context;
+        this.context=context;
+        try {
+            JSONArray jsonarray=new JSONArray(Omoyo.shared.getString("shop", "shop"));
+            jsonobject = jsonarray.getJSONObject(0);
+            JSONArray jsonArray=jsonobject.getJSONArray("shop_item");
+            StringBuilder stringBuilder=new StringBuilder();
+            for(int i=0 ; i<jsonArray.length();i++){
+                stringBuilder.append(jsonArray.getJSONObject(i).getString("item")+"    ");
+            }
+            item=stringBuilder.toString();
+        }
+        catch(JSONException e){
 
+        }
         textdata=context.getResources().getStringArray(R.array.shoppagedatatext);
     }
 
@@ -50,47 +68,52 @@ this.context=context;
 
     @Override
     public void onBindViewHolder(CustomViewHolder viewHolder, int i) {
-        if(i!=6) {
-            viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
-            viewHolder.linearlayout2.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
-            switch (i) {
-                case 0:
-                    viewHolder.textview1.setText(textdata[0]);
-                    viewHolder.textview2.setText(textdata[1]);
-                    break;
-                case 1:
-                    viewHolder.textview1.setText(textdata[2]);
-                    viewHolder.textview2.setText(textdata[3]);
-                    break;
-                case 2:
-                    viewHolder.textview1.setText(textdata[4]);
-                    viewHolder.textview2.setText(textdata[5]);
-                    break;
-                case 3:
-                    viewHolder.linearlayout2.setVisibility(View.GONE);
-                    viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
-                    viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 5);
-                    viewHolder.textview1.setText(context.getResources().getString(R.string.shoppagedetalofsomeitem));
-                    viewHolder.textview1.setTextSize(12);
-                    break;
-                case 4:
-                    viewHolder.linearlayout2.setVisibility(View.GONE);
-                    viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
-                    viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 10);
-                    viewHolder.textview1.setText(context.getResources().getString(R.string.shoppagedetalofsomeitem));
-                    viewHolder.textview1.setTextSize(12);
-                    break;
-                case 5:
-                    viewHolder.linearlayout2.setVisibility(View.GONE);
-                    viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
-                    viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 5);
-                    viewHolder.textview1.setText(context.getResources().getString(R.string.shoppagedetalofsomeitem));
-                    viewHolder.textview1.setTextSize(12);
-                    break;
+        try {
+            if (i != 6) {
+                viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
+                viewHolder.linearlayout2.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
+                switch (i) {
+                    case 0:
+                        viewHolder.textview1.setText(jsonobject.getString("shop_mobile_number"));
+                        viewHolder.textview2.setText(jsonobject.getString("shop_mobile_number"));
+                        break;
+                    case 1:
+                        viewHolder.textview1.setText(jsonobject.getString("shop_address"));
+                        viewHolder.textview2.setText(jsonobject.getString("shop_id"));
+                        break;
+                    case 2:
+                        viewHolder.textview1.setText(textdata[4]);
+                        viewHolder.textview2.setText(textdata[5]);
+                        break;
+                    case 3:
+                        viewHolder.linearlayout2.setVisibility(View.GONE);
+                        viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
+                        viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 5);
+                        viewHolder.textview1.setText(jsonobject.getString("shop_description"));
+                        viewHolder.textview1.setTextSize(12);
+                        break;
+                    case 4:
+                        viewHolder.linearlayout2.setVisibility(View.GONE);
+                        viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
+                        viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 10);
+                        viewHolder.textview1.setText(jsonobject.getString("shop_timing"));
+                        viewHolder.textview1.setTextSize(12);
+                        break;
+                    case 5:
+
+                        viewHolder.linearlayout2.setVisibility(View.GONE);
+                        viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
+                        viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 5);
+                        viewHolder.textview1.setText(item);
+                        viewHolder.textview1.setTextSize(12);
+                        break;
+                }
             }
         }
-    }
+        catch(JSONException e){
 
+        }
+    }
     public class CustomViewHolder extends RecyclerView.ViewHolder {
        protected LinearLayout linearlayout2;
         protected  LinearLayout linearlayout1;
