@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.JsonReader;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -69,6 +72,8 @@ public class firstpage extends Activity {
     @Bind(R.id.doneselectingarea)
     Button done;
     HashMap<String,String> hash=new HashMap<>();
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +81,7 @@ public class firstpage extends Activity {
         ButterKnife.bind(this);
         Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
         Omoyo.edit=Omoyo.shared.edit();
+
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -211,11 +217,24 @@ cityloader();
                             final  String data=response.body().string();
                              Omoyo.edit.putString("location", data);
                              Omoyo.edit.commit();
+
 runOnUiThread(new Runnable() {
     @Override
     public void run() {
        // Omoyo.toast(Omoyo.shared.getString("ads","f"),getApplicationContext());
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        if(checkPlayServices()){
+            if(Omoyo.shared.getBoolean("gcm_token_registered",true)) {
+                Intent intent = new Intent(getApplicationContext(), Registrationid.class);
+                startService(intent);
+            }
+            else{
+                Omoyo.toast("Registered Already",getApplicationContext());
+            }
+        }
+        else{
+            Omoyo.toast("Service not supported for GCM",getApplicationContext());
+        }
       //  Omoyo.toast("Response:"+data,getApplicationContext());
     }
 });
@@ -284,10 +303,10 @@ runOnUiThread(new Runnable() {
 
 
 
-    public void cityloader(){
-        OkHttpClient okhttp=new OkHttpClient();
+    public void cityloader() {
+        OkHttpClient okhttp = new OkHttpClient();
 
-        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/getcity/").build();
+        Request request=new Request.Builder().url("http://" + getResources().getString(R.string.ip) + "/getcity/").build();
 
         Call call = okhttp.newCall(request);
 
@@ -337,4 +356,20 @@ runOnUiThread(new Runnable() {
         });
 
     }
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode,PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
 }

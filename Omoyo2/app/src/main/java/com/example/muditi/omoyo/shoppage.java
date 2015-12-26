@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +52,7 @@ public class shoppage extends ActionBarActivity {
         //toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.showOverflowMenu();
         try {
-            collapsingtoolbar.setTitle(new JSONArray(Omoyo.shared.getString("shop", "shop")).getJSONObject(0).getString("shop_name"));
+            collapsingtoolbar.setTitle(new JSONObject(Omoyo.shared.getString("shop", "shop")).getString("shop_name"));
         }
         catch(JSONException e){
 
@@ -119,10 +119,6 @@ public class shoppage extends ActionBarActivity {
              //   Omoyo.toast("X:"+dx+"Y:"+dy,getApplicationContext());
             }
         });
-//systembar
-        SystemBarTintManager systembar=new SystemBarTintManager(this);
-        systembar.setStatusBarTintEnabled(true);
-        systembar.setStatusBarTintColor(getResources().getColor(R.color.appcolor));
     }
 
     @Override

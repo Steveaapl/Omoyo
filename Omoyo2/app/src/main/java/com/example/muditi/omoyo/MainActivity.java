@@ -31,7 +31,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -53,7 +52,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity  {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.slidemenu)
@@ -391,8 +390,15 @@ public void categoryloader(){
                             startActivity(new Intent(getApplicationContext(), shoppage.class));
                         }
                     });
-                    Omoyo.edit.putString("shop", data);
-                    Omoyo.edit.commit();
+                    try {
+                        JSONArray jsonArray = new JSONArray(data);
+                        Omoyo.edit.putString("shop",jsonArray.getJSONObject(0).toString());
+                        Omoyo.edit.commit();
+                    }
+                    catch(JSONException e){
+
+                    }
+
                 }
             }
         });
@@ -442,6 +448,7 @@ private void shopListLoader(final String category_id)
     RequestBody requestbody=RequestBody.create(JSON, json);
     Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/shoplist/").post(requestbody).build();
     Call call=okhttp.newCall(request);
+
     call.enqueue(new Callback() {
         @Override
         public void onFailure(Request request, IOException e) {

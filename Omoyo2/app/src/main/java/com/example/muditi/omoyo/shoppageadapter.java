@@ -31,8 +31,7 @@ Context context;
     public shoppageadapter(Context context){
         this.context=context;
         try {
-            JSONArray jsonarray=new JSONArray(Omoyo.shared.getString("shop", "shop"));
-            jsonobject = jsonarray.getJSONObject(0);
+             jsonobject=new JSONObject(Omoyo.shared.getString("shop", "shop"));
             JSONArray jsonArray=jsonobject.getJSONArray("shop_item");
             StringBuilder stringBuilder=new StringBuilder();
             for(int i=0 ; i<jsonArray.length();i++){

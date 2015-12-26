@@ -28,6 +28,8 @@ public class Omoyo {
     public static SharedPreferences shared;
     public static SharedPreferences.Editor edit;
     public static String currentShopId;
+    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public  static ArrayList<Bitmap> adsforhomebitmaplist=new ArrayList<Bitmap>();
     public static void  toast(String message,Context context){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show();

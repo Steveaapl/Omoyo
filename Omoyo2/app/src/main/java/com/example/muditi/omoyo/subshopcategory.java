@@ -361,9 +361,15 @@ public class subshopcategory extends ActionBarActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Omoyo.edit.putString("shop", data);
-                            Omoyo.edit.commit();
-                            startActivity(new Intent(getApplicationContext(), shoppage.class));
+                         try{
+                             JSONArray jsonArray = new JSONArray(data);
+                             Omoyo.edit.putString("shop",jsonArray.getJSONObject(0).toString());
+                             Omoyo.edit.commit();
+                             startActivity(new Intent(getApplicationContext(), shoppage.class));
+                         }
+                         catch(JSONException e){
+
+                         }
                         }
                     });
                 }
