@@ -76,6 +76,10 @@ public class MainActivity extends ActionBarActivity  {
         Omoyo.screendisplay=display;
         Omoyo.widthofscreen=display.getWidth();
         Omoyo.heightofscreen=display.getHeight();
+        Omoyo.edit.putInt("widthOfDevice",display.getWidth());
+        Omoyo.edit.commit();
+        Omoyo.edit.putInt("heightOfDevice", display.getHeight());
+        Omoyo.edit.commit();
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));
@@ -99,19 +103,7 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    startActivity(new Intent(getApplicationContext(), shoppage.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-                if (position == 1) {
-                    startActivity(new Intent(getApplicationContext(), shoplist.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-                if (position == 2) {
-                    startActivity(new Intent(getApplicationContext(), subshopcategory.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-                if (position == 3) {
-                    startActivity(new Intent(getApplicationContext(), firstpage.class));
+                    startActivity(new Intent(getApplicationContext(),SmsVarification.class));
                     drawerlayout.closeDrawer(Gravity.LEFT);
                 }
             }
@@ -209,6 +201,7 @@ if(home==R.id.home){
                                                         getResources(), resource));
                                             }
                                         });
+
                                         linearLayout2.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {

@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.muditi.omoyo.SmsVarification">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:background="@color/appcolor"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:layout_alignParentTop="true"
+
+        />
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        card_view:cardElevation="10dp"
+        card_view:cardCornerRadius="4dp">
+
+
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

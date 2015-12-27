@@ -30,4 +30,5 @@
     <string name="title_activity_firstpage">firstpage</string>
     <string name="ip">192.168.0.113:15437</string>
     <string name="gcm_appid">406549326070</string>
+    <string name="title_activity_sms_varification">SmsVarification</string>
 </resources>

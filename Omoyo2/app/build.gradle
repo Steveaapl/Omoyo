@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.muditi.omoyo"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,7 @@ dependencies {
     compile "com.splunk.mint:mint:4.3.0"
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:palette-v7:22.2.1'
     compile "com.google.android.gms:play-services-gcm:8.3.0"
     repositories {
