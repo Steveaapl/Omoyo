@@ -3,18 +3,26 @@ package com.example.muditi.omoyo;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -25,10 +33,13 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.squareup.okhttp.Call;
@@ -79,9 +90,13 @@ public class firstpage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
+
+   //     open();
+
         Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
         Omoyo.edit=Omoyo.shared.edit();
-
+        Omoyo.edit.putString("senderId","MM-OMOYoO");
+        Omoyo.edit.commit();
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -133,8 +148,10 @@ done.setOnClickListener(new View.OnClickListener() {
 
 
         }
-        else
-            Omoyo.toast("Area need to be Selected",getApplicationContext());
+        else {
+            Omoyo.toast("Area need to be Selected", getApplicationContext());
+            YoYo.with(Techniques.Shake).duration(100).playOn(findViewById(R.id.doneselectingarea));
+        }
     }
 });
         areaselectionanimation=ObjectAnimator.ofFloat(linearlayoutforlocation,"alpha",0,1);
@@ -143,7 +160,7 @@ done.setOnClickListener(new View.OnClickListener() {
         areaselectionanimation.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                linearlayoutforlocation.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -344,10 +361,11 @@ runOnUiThread(new Runnable() {
 
                             }
 
-                            areaselectionanimation.start();
+                         //   areaselectionanimation.start();
+                            linearlayoutforlocation.setVisibility(View.VISIBLE);
+                            YoYo.with(Techniques.ZoomIn).duration(500).playOn(linearlayoutforlocation);
                             ArrayAdapter adapterforcity=new firstpagespinneradapter("City",getApplicationContext(),R.layout.firstpagespinnerlayout,listforcity);
                             spinnerforcity.setAdapter(adapterforcity);
-
                         }
                     });
                 }
@@ -370,6 +388,25 @@ runOnUiThread(new Runnable() {
             return false;
         }
         return true;
+    }
+
+    public void open(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        LayoutInflater inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view=inflater.inflate(R.layout.popupcard, null, false);
+        LinearLayout linearLayout=ButterKnife.findById(view, R.id.linearlayoutpopupparent);
+        YoYo.with(Techniques.ZoomIn).duration(1000).playOn(linearLayout);
+       // linearLayout.setBackground(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setView(view);
+        alertDialog.getWindow().setBackgroundDrawable(null);
+        WindowManager.LayoutParams linear = alertDialog.getWindow().getAttributes();
+        linear.gravity= Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+        alertDialog.show();
     }
 
 }
