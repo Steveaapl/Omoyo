@@ -73,7 +73,7 @@ public class GcmMessage extends GcmListenerService {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                Glide.with(getApplicationContext()).load("http://"+getApplicationContext().getResources().getString(R.string.ip)+"/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                      //remoteViews.setBitmap(R.id.offerposterlinearlayout, "", resource);

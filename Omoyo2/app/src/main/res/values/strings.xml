@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OMOYo!</string>
+    <string name="app_name">Shopcut</string>
     <string name="subtitle">location..</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -28,7 +28,7 @@
     <string name="title_activity_shoplist">shoplist</string>
     <string name="title_activity_subshopcategory">subshopcategory</string>
     <string name="title_activity_firstpage">firstpage</string>
-    <string name="ip">192.168.0.113:15437</string>
+    <string name="ip">192.168.137.199:15437</string>
     <string name="gcm_appid">406549326070</string>
     <string name="next">Next</string>
     <string name="title_activity_sms_varification">SmsVarification</string>
@@ -36,4 +36,5 @@
     <string name="varification">Sms Varification is all new way to get login </string>
     <string name="countrycode">+91</string>
     <string name="enteryourmobilenumber">Enter mobile number</string>
+    <string name="gpslocationtext">Near you</string>
 </resources>

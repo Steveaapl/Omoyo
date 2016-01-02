@@ -7,15 +7,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.ResultReceiver;
+import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,25 +20,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -57,6 +52,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Handler;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -64,6 +60,7 @@ import okio.BufferedSink;
 
 
 public class firstpage extends Activity {
+    GoogleApiClient googleApiClient;
     @Bind(R.id.linearlayoutfooter)
     LinearLayout linearlayoutforfooter;
     @Bind(R.id.linearlayoutforlocation)
@@ -83,15 +80,56 @@ public class firstpage extends Activity {
     @Bind(R.id.doneselectingarea)
     Button done;
     HashMap<String,String> hash=new HashMap<>();
+    @Bind(R.id.gpsLocation)
+    FloatingActionButton gpsLocation;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
+    protected Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
+    private Boolean clickForLocation = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
+        mResultReceiver=new AddressResultReceiver(new android.os.Handler());
+        googleApiClient=new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(Bundle bundle) {
+                // Gets the best and most recent location currently available, which may be null
+                // in rare cases when a location is not available.
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                if (mLastLocation != null) {
+                    // Determine whether a Geocoder is available.
+                    if (!Geocoder.isPresent()) {
+                        Omoyo.toast("No GeoCoder Avilabe",getApplicationContext());
+                        return;
+                    }
+                    // It is possible that the user presses the button to get the address before the
+                    // GoogleApiClient object successfully connects. In such a case, mAddressRequested
+                    // is set to true, but no attempt is made to fetch the address (see
+                    // fetchAddressButtonHandler()) . Instead, we start the intent service here if the
+                    // user has requested an address, since we now have a connection to GoogleApiClient.
+                    if (clickForLocation) {
+                        startServiceLocationAddress();
+                    }
 
-   //     open();
+                }
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+            }
+        }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(ConnectionResult connectionResult) {
+
+            }
+        })
+       .addApi(LocationServices.API).build();
+
+       //open();
 
         Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
         Omoyo.edit=Omoyo.shared.edit();
@@ -100,12 +138,12 @@ public class firstpage extends Activity {
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-              if(position!=0){
-                  area_id=hash.get(listforarea.get(position));
-                  Omoyo.edit.putString("area",listforarea.get(position));
-                  Omoyo.edit.commit();
-                  Omoyo.check=1;
-                            }
+                if (position != 0) {
+                    area_id = hash.get(listforarea.get(position));
+                    Omoyo.edit.putString("area", listforarea.get(position));
+                    Omoyo.edit.commit();
+                    Omoyo.check = 1;
+                }
             }
 
             @Override
@@ -133,10 +171,10 @@ public class firstpage extends Activity {
 done.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        if(Omoyo.check==1) {
-            Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
-            Omoyo.edit=Omoyo.shared.edit();
-            Omoyo.edit.putString("city_id",city_id);
+        if (Omoyo.check == 1) {
+            Omoyo.shared = getSharedPreferences("omoyo", Context.MODE_PRIVATE);
+            Omoyo.edit = Omoyo.shared.edit();
+            Omoyo.edit.putString("city_id", city_id);
             Omoyo.edit.putString("area_id", area_id);
             Omoyo.edit.commit();
             new Thread(new Runnable() {
@@ -147,8 +185,7 @@ done.setOnClickListener(new View.OnClickListener() {
             }).start();
 
 
-        }
-        else {
+        } else {
             Omoyo.toast("Area need to be Selected", getApplicationContext());
             YoYo.with(Techniques.Shake).duration(100).playOn(findViewById(R.id.doneselectingarea));
         }
@@ -181,8 +218,24 @@ done.setOnClickListener(new View.OnClickListener() {
 
              progressbarnetworkcheck.setProgress(20);
 
-cityloader();
+             cityloader();
 
+        gpsLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              if(googleApiClient.isConnected() && mLastLocation != null)
+              {
+                  startServiceLocationAddress();
+             //     open();
+              }
+              else
+              {
+                  clickForLocation=true;
+
+
+              }
+            }
+        });
 
 
     }
@@ -206,6 +259,11 @@ cityloader();
             return true;
         }
 
+
+        if(id == R.id.gps){
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -223,39 +281,37 @@ cityloader();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Omoyo.toast("Error in the network",getApplicationContext());
+                        Omoyo.toast("Error in the network", getApplicationContext());
                     }
                 });
             }
 
             @Override
-            public void onResponse(Response response) throws IOException  {
-                         if(response.isSuccessful()){
-                            final  String data=response.body().string();
-                             Omoyo.edit.putString("location", data);
-                             Omoyo.edit.commit();
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String data = response.body().string();
+                    Omoyo.edit.putString("location", data);
+                    Omoyo.edit.commit();
 
-runOnUiThread(new Runnable() {
-    @Override
-    public void run() {
-       // Omoyo.toast(Omoyo.shared.getString("ads","f"),getApplicationContext());
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        if(checkPlayServices()){
-            if(Omoyo.shared.getBoolean("gcm_token_registered",true)) {
-                Intent intent = new Intent(getApplicationContext(), Registrationid.class);
-                startService(intent);
-            }
-            else{
-                Omoyo.toast("Registered Already",getApplicationContext());
-            }
-        }
-        else{
-            Omoyo.toast("Service not supported for GCM",getApplicationContext());
-        }
-      //  Omoyo.toast("Response:"+data,getApplicationContext());
-    }
-});
-                         }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Omoyo.toast(Omoyo.shared.getString("ads","f"),getApplicationContext());
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            if (checkPlayServices()) {
+                                if (Omoyo.shared.getBoolean("gcm_token_registered", true)) {
+                                    Intent intent = new Intent(getApplicationContext(), Registrationid.class);
+                                    startService(intent);
+                                } else {
+                                    Omoyo.toast("Registered Already", getApplicationContext());
+                                }
+                            } else {
+                                Omoyo.toast("Service not supported for GCM", getApplicationContext());
+                            }
+                            //  Omoyo.toast("Response:"+data,getApplicationContext());
+                        }
+                    });
+                }
             }
         });
     }
@@ -381,6 +437,7 @@ runOnUiThread(new Runnable() {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 apiAvailability.getErrorDialog(this, resultCode,PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
+
             } else {
                 Log.i(TAG, "This device is not supported.");
                 finish();
@@ -393,20 +450,128 @@ runOnUiThread(new Runnable() {
     public void open(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-
-
         AlertDialog alertDialog = alertDialogBuilder.create();
 
         LayoutInflater inflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view=inflater.inflate(R.layout.popupcard, null, false);
-        LinearLayout linearLayout=ButterKnife.findById(view, R.id.linearlayoutpopupparent);
-        YoYo.with(Techniques.ZoomIn).duration(1000).playOn(linearLayout);
-       // linearLayout.setBackground(new ColorDrawable(Color.TRANSPARENT));
+
+        MapFragment mapFragment= (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                map.getUiSettings().setZoomControlsEnabled(true);
+                map.getUiSettings().setMyLocationButtonEnabled(true);
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                map.setMyLocationEnabled(true);
+                map.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude())).title("HeHo"));
+            }
+        });
+
         alertDialog.setView(view);
         alertDialog.getWindow().setBackgroundDrawable(null);
         WindowManager.LayoutParams linear = alertDialog.getWindow().getAttributes();
         linear.gravity= Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+        linear.width=200;
+        linear.height=200;
         alertDialog.show();
+
     }
 
+
+    public void statusCheck()
+    {
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
+            buildAlertMessageNoGps();
+
+        }
+
+
+    }
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled,  enable it to get your location?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog,  final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    @Override
+    protected void onStart() {
+        googleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        googleApiClient.disconnect();
+        super.onStop();
+    }
+ private  void startServiceLocationAddress(){
+     // Create an intent for passing to the intent service responsible for fetching the address.
+     Intent intent = new Intent(this, AddressOfUserByGPS.class);
+
+     // Pass the result receiver as an extra to the service.
+     intent.putExtra(Omoyo.RECEIVER, mResultReceiver);
+
+     // Pass the location data as an extra to the service.
+     intent.putExtra(Omoyo.LOCATION_DATA_EXTRA, mLastLocation);
+
+     // Start the service. If the service isn't already running, it is instantiated and started
+     // (creating a process for it if needed); if it is running then it remains running. The
+     // service kills itself automatically once all intents are processed.
+     startService(intent);
+}
+
+    @Override
+    protected void onPause() {
+        if(googleApiClient.isConnected()){
+            googleApiClient.disconnect();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        googleApiClient.connect();
+        super.onResume();
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(android.os.Handler handler) {
+            super(handler);
+        }
+
+        /**
+         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string or an error message sent from the intent service.
+        String     mAddressOutput = resultData.getString(Omoyo.RESULT_DATA_KEY);
+          //  displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == Omoyo.SUCCESS_RESULT) {
+                Omoyo.toast("Address:"+mAddressOutput,getApplicationContext());
+            }
+
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+          //  mAddressRequested = false;
+          //  updateUIWidgets();
+        }
+    }
 }
