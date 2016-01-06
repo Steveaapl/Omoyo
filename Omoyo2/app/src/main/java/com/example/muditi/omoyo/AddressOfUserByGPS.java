@@ -43,6 +43,7 @@ public class AddressOfUserByGPS extends IntentService {
 
         Location location = intent.getParcelableExtra(Omoyo.LOCATION_DATA_EXTRA);
 
+       // Omoyo.toast(location.getLatitude()+":"+location.getLongitude(),getApplicationContext());
 
         if (location == null) {
             errorMessage = "No Location Found";
@@ -88,9 +89,9 @@ public class AddressOfUserByGPS extends IntentService {
             for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                 addressFragments.add(address.getAddressLine(i));
             }
-            Log.i(TAG,"Address Found");
-            deliverResultToReceiver(Omoyo.SUCCESS_RESULT,
-                    TextUtils.join(System.getProperty("line.separator"), addressFragments));
+                   Log.i(TAG,"Address Found");
+                   deliverResultToReceiver(Omoyo.SUCCESS_RESULT,
+                   TextUtils.join(System.getProperty("line.separator"), addressFragments));
         }
     }
 

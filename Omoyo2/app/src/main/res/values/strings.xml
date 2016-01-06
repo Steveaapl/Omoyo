@@ -8,9 +8,9 @@
     <string name="categoryofshop">Apple Product\'s</string>
     <string name="numberofshop">1007</string>
     <string name="categoryitem">iPhone , iPad , iMac , Apple Watch , MacBook , MacPro </string>
-    <string name="serchboxhint">Search Shop\'s     </string>
+    <string name="serchboxhint">Search Shop\'s </string>
     <string name="status">Open</string>
-    <string name="shoppagetext">iPhone 7 </string>
+    <string name="shoppagetext">iPhone 7</string>
     <string name="shopcaption">This is the first Apple store in the history of planet to be powered by virtual reality to give it\'s customer a better experience</string>
     <string name="title_activity_shoppage">shoppage</string>
     <string name="urlofshoppage">url</string>
@@ -28,8 +28,9 @@
     <string name="title_activity_shoplist">shoplist</string>
     <string name="title_activity_subshopcategory">subshopcategory</string>
     <string name="title_activity_firstpage">firstpage</string>
-    <string name="ip">192.168.137.199:15437</string>
+    <string name="ip">192.168.0.101:15437</string>
     <string name="gcm_appid">406549326070</string>
+    <string name="google_app_id">406549326070</string>
     <string name="next">Next</string>
     <string name="title_activity_sms_varification">SmsVarification</string>
     <string name="login">Login</string>
@@ -37,4 +38,7 @@
     <string name="countrycode">+91</string>
     <string name="enteryourmobilenumber">Enter mobile number</string>
     <string name="gpslocationtext">Near you</string>
+    <string name="title_activity_search">Search</string>
+    <string name="searchHint">Search  items and  shops </string>
+    <string name="searchLabel">Search</string>
 </resources>

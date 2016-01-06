@@ -4,14 +4,16 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
-<style name="collapsebartitleexpanding">
-    <item name="android:textColor">#ffffff</item>
-    <item name="android:textSize">17dp</item>
-    <item name="android:gravity">start|top|left</item>
-    <item name="android:layout_gravity">start|top|left</item>
-    <item name="android:layout_alignParentLeft">true</item>
-    <item name="android:layout_marginRight">20dp</item>
-</style>
+
+    <style name="collapsebartitleexpanding">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">17dp</item>
+        <item name="android:gravity">start|top|left</item>
+        <item name="android:layout_gravity">start|top|left</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginRight">20dp</item>
+    </style>
+
     <style name="collapsebartitlecollapsing">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">13dp</item>
@@ -20,16 +22,22 @@
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
-<style name="shoppagesubtitlestyle">
-   <item name="android:text">@string/shopstatus</item>
-    <item name="android:textColor">@android:color/white</item>
-    <item name="android:textSize">15dp</item>
-    <item name="android:fitsSystemWindows">true</item>
-</style>
+
+    <style name="shoppagesubtitlestyle">
+        <item name="android:text">@string/shopstatus</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
     <style name="shopratedtext">
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:src">@mipmap/ic_launcher</item>
 
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -4,6 +4,7 @@
     android:id="@+id/drawerlayout"
     >
 <ScrollView
+    android:id="@+id/parentScrollView"
     android:background="@color/appcolor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,6 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="top"
             />
+
 <HorizontalScrollView
     android:id="@+id/hozintalscroolview"
     android:layout_width="match_parent"
@@ -42,6 +44,17 @@
             android:columnCount="1">
 
         </GridLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleviewforsearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@android:color/white"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
     </LinearLayout>
 </ScrollView>
     <ListView

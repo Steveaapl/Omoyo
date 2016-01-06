@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Looper;
+import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -87,17 +90,18 @@ public class firstpage extends Activity {
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private Boolean clickForLocation = false;
+    private static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
+        context=getApplicationContext();
         mResultReceiver=new AddressResultReceiver(new android.os.Handler());
         googleApiClient=new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(Bundle bundle) {
-                // Gets the best and most recent location currently available, which may be null
-                // in rare cases when a location is not available.
+
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                 if (mLastLocation != null) {
                     // Determine whether a Geocoder is available.
@@ -105,14 +109,12 @@ public class firstpage extends Activity {
                         Omoyo.toast("No GeoCoder Avilabe",getApplicationContext());
                         return;
                     }
-                    // It is possible that the user presses the button to get the address before the
-                    // GoogleApiClient object successfully connects. In such a case, mAddressRequested
-                    // is set to true, but no attempt is made to fetch the address (see
-                    // fetchAddressButtonHandler()) . Instead, we start the intent service here if the
-                    // user has requested an address, since we now have a connection to GoogleApiClient.
+
                     if (clickForLocation) {
                         startServiceLocationAddress();
                     }
+
+                    //Omoyo.toast(mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude(),getApplicationContext());
 
                 }
             }
@@ -133,7 +135,7 @@ public class firstpage extends Activity {
 
         Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
         Omoyo.edit=Omoyo.shared.edit();
-        Omoyo.edit.putString("senderId","MM-OMOYoO");
+        Omoyo.edit.putString("senderId", "MM-OMOYoO");
         Omoyo.edit.commit();
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -155,9 +157,9 @@ public class firstpage extends Activity {
         spinnerforcity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position!=0){
-                    city_id=hash.get(listforcity.get(position));
-                    Omoyo.edit.putString("city",listforcity.get(position));
+                if (position != 0) {
+                    city_id = hash.get(listforcity.get(position));
+                    Omoyo.edit.putString("city", listforcity.get(position));
                     Omoyo.edit.commit();
                     arealoader(city_id);
                 }
@@ -187,7 +189,7 @@ done.setOnClickListener(new View.OnClickListener() {
 
         } else {
             Omoyo.toast("Area need to be Selected", getApplicationContext());
-            YoYo.with(Techniques.Shake).duration(100).playOn(findViewById(R.id.doneselectingarea));
+            YoYo.with(Techniques.Shake).duration(100).playOn(findViewById(R.id.linearlayoutforlocation));
         }
     }
 });
@@ -223,19 +225,15 @@ done.setOnClickListener(new View.OnClickListener() {
         gpsLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              if(googleApiClient.isConnected() && mLastLocation != null)
-              {
-                  startServiceLocationAddress();
-             //     open();
-              }
-              else
-              {
-                  clickForLocation=true;
-
-
-              }
+                if (googleApiClient.isConnected() && mLastLocation != null) {
+                    startServiceLocationAddress();
+                    //     open();
+                } else {
+                    clickForLocation = true;
+                }
             }
         });
+
 
 
     }
@@ -520,18 +518,15 @@ done.setOnClickListener(new View.OnClickListener() {
         super.onStop();
     }
  private  void startServiceLocationAddress(){
-     // Create an intent for passing to the intent service responsible for fetching the address.
+
      Intent intent = new Intent(this, AddressOfUserByGPS.class);
 
-     // Pass the result receiver as an extra to the service.
+   //  String mResultReceiverObject=new Gson().toJson(mResultReceiver);
      intent.putExtra(Omoyo.RECEIVER, mResultReceiver);
 
-     // Pass the location data as an extra to the service.
+
      intent.putExtra(Omoyo.LOCATION_DATA_EXTRA, mLastLocation);
 
-     // Start the service. If the service isn't already running, it is instantiated and started
-     // (creating a process for it if needed); if it is running then it remains running. The
-     // service kills itself automatically once all intents are processed.
      startService(intent);
 }
 
@@ -549,29 +544,22 @@ done.setOnClickListener(new View.OnClickListener() {
         super.onResume();
     }
 
-    class AddressResultReceiver extends ResultReceiver {
+    static class AddressResultReceiver extends ResultReceiver implements Parcelable {
+
+         static   Parcelable.Creator CREATOR;
+
         public AddressResultReceiver(android.os.Handler handler) {
             super(handler);
         }
 
-        /**
-         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
-         */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-            // Display the address string or an error message sent from the intent service.
         String     mAddressOutput = resultData.getString(Omoyo.RESULT_DATA_KEY);
-          //  displayAddressOutput();
 
-            // Show a toast message if an address was found.
             if (resultCode == Omoyo.SUCCESS_RESULT) {
-                Omoyo.toast("Address:"+mAddressOutput,getApplicationContext());
+                Omoyo.toast("Address:"+mAddressOutput,firstpage.context);
             }
-
-            // Reset. Enable the Fetch Address button and stop showing the progress bar.
-          //  mAddressRequested = false;
-          //  updateUIWidgets();
         }
     }
 }

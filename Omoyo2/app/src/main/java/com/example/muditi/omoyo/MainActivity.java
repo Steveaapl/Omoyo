@@ -1,21 +1,20 @@
 package com.example.muditi.omoyo;
 
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,10 +26,9 @@ import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -41,18 +39,15 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends ActionBarActivity  {
+public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.slidemenu)
@@ -65,6 +60,10 @@ public class MainActivity extends ActionBarActivity  {
     GridLayout gridlayout;
     @Bind(R.id.adslayout)
     LinearLayout adslayout;
+    @Bind(R.id.recycleviewforsearch)
+    RecyclerView recycleViewForSearch;
+    @Bind(R.id.parentScrollView)
+    ScrollView scrollView ;
     String location;
     int count;
     @Override
@@ -121,23 +120,77 @@ adsloader();
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+MenuItem item = menu.findItem(R.id.searchItem);
+        SearchManager searchManager =(SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) item.getActionView();
+        if(searchView != null) {
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    //Omoyo.toast("Submit:" + query, getApplicationContext());
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    //Omoyo.toast("Change:" + newText, getApplicationContext());
+                    return true;
+                }
+            });
+            searchView.setIconified(true);
+            searchView.setIconifiedByDefault(true);
+
+            MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    toolbar.setBackgroundColor(Color.WHITE);
+                    horizontalscrollview.setVisibility(View.GONE);
+                    gridlayout.setVisibility(View.GONE);
+                    recycleViewForSearch.setVisibility(View.VISIBLE);
+                    scrollView.setBackgroundColor(Color.WHITE);
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                    horizontalscrollview.setVisibility(View.VISIBLE);
+                    gridlayout.setVisibility(View.VISIBLE);
+                    recycleViewForSearch.setVisibility(View.GONE);
+                    scrollView.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                    return true;
+                }
+            });
+
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        else{
+            Omoyo.toast("NUll", getApplicationContext());
+        }
+
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
-int home=item.getItemId();
-        //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             return true;
         }
-if(home==R.id.home){
-    drawerlayout.openDrawer(Gravity.LEFT);
-}
+        if(id==R.id.home)
+        {
+            drawerlayout.openDrawer(Gravity.LEFT);
+        }
+
+        if(id==R.id.searchItem){
+
+        }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -448,22 +501,24 @@ private void shopListLoader(final String category_id)
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Omoyo.toast("Error in Network",getApplicationContext());
+                    Omoyo.toast("Error in Network", getApplicationContext());
                 }
             });
         }
 
         @Override
         public void onResponse(Response response) throws IOException {
-if(response.isSuccessful()){
-    final String data=response.body().string();
-    Omoyo.edit.putString("shoplist", data);
-    Omoyo.edit.commit();
-    Intent intent =new Intent(getApplicationContext(),shoplist.class);
-    intent.putExtra("category_id",category_id);
-    startActivity(intent);
-}
+            if (response.isSuccessful()) {
+                final String data = response.body().string();
+                Omoyo.edit.putString("shoplist", data);
+                Omoyo.edit.commit();
+                Intent intent = new Intent(getApplicationContext(), shoplist.class);
+                intent.putExtra("category_id", category_id);
+                startActivity(intent);
+            }
         }
     });
 }
+
+
 }
