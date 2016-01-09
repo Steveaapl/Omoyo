@@ -10,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -60,12 +61,13 @@ public class MainActivity extends AppCompatActivity {
     GridLayout gridlayout;
     @Bind(R.id.adslayout)
     LinearLayout adslayout;
-    @Bind(R.id.recycleviewforsearch)
-    RecyclerView recycleViewForSearch;
+    @Bind(R.id.linear_layout_for_search_result)
+    LinearLayout linear_layout_for_search;
     @Bind(R.id.parentScrollView)
     ScrollView scrollView ;
     String location;
     int count;
+    boolean query_submit_check=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Display display=getWindowManager().getDefaultDisplay();
         Omoyo.screendisplay=display;
+       // recycleViewForSearch.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+      //  listViewForSearch.setAdapter(new search_result_base_adapter(getApplicationContext()));
         Omoyo.widthofscreen=display.getWidth();
         Omoyo.heightofscreen=display.getHeight();
         Omoyo.edit.putInt("widthOfDevice",display.getWidth());
@@ -111,9 +115,6 @@ public class MainActivity extends AppCompatActivity {
 categoryloader();
 adsloader();
         //grid layout
-
-
-
     }
 
     @Override
@@ -128,13 +129,16 @@ MenuItem item = menu.findItem(R.id.searchItem);
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    //Omoyo.toast("Submit:" + query, getApplicationContext());
+                    queryResponse(query);
+                    query_submit_check=true;
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    //Omoyo.toast("Change:" + newText, getApplicationContext());
+                    if(newText.length()==0){
+                        linear_layout_for_search.removeAllViews();
+                    }
                     return true;
                 }
             });
@@ -144,11 +148,9 @@ MenuItem item = menu.findItem(R.id.searchItem);
             MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
-                    toolbar.setBackgroundColor(Color.WHITE);
                     horizontalscrollview.setVisibility(View.GONE);
                     gridlayout.setVisibility(View.GONE);
-                    recycleViewForSearch.setVisibility(View.VISIBLE);
-                    scrollView.setBackgroundColor(Color.WHITE);
+                    linear_layout_for_search.setVisibility(View.VISIBLE);
                     return true;
                 }
 
@@ -157,7 +159,7 @@ MenuItem item = menu.findItem(R.id.searchItem);
                     toolbar.setBackgroundColor(getResources().getColor(R.color.appcolor));
                     horizontalscrollview.setVisibility(View.VISIBLE);
                     gridlayout.setVisibility(View.VISIBLE);
-                    recycleViewForSearch.setVisibility(View.GONE);
+                    linear_layout_for_search.setVisibility(View.GONE);
                     scrollView.setBackgroundColor(getResources().getColor(R.color.appcolor));
                     return true;
                 }
@@ -168,8 +170,6 @@ MenuItem item = menu.findItem(R.id.searchItem);
         else{
             Omoyo.toast("NUll", getApplicationContext());
         }
-
-
         return true;
     }
 
@@ -519,6 +519,48 @@ private void shopListLoader(final String category_id)
         }
     });
 }
+private  void queryResponse(String query){
 
+    OkHttpClient okhttp=new OkHttpClient();
+    String json=String.format("{\"query\" : \"%s\"}", query.toLowerCase());
+    final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+    RequestBody requestbody=RequestBody.create(JSON, json);
+    Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/searchquery/").post(requestbody).build();
+    Call call=okhttp.newCall(request);
+    call.enqueue(new Callback() {
+        @Override
+        public void onFailure(Request request, final IOException e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Omoyo.toast("Error:"+e.getMessage(), getApplicationContext());
+                }
+            });
+        }
+
+        @Override
+        public void onResponse( Response response) throws IOException {
+            if(response.isSuccessful()){
+                final String data = response.body().string();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONArray jsonArray = new JSONArray(data);
+                            for(int i=0 ; i<jsonArray.length();i++) {
+                                LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                                View view = inflate.inflate(R.layout.include_for_search, null);
+                                linear_layout_for_search.addView(view);
+                            }
+                        }
+                        catch(JSONException jsonException){
+
+                        }
+                    }
+                });
+            }
+        }
+    });
+}
 
 }

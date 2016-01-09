@@ -1,4 +1,5 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"  tools:context=".MainActivity"
     android:id="@+id/drawerlayout"
@@ -20,7 +21,15 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="top"
             />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/linear_layout_for_search_result"
+    android:orientation="vertical"
+    android:visibility="gone"
+    >
 
+</LinearLayout>
 <HorizontalScrollView
     android:id="@+id/hozintalscroolview"
     android:layout_width="match_parent"
@@ -45,15 +54,7 @@
 
         </GridLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycleviewforsearch"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            android:background="@android:color/white"
-            >
 
-        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 </ScrollView>
