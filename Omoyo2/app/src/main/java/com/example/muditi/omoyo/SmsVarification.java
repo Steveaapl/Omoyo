@@ -1,10 +1,15 @@
 package com.example.muditi.omoyo;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.rey.material.app.Dialog;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -31,7 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class SmsVarification extends ActionBarActivity  {
+public class SmsVarification extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.logintextview)
@@ -49,7 +55,9 @@ public class SmsVarification extends ActionBarActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms_varification);
         ButterKnife.bind(this);
-
+        LayoutInflater inflate =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflate.inflate(R.layout.snak_bar_,null);
+        CoordinatorLayout coordinatorLayout = ButterKnife.findById(view,R.id.coordinatorLayout);
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));
@@ -60,6 +68,15 @@ public class SmsVarification extends ActionBarActivity  {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final  Snackbar snackbar =Snackbar.make(findViewById(R.id.card_view),"Hello Snack",Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction("OMOYoo!", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Omoyo.toast("Hello Snack", getApplicationContext());
+                    }
+                });
+                snackbar.setActionTextColor(Color.RED);
+                 snackbar.show();
                  String user_mobile_number = userMobileNumber.getText().toString();
                  if(filterOfMobileNumber(user_mobile_number)){
                     // String message = String.format("Your OTP is %s \n \" Hope The Force Is With You \" ",OTPGenerator());

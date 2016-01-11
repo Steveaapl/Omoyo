@@ -96,6 +96,8 @@ public class firstpage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
+        Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
+        Omoyo.edit=Omoyo.shared.edit();
         context=getApplicationContext();
         mResultReceiver=new AddressResultReceiver(new android.os.Handler());
         googleApiClient=new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -132,9 +134,6 @@ public class firstpage extends Activity {
        .addApi(LocationServices.API).build();
 
        //open();
-
-        Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
-        Omoyo.edit=Omoyo.shared.edit();
         Omoyo.edit.putString("senderId", "MM-OMOYoO");
         Omoyo.edit.commit();
         spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -558,7 +557,8 @@ done.setOnClickListener(new View.OnClickListener() {
         String     mAddressOutput = resultData.getString(Omoyo.RESULT_DATA_KEY);
 
             if (resultCode == Omoyo.SUCCESS_RESULT) {
-                Omoyo.toast("Address:"+mAddressOutput,firstpage.context);
+               Omoyo.edit.putString("GpsLocation",mAddressOutput);
+                Omoyo.edit.commit();
             }
         }
     }

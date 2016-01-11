@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setSubtitleTextColor(Color.WHITE);
         location=Omoyo.shared.getString("area","Modinager")+","+Omoyo.shared.getString("city","Ghaziabad");
-        toolbar.setSubtitle(location);
+        toolbar.setSubtitle(Omoyo.shared.getString("GpsLocation",location));
         toolbar.showOverflowMenu();
         View view=getLayoutInflater().inflate(R.layout.serachbox, null);
         final EditText searchboxedittext=ButterKnife.findById(view, R.id.searchboxedittext);
@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //request for category
-categoryloader();
-adsloader();
+          categoryloader();
+          adsloader();
         //grid layout
     }
 
