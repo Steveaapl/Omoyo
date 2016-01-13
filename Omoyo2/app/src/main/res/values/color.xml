@@ -4,7 +4,7 @@
     <color name="firstpageareaselect">#45000000</color>
     <color name="white">@android:color/white</color>
     <color name="transparent">@android:color/transparent</color>
-
+    <color name="snackbar_back">#FF323232</color>
 
     <color name="bright_pink">#FF007F</color>
     <color name="red">#FF0000</color>

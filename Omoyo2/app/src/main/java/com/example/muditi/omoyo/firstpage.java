@@ -7,14 +7,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Looper;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,10 +25,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import com.rey.material.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.rey.material.widget.ProgressView;
+
+import com.rey.material.widget.ProgressView;
+import com.rey.material.widget.SnackBar;
+import com.rey.material.widget.Spinner;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.ConnectionResult;
@@ -73,24 +79,27 @@ public class firstpage extends Activity {
     @Bind(R.id.spinnerforcity)
     Spinner spinnerforcity;
     @Bind(R.id.processbarfirstpagenetwork)
-    ProgressBar progressbarnetworkcheck;
+    ProgressView progressbarnetworkcheck;
     JSONObject jsonobject;
     JSONArray jsonarray;
     ObjectAnimator areaselectionanimation;
     ArrayList<String> listforcity =new ArrayList<>();
     ArrayList<String> listforarea =new ArrayList<>();
-    String city_id,area_id;
+   private static String city_id,area_id;
     @Bind(R.id.doneselectingarea)
     Button done;
     HashMap<String,String> hash=new HashMap<>();
     @Bind(R.id.gpsLocation)
     FloatingActionButton gpsLocation;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    @Bind(R.id.process_bar_for_button)
+    ProgressView progressView;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 10;
     private static final String TAG = "MainActivity";
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     private Boolean clickForLocation = false;
     private static Context context;
+    private String locationOfUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,32 +112,36 @@ public class firstpage extends Activity {
         googleApiClient=new GoogleApiClient.Builder(getApplicationContext()).addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(Bundle bundle) {
-
+                Log.d("TAG","GoogleApiClient Connected");
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                 if (mLastLocation != null) {
-                    // Determine whether a Geocoder is available.
+                    Log.d("TAG","Lati:"+mLastLocation.getLatitude()+"Longi:"+mLastLocation.getLongitude());
                     if (!Geocoder.isPresent()) {
                         Omoyo.toast("No GeoCoder Avilabe",getApplicationContext());
                         return;
                     }
 
                     if (clickForLocation) {
+                        progressbarnetworkcheck.setVisibility(View.VISIBLE);
                         startServiceLocationAddress();
                     }
 
                     //Omoyo.toast(mLastLocation.getLatitude()+"-"+mLastLocation.getLongitude(),getApplicationContext());
 
                 }
+                else{
+                    Log.d("TAG","Location is null");
+                }
             }
 
             @Override
             public void onConnectionSuspended(int i) {
-
+                Log.d("TAG","GoogleApiClient connection suspended! "+i);
             }
         }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
             @Override
             public void onConnectionFailed(ConnectionResult connectionResult) {
-
+                Log.d("TAG","GoogleApiClient connection failed"+connectionResult.getErrorMessage());
             }
         })
        .addApi(LocationServices.API).build();
@@ -136,38 +149,35 @@ public class firstpage extends Activity {
        //open();
         Omoyo.edit.putString("senderId", "MM-OMOYoO");
         Omoyo.edit.commit();
-        spinnerforarea.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != 0) {
-                    area_id = hash.get(listforarea.get(position));
-                    Omoyo.edit.putString("area", listforarea.get(position));
-                    Omoyo.edit.commit();
-                    Omoyo.check = 1;
-                }
-            }
+       spinnerforarea.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+           @Override
+           public void onItemSelected(Spinner parent, View view, int position, long id) {
+               if (position != 0 && listforarea.size()>0) {
+                   area_id = hash.get(listforarea.get(position));
+                   Omoyo.edit.putString("area", listforarea.get(position));
+                   Omoyo.edit.commit();
+                   Omoyo.check = 1;
+                   progressView.setVisibility(View.GONE);
+                   done.setVisibility(View.VISIBLE);
+                   YoYo.with(Techniques.FadeInLeft).duration(500).playOn(done);
+               }
+           }
+       });
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //  Omoyo.toast("Nothing", getApplicationContext());
-            }
-        });
 
-        spinnerforcity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerforcity.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != 0) {
+            public void onItemSelected(Spinner parent, View view, int position, long id) {
+                if (position != 0 && listforcity.size()>0) {
                     city_id = hash.get(listforcity.get(position));
                     Omoyo.edit.putString("city", listforcity.get(position));
                     Omoyo.edit.commit();
                     arealoader(city_id);
+                    progressbarnetworkcheck.setVisibility(View.VISIBLE);
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
 
             }
+
         });
 done.setOnClickListener(new View.OnClickListener() {
     @Override
@@ -178,12 +188,10 @@ done.setOnClickListener(new View.OnClickListener() {
             Omoyo.edit.putString("city_id", city_id);
             Omoyo.edit.putString("area_id", area_id);
             Omoyo.edit.commit();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+            progressbarnetworkcheck.setVisibility(View.VISIBLE);
+
                     locationloader();
-                }
-            }).start();
+
 
 
         } else {
@@ -217,18 +225,28 @@ done.setOnClickListener(new View.OnClickListener() {
             }
         });
 
-             progressbarnetworkcheck.setProgress(20);
+            // progressbarnetworkcheck.setProgress(20);
 
              cityloader();
 
         gpsLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (googleApiClient.isConnected() && mLastLocation != null) {
-                    startServiceLocationAddress();
-                    //     open();
+                if (googleApiClient.isConnected()) {
+                    if(statusCheck()){
+
+                    }
+                    else {
+                        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                        startServiceLocationAddress();
+                        progressbarnetworkcheck.setVisibility(View.VISIBLE);
+                    }
+
+                    Log.d("TAG", "GoogleApiClient");
                 } else {
                     clickForLocation = true;
+                  //  statusCheck();
+                    Log.d("TAG","GoogleApiClient!");
                 }
             }
         });
@@ -264,7 +282,8 @@ done.setOnClickListener(new View.OnClickListener() {
         return super.onOptionsItemSelected(item);
     }
 
-    public void locationloader(){
+    private void locationloader(){
+        progressbarnetworkcheck.setVisibility(View.VISIBLE);
         OkHttpClient okhttp=new OkHttpClient();
         String json=String.format("{\"city_id\" : \"%s\",\"area_id\" : \"%s\"}", city_id, area_id);
        // Omoyo.toast(json,getApplicationContext());
@@ -278,7 +297,8 @@ done.setOnClickListener(new View.OnClickListener() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Omoyo.toast("Error in the network", getApplicationContext());
+                                      progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+                                      snackBar(3);
                     }
                 });
             }
@@ -293,24 +313,30 @@ done.setOnClickListener(new View.OnClickListener() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Omoyo.toast(Omoyo.shared.getString("ads","f"),getApplicationContext());
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            if (checkPlayServices()) {
-                                if (Omoyo.shared.getBoolean("gcm_token_registered", true)) {
-                                    Intent intent = new Intent(getApplicationContext(), Registrationid.class);
-                                    startService(intent);
-                                } else {
-                                    Omoyo.toast("Registered Already", getApplicationContext());
-                                }
-                            } else {
-                                Omoyo.toast("Service not supported for GCM", getApplicationContext());
-                            }
+                            progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+                           // startActivity(new Intent(context, MainActivity.class));
+                            gcmRegistration();
                             //  Omoyo.toast("Response:"+data,getApplicationContext());
                         }
                     });
                 }
             }
         });
+    }
+
+    private void gcmRegistration(){
+        if (checkPlayServices()) {
+            if (Omoyo.shared.getBoolean("gcm_token_registered", true)) {
+                Intent intent = new Intent(getApplicationContext(), Registrationid.class);
+                intent.putExtra(Omoyo.RECEIVER, mResultReceiver);
+                startService(intent);
+                progressbarnetworkcheck.setVisibility(View.VISIBLE);
+            } else {
+                startActivity(new Intent(context, MainActivity.class));
+            }
+        } else {
+            Omoyo.toast("Service not supported for GCM", getApplicationContext());
+        }
     }
 
     public void arealoader(String city_id){
@@ -327,8 +353,9 @@ done.setOnClickListener(new View.OnClickListener() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        progressbarnetworkcheck.setVisibility(View.INVISIBLE);
-                        Omoyo.toast("Error - In the Network ",getApplicationContext());
+                       progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+                       snackBar(2);
+                    //    Omoyo.toast("Error - In the Network ",getApplicationContext());
                     }
                 });
             }
@@ -344,8 +371,7 @@ done.setOnClickListener(new View.OnClickListener() {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
-                            //progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+                            progressbarnetworkcheck.setVisibility(View.INVISIBLE);
                             try {
                                 jsonarray = new JSONArray(data);
                                 for (int i = 0; i < jsonarray.length(); i++) {
@@ -357,7 +383,6 @@ done.setOnClickListener(new View.OnClickListener() {
                             } catch (JSONException jsonex) {
 
                             }
-
                             //  areaselectionanimation.start();
                             ArrayAdapter adapterforarea = new firstpagespinneradapter("Area", getApplicationContext(), R.layout.firstpagespinnerlayout, listforarea);
                             spinnerforarea.setAdapter(adapterforarea);
@@ -386,8 +411,10 @@ done.setOnClickListener(new View.OnClickListener() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        progressbarnetworkcheck.setVisibility(View.INVISIBLE);
-                        Omoyo.toast("Error - In the Network ",getApplicationContext());
+                       progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+                        snackBar(1);
+                        Omoyo.InternetCheck=false;
+                       // Omoyo.toast("Error - In the Network ",getApplicationContext());
                     }
                 });
             }
@@ -396,6 +423,7 @@ done.setOnClickListener(new View.OnClickListener() {
             public void onResponse(Response response) throws IOException {
                 listforcity.add("city");
                 if(response.isSuccessful()) {
+                    Omoyo.InternetCheck=true;
                     final String data = response.body().string();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -475,16 +503,16 @@ done.setOnClickListener(new View.OnClickListener() {
     }
 
 
-    public void statusCheck()
+    public Boolean statusCheck()
     {
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
         if ( !manager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) {
             buildAlertMessageNoGps();
-
+            return true;
         }
-
-
+else
+        return false;
     }
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -517,7 +545,8 @@ done.setOnClickListener(new View.OnClickListener() {
         super.onStop();
     }
  private  void startServiceLocationAddress(){
-
+     linearlayoutforlocation.setVisibility(View.INVISIBLE);
+     progressbarnetworkcheck.setVisibility(View.VISIBLE);
      Intent intent = new Intent(this, AddressOfUserByGPS.class);
 
    //  String mResultReceiverObject=new Gson().toJson(mResultReceiver);
@@ -543,9 +572,9 @@ done.setOnClickListener(new View.OnClickListener() {
         super.onResume();
     }
 
-    static class AddressResultReceiver extends ResultReceiver implements Parcelable {
+     class AddressResultReceiver extends ResultReceiver implements Parcelable {
 
-         static   Parcelable.Creator CREATOR;
+         Parcelable.Creator CREATOR;
 
         public AddressResultReceiver(android.os.Handler handler) {
             super(handler);
@@ -554,12 +583,101 @@ done.setOnClickListener(new View.OnClickListener() {
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-        String     mAddressOutput = resultData.getString(Omoyo.RESULT_DATA_KEY);
-
             if (resultCode == Omoyo.SUCCESS_RESULT) {
-               Omoyo.edit.putString("GpsLocation",mAddressOutput);
-                Omoyo.edit.commit();
+              //  Omoyo.toast(resultData.getString("fromWhereCode"),getApplicationContext());
+                progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+                if(resultData.getString("fromWhereCode").equals("0")) {
+                    String     mAddressOutput = resultData.getString(Omoyo.RESULT_DATA_KEY);
+                  //  Omoyo.toast(mAddressOutput, getApplicationContext());
+                    try{
+                        JSONObject jsonObject =new JSONObject(mAddressOutput);
+                        if(jsonObject.getString("success").equals("1")){
+                            city_id = jsonObject.getString("city_id");
+                            area_id = jsonObject.getString(("area_id"));
+                            Omoyo.edit.putString("GpsLocation",jsonObject.getString("location"));
+                            Omoyo.edit.commit();
+                            locationloader();
+                        }
+                        if(jsonObject.getString("success").equals("0")){
+                            locationOfUser=jsonObject.getString("location");
+                            snackBar(404);
+                        }
+                    }
+                    catch(JSONException ex){
+
+                    }
+                }
+                if(resultData.getString("fromWhereCode").equals("1")){
+                  //  Omoyo.toast("Done",getApplicationContext());
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                }
+            }
+            else{
+              //Omoyo.toast("Not Done",getApplicationContext());
+                Log.d("TAG","FAILURE");
+                if(resultData.getString("fromWhereCode").equals("0"))
+                {
+                    Log.d("TAG","FAILURE in side");
+                      snackBar(4);
+                }
+                if(resultData.getString("fromWhereCode").equals("1"))
+                {
+                     snackBar(5);
+                }
             }
         }
+    }
+
+    private  void snackBar(final int i){
+        progressbarnetworkcheck.setVisibility(View.INVISIBLE);
+        final Snackbar snackbar =Snackbar.make(findViewById(R.id.relativelayout_parent_first_page), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
+        final View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.snackbar_back));
+        final TextView textView =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_text);
+        final TextView textViewAction =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_action);
+        textView.setTextColor(Color.WHITE);
+        snackbar.setText(R.string.internet_not_available);
+        snackbar.setAction(getResources().getString(R.string.try_again), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressbarnetworkcheck.setVisibility(View.VISIBLE);
+                switch (i) {
+                    case 1:
+                        cityloader();
+                        break;
+                    case 2:
+                        arealoader(city_id);
+                        break;
+                    case 3:
+                        locationloader();
+                        break;
+                    case 4:
+                        startServiceLocationAddress();
+                        break;
+                    case 5:
+                        gcmRegistration();
+                        break;
+                    case 404:
+                        break;
+                    default:
+                        cityloader();
+                }
+            }
+        });
+        if(i==404)
+        {
+            snackbar.setText(locationOfUser);
+            textViewAction.setText(R.string.location_not_supported);
+            snackbar.setDuration(Snackbar.LENGTH_LONG);
+            linearlayoutforlocation.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.ZoomIn).duration(500).playOn(linearlayoutforlocation);
+        }
+        if(i==4 && Omoyo.InternetCheck){
+            linearlayoutforlocation.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.ZoomIn).duration(500).playOn(linearlayoutforlocation);
+        }
+        snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+        if(Omoyo.InternetCheck || i==1)
+        snackbar.show();
     }
 }

@@ -21,6 +21,7 @@ import java.util.ArrayList;
  * Created by muditi on 04-12-2015.
  */
 public class Omoyo {
+    public static boolean InternetCheck=true;
     public static  int check=0;
     public static int widthofscreen;
     public static int heightofscreen;
@@ -30,6 +31,7 @@ public class Omoyo {
     public static String currentShopId;
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
+    public static  int fromWhereCode=0;
     public static final String PACKAGE_NAME =
             "com.example.muditi.omoyo";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";

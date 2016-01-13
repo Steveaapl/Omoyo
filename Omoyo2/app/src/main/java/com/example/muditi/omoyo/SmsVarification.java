@@ -1,5 +1,6 @@
 package com.example.muditi.omoyo;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.design.widget.CoordinatorLayout;
@@ -57,7 +58,6 @@ public class SmsVarification extends AppCompatActivity {
         ButterKnife.bind(this);
         LayoutInflater inflate =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflate.inflate(R.layout.snak_bar_,null);
-        CoordinatorLayout coordinatorLayout = ButterKnife.findById(view,R.id.coordinatorLayout);
         toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));

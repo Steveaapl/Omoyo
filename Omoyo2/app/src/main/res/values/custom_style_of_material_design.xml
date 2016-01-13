@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CircularProgress">
+        <item name="cpd_padding">0dp</item>
+        <item name="cpd_initialAngle">0</item>
+        <item name="cpd_maxSweepAngle">270</item>
+        <item name="cpd_minSweepAngle">1</item>
+        <item name="cpd_strokeSize">4dp</item>
+        <item name="cpd_strokeColors">@array/rainbow</item>
+        <item name="cpd_strokeSecondaryColor">@android:color/transparent</item>
+        <item name="cpd_reverse">false</item>
+        <item name="cpd_rotateDuration">1000</item>
+        <item name="cpd_transformDuration">600</item>
+        <item name="cpd_keepDuration">200</item>
+        <item name="cpd_transformInterpolator">@android:anim/decelerate_interpolator</item>
+        <item name="pv_progressMode">indeterminate</item>
+        <item name="cpd_inAnimDuration">0</item>
+        <item name="cpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
+    </style>
+
+    <style name="SnackBar">
+        <item name="sb_backgroundColor">@color/snackbar_back</item>
+        <item name="sb_backgroundCornerRadius">0dp</item>
+        <item name="sb_horizontalPadding">24dp</item>
+        <item name="sb_verticalPadding">0dp</item>
+        <item name="sb_width">match_parent</item>
+        <item name="sb_height">48dp</item>
+        <item name="sb_textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="sb_textColor">#FFFFFFFF</item>
+        <item name="sb_ellipsize">middle</item>
+        <item name="sb_actionTextAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="sb_actionTextColor">?attr/colorPrimary</item>
+        <item name="sb_actionText">@string/try_again</item>
+        <item name="sb_text">@string/internet_not_available</item>
+        <item name="sb_actionRipple">@style/Material.Drawable.Ripple.Wave</item>
+        <item name="sb_inAnimation">@anim/abc_slide_in_bottom</item>
+        <item name="sb_outAnimation">@anim/abc_slide_out_bottom</item>
+        <item name="sb_removeOnDismiss">true</item>
+    </style>
+
+    <style name="LinearProgress">
+        <item name="lpd_maxLineWidth">75%</item>
+        <item name="lpd_minLineWidth">10%</item>
+        <item name="lpd_strokeSize">4dp</item>
+        <item name="lpd_strokeColors">@array/rainbow</item>
+        <item name="lpd_strokeSecondaryColor">?attr/colorControlNormal</item>
+        <item name="lpd_reverse">false</item>
+        <item name="lpd_travelDuration">1000</item>
+        <item name="lpd_transformDuration">600</item>
+        <item name="lpd_keepDuration">200</item>
+        <item name="lpd_transformInterpolator">@android:anim/decelerate_interpolator</item>
+        <item name="pv_progressMode">indeterminate</item>
+        <item name="lpd_inAnimDuration">@android:integer/config_mediumAnimTime</item>
+        <item name="lpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
+        <item name="lpd_verticalAlign">bottom</item>
+    </style>
+
+</resources>

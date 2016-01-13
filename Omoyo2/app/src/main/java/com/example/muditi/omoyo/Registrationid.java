@@ -3,8 +3,11 @@ package com.example.muditi.omoyo;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmPubSub;
@@ -29,7 +32,7 @@ import java.io.IOException;
 public class Registrationid extends IntentService {
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
-
+    protected ResultReceiver mReceiver;
     public Registrationid() {
         super(TAG);
     }
@@ -39,12 +42,21 @@ public class Registrationid extends IntentService {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
+            mReceiver = intent.getParcelableExtra(Omoyo.RECEIVER);
+
+
+            if (mReceiver == null) {
+                Log.wtf(TAG, "No receiver received. There is nowhere to send the results.");
+                return;
+            }
 
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_appid),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
             Log.i(TAG, "GCM Registration Token: " + token);
+
+
 
           //  Omoyo.toast("Token is :" + token, getApplicationContext());
 
@@ -84,12 +96,13 @@ public class Registrationid extends IntentService {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-
+                deliverResultToReceiver(Omoyo.FAILURE_RESULT);
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                      if(response.isSuccessful()){
+                         deliverResultToReceiver(Omoyo.SUCCESS_RESULT);
                                               Log.d("RESPONCE",response.body().string());
                                       }
             }
@@ -113,4 +126,12 @@ public class Registrationid extends IntentService {
             pubSub.subscribe(token, "/topics/" + topic, null);
         }
     }
+
+    private void deliverResultToReceiver(int resultCode) {
+        Bundle bundle = new Bundle();
+        Omoyo.fromWhereCode=1;
+        bundle.putString("fromWhereCode",""+String.valueOf(Omoyo.fromWhereCode));
+        mReceiver.send(resultCode, bundle);
+    }
+
 }

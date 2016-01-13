@@ -65,7 +65,7 @@ Context context;
             textView.setText(data.get(position));
         if(position==0){
             textView.setTextSize((float)(0.1));
-textView.setVisibility(View.INVISIBLE);
+            textView.setVisibility(View.INVISIBLE);
         }
         else{
             textView.setTextSize(25);
@@ -77,8 +77,8 @@ textView.setVisibility(View.INVISIBLE);
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflate=(LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view=inflate.inflate(id,parent,false);
-        LinearLayout linear=ButterKnife.findById(view, R.id.parentoflayout);
-        linear.setBackgroundResource(R.drawable.firstpagespinnerround);
+      //  LinearLayout linear=ButterKnife.findById(view, R.id.parentoflayout);
+      //  linear.setBackgroundResource(R.drawable.firstpagespinnerround);
         if(position!=0 )
         {
             TextView textView=ButterKnife.findById(view,R.id.spinnertext);
@@ -87,8 +87,7 @@ textView.setVisibility(View.INVISIBLE);
         }
         else{
 
-                    TextView textView = ButterKnife.findById(view, R.id.spinnertext);
-                    textView.setText("Select Your " + this.wht);
+
 
           //  Omoyo.toast(position+"else:"+Omoyo.spinnerfirstpagecheck,context);
 

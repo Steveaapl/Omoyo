@@ -10,6 +10,16 @@ import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,43 +71,78 @@ public class AddressOfUserByGPS extends IntentService {
             addresses = geocoder.getFromLocation(
                     location.getLatitude(),
                     location.getLongitude(),
-
                     1);
-        } catch (IOException ioException) {
 
+
+            if (addresses == null || addresses.size()  == 0) {
+                if (errorMessage.isEmpty()) {
+                    errorMessage = "No address found";
+                    Log.e(TAG, errorMessage);
+                }
+                deliverResultToReceiver(Omoyo.FAILURE_RESULT, errorMessage);
+            } else {
+                Address address = addresses.get(0);
+                ArrayList<String> addressFragments = new ArrayList<String>();
+                StringBuffer stringBuffer =new StringBuffer();
+                for(int i = 0; i < address.getMaxAddressLineIndex(); i++)
+                {
+                    stringBuffer.append(address.getAddressLine(i) + " ");
+
+                }
+                //  String locationOfUser=TextUtils.join(System.getProperty("line.separator"), addressFragments);
+                gettingUserLocation(stringBuffer.toString());
+
+            }
+
+        } catch (IOException ioException) {
             errorMessage = "Service not found";
+            deliverResultToReceiver(Omoyo.FAILURE_RESULT,errorMessage );
             Log.e(TAG, errorMessage, ioException);
         } catch (IllegalArgumentException illegalArgumentException) {
 
             errorMessage = "Invalide Latitude and Longitude";
+            deliverResultToReceiver(Omoyo.FAILURE_RESULT,errorMessage);
             Log.e(TAG, errorMessage + ". " +
                     "Latitude = " + location.getLatitude() +
                     ", Longitude = " + location.getLongitude(), illegalArgumentException);
         }
 
 
-        if (addresses == null || addresses.size()  == 0) {
-            if (errorMessage.isEmpty()) {
-                errorMessage = "No address found";
-                Log.e(TAG, errorMessage);
-            }
-            deliverResultToReceiver(Omoyo.FAILURE_RESULT, errorMessage);
-        } else {
-            Address address = addresses.get(0);
-            ArrayList<String> addressFragments = new ArrayList<String>();
-
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                addressFragments.add(address.getAddressLine(i));
-            }
-                   Log.i(TAG,"Address Found");
-                   deliverResultToReceiver(Omoyo.SUCCESS_RESULT,
-                   TextUtils.join(System.getProperty("line.separator"), addressFragments));
-        }
     }
 
     private void deliverResultToReceiver(int resultCode, String message) {
         Bundle bundle = new Bundle();
         bundle.putString(Omoyo.RESULT_DATA_KEY, message);
+        Omoyo.fromWhereCode=0;
+        bundle.putString("fromWhereCode",String.valueOf(Omoyo.fromWhereCode));
         mReceiver.send(resultCode, bundle);
     }
+
+    private void gettingUserLocation(final String locationThroughGPS){
+        String json = String.format("{\"location\" : \"%s\"}",locationThroughGPS);
+        OkHttpClient okhttp=new OkHttpClient();
+        MediaType JSON
+                = MediaType.parse("application/json; charset=utf-8");
+        RequestBody requestbody=RequestBody.create(JSON,json);
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/locationthroughgps/").post(requestbody).build();
+        Call call = okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                deliverResultToReceiver(Omoyo.FAILURE_RESULT,"Error occured"
+                );
+                Log.d("TAG","Error:"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                           if(response.isSuccessful()){
+                               String data = response.body().string();
+                               deliverResultToReceiver(Omoyo.SUCCESS_RESULT,data
+                               );
+                           }
+            }
+        });
+    }
+
 }

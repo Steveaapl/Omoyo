@@ -33,6 +33,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.rey.material.app.Dialog;
+import com.rey.material.app.TimePickerDialog;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -73,10 +75,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        materialDialog();
         Display display=getWindowManager().getDefaultDisplay();
         Omoyo.screendisplay=display;
-       // recycleViewForSearch.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-      //  listViewForSearch.setAdapter(new search_result_base_adapter(getApplicationContext()));
         Omoyo.widthofscreen=display.getWidth();
         Omoyo.heightofscreen=display.getHeight();
         Omoyo.edit.putInt("widthOfDevice",display.getWidth());
@@ -547,13 +548,12 @@ private  void queryResponse(String query){
                     public void run() {
                         try {
                             JSONArray jsonArray = new JSONArray(data);
-                            for(int i=0 ; i<jsonArray.length();i++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
                                 View view = inflate.inflate(R.layout.include_for_search, null);
                                 linear_layout_for_search.addView(view);
                             }
-                        }
-                        catch(JSONException jsonException){
+                        } catch (JSONException jsonException) {
 
                         }
                     }
@@ -562,5 +562,8 @@ private  void queryResponse(String query){
         }
     });
 }
-
+private void materialDialog(){
+    TimePickerDialog dialog =new TimePickerDialog(getApplicationContext());
+    dialog.show();
+}
 }
