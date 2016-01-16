@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="user_name">Hello Folks</string>
+    <string name="user_address">126 Ashwamedh nagartaramandal road gorkhpur</string>
+    <string name="user_contact_number">9897433253</string>
+    <string name="number_of_alert">2</string>
+    <string name="welcome">Welcome</string>
+    <string name="enter_user_name">User Name</string>
+    <string name="enter_user_email_address">Email Address</string>
+</resources>

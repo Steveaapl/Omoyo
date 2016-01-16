@@ -47,4 +47,20 @@
     <string name="title_activity_search">Search</string>
     <string name="searchHint">Search  items and  shops </string>
     <string name="searchLabel">Search</string>
+    <string name="are_you_a_shop">Are you a shop </string>
+    <string name="favourites">Favourites</string>
+    <string name="call_log">Call Log</string>
+    <string name="messsge_log">Message Log</string>
+    <string name="notification_point">Notification Point</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="help">Help</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="submit_query">Submit Query</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="social_connections">Social Connections</string>
+    <string name="who_we_are">Who We Are</string>
+    <string name="our_ambitious_ambition">Our Ambition</string>
+    <string name="offers">Offer\'s</string>
+    <string name="open_of_navigation_view_slider">Open</string>
+    <string name="close_of_navigation_view_slider">Close</string>
 </resources>

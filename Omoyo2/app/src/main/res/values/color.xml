@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="appcolor">#00b5ad</color>
+    <color name="appcolor">#26C281</color>
     <color name="firstpageareaselect">#45000000</color>
     <color name="white">@android:color/white</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="snackbar_back">#FF323232</color>
-
     <color name="bright_pink">#FF007F</color>
     <color name="red">#FF0000</color>
     <color name="orange">#FF7F00</color>
@@ -19,18 +18,29 @@
     <color name="violet">#7F00FF</color>
     <color name="magenta">#FF00FF</color>
 
+    <color name="madang">#C8F7C5</color>
+    <color name="lynch">#6C7A89</color>
+    <color name="plum">#913D88</color>
+    <color name="chestnut">#D24D57</color>
+    <color name="pomegrante">#F22613</color>
+    <color name="thunderbird">#D91E18</color>
+    <color name="oldbrick">#96281B</color>
+    <color name="flamingo">#EF4836</color>
+    <color name="valencia">#D64541</color>
+    <color name="tallypoppy">#C0392B</color>
+    <color name="monza">#CF000F</color>
+    <color name="cinnabar">#E74C3C</color>
+    <color name="razzmatazz">#DB0A5B</color>
+    <color name="sunsetorange">#F64747</color>
+    <color name="royalblue">#4183D7</color>
+    <color name="aliceblue">#E4F1FE</color>
+    <color name="ebonyclay">#22313F</color>
+    <color name="waxflower">#F1A9A0</color>
+    <color name="junglegreen">#26C281</color>
     <array name="rainbow">
-        <item>@color/bright_pink</item>
-        <item>@color/red</item>
-        <item>@color/orange</item>
-        <item>@color/yellow</item>
-        <item>@color/chartreuse</item>
-        <item>@color/green</item>
-        <item>@color/spring_green</item>
-        <item>@color/cyan</item>
-        <item>@color/azure</item>
-        <item>@color/blue</item>
-        <item>@color/violet</item>
-        <item>@color/magenta</item>
+        <item>@color/white</item>
+    </array>
+    <array name="rainbow1">
+        <item>@color/junglegreen</item>
     </array>
 </resources>

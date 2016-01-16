@@ -62,7 +62,7 @@ public class Registrationid extends IntentService {
 
             Omoyo.edit.putString("gcm_token", token);
             Omoyo.edit.commit();
-            Omoyo.edit.putBoolean("gcm_token_registered",false);
+            Omoyo.edit.putBoolean("gcm_token_flag",false);
             Omoyo.edit.commit();
 
             sendRegistrationToServer(token);
@@ -87,7 +87,7 @@ public class Registrationid extends IntentService {
             JSONObject jsonObject = new JSONObject(Omoyo.shared.getString("location", defaultlocation));
             final String location_id=jsonObject.getString("location_id");
         OkHttpClient okhttp=new OkHttpClient();
-        String json = String.format("{\"token_number\" : \"%s\",\"location_id\" : \"%s\"}", token,location_id);
+        String json = String.format("{\"token_number\" : \"%s\"}",token);
         final MediaType JSON
                 = MediaType.parse("application/json; charset=utf-8");
         RequestBody requestbody=RequestBody.create(JSON, json);

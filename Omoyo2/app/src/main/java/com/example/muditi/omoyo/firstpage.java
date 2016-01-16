@@ -2,6 +2,7 @@ package com.example.muditi.omoyo;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
 import android.support.design.widget.FloatingActionButton;
@@ -23,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import com.rey.material.widget.Button;
 import android.widget.LinearLayout;
@@ -31,8 +32,6 @@ import android.widget.TextView;
 
 import com.rey.material.widget.ProgressView;
 
-import com.rey.material.widget.ProgressView;
-import com.rey.material.widget.SnackBar;
 import com.rey.material.widget.Spinner;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -45,7 +44,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
@@ -61,11 +59,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Handler;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import okio.BufferedSink;
 
 
 public class firstpage extends Activity {
@@ -105,6 +101,7 @@ public class firstpage extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firstpage);
         ButterKnife.bind(this);
+        statusBarBackColor();
         Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
         Omoyo.edit=Omoyo.shared.edit();
         context=getApplicationContext();
@@ -326,16 +323,18 @@ done.setOnClickListener(new View.OnClickListener() {
 
     private void gcmRegistration(){
         if (checkPlayServices()) {
-            if (Omoyo.shared.getBoolean("gcm_token_registered", true)) {
+            if (Omoyo.shared.getBoolean("gcm_token_flag", true)) {
                 Intent intent = new Intent(getApplicationContext(), Registrationid.class);
                 intent.putExtra(Omoyo.RECEIVER, mResultReceiver);
                 startService(intent);
                 progressbarnetworkcheck.setVisibility(View.VISIBLE);
             } else {
                 startActivity(new Intent(context, MainActivity.class));
+                overridePendingTransition(R.anim.activity_transition_forword_in,R.anim.activity_transition_forword_out);
             }
         } else {
             Omoyo.toast("Service not supported for GCM", getApplicationContext());
+            
         }
     }
 
@@ -640,7 +639,6 @@ else
         snackbar.setAction(getResources().getString(R.string.try_again), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressbarnetworkcheck.setVisibility(View.VISIBLE);
                 switch (i) {
                     case 1:
                         cityloader();
@@ -658,9 +656,10 @@ else
                         gcmRegistration();
                         break;
                     case 404:
+                        Log.d("Nothing","No");
                         break;
                     default:
-                        cityloader();
+                       Log.d("Nothing","No");
                 }
             }
         });
@@ -680,4 +679,18 @@ else
         if(Omoyo.InternetCheck || i==1)
         snackbar.show();
     }
+
+    @TargetApi(21)
+    private void statusBarBackColor(){
+        Log.d("TAG",Build.VERSION.SDK_INT+"");
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)
+        getWindow().setStatusBarColor(getResources().getColor(R.color.appcolor));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
+    }
+
 }

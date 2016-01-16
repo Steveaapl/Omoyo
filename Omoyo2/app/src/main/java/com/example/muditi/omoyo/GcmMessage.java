@@ -16,12 +16,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.gcm.GcmListenerService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -33,14 +37,20 @@ public class GcmMessage extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
-        //final Handler mainThread = new Handler(getApplicationContext().getMainLooper());
-        String offerDescription = data.getString("offerDescription");
-        String offerPosterUri=data.getString("offerPosterUri");
-        String offerTitle=data.getString("offerTitle");
-        String offerContent=data.getString("offerContent");
-     // Omoyo.toast("Message:"+message,getApplicationContext());
-        sendNotification(offerDescription,offerPosterUri,offerContent,offerTitle);
-     // Omoyo.toast("From:"+from,getApplicationContext());
+        Omoyo.shared=getSharedPreferences("omoyo", Context.MODE_PRIVATE);
+        Omoyo.edit=Omoyo.shared.edit();
+        try{
+            JSONObject jsonObject = new JSONObject(data.getString("data"));
+            JSONObject jsonObjectForData = jsonObject.getJSONObject("data");
+            if(jsonObject.getString("type_of").equals("1")){
+                Log.d("TAGFORGCM",jsonObjectForData.toString());
+                Omoyo.edit.putString("user_id", jsonObjectForData.getString("token_id"));
+                Omoyo.edit.commit();
+            }
+        }
+        catch(JSONException jsonex){
+
+        }
         if (from.startsWith("/topics/")){
             // message received from some topic.
         } else {

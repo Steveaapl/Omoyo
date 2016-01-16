@@ -22,6 +22,7 @@ import java.util.ArrayList;
  */
 public class Omoyo {
     public static boolean InternetCheck=true;
+    public static int Request_Code =1;
     public static  int check=0;
     public static int widthofscreen;
     public static int heightofscreen;

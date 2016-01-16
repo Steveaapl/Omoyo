@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+<android.support.design.widget.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:layout_marginTop="15dp"
+    android:hint="@string/enter_user_name"
+    android:id="@+id/text_input_view_for_user_name"
+    app:hintTextAppearance="@style/text_input_view_hint_appearence"
+    >
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_view_for_user_name"
+        android:textSize="15dp"
+        android:textColor="@android:color/background_dark"
+        android:hint="@string/enter_user_name"
+        android:singleLine="true"
+        android:inputType="textPersonName"
+        />
+</android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="15dp"
+        android:hint="@string/enter_user_email_address"
+        android:id="@+id/text_input_view_for_user_email_address"
+        app:hintTextAppearance="@style/text_input_view_hint_appearence"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_view_for_user_email"
+            android:textSize="15dp"
+            android:textColor="@android:color/background_dark"
+            android:hint="@string/enter_user_email_address"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <com.rey.material.widget.Button
+        android:id="@+id/doneenteringdata"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        app:rd_enable="true"
+        android:layout_gravity="center_horizontal|top"
+        android:gravity="center_horizontal|top"
+        android:text="@string/done"
+        android:textSize="30sp"
+        android:background="@drawable/user_name_enter_buttom_layout"
+        android:visibility="visible"
+        android:textAppearance="@style/text_appearence_for_button_on_user_name_dialog"
+        android:textColor="@android:color/white"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="2">
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/process_bar_for_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:pv_circular="false"
+            app:pv_autostart="true"
+            app:pv_progressStyle="@style/LinearProgress"
+            app:lpd_strokeColor="@array/rainbow"
+            app:lpd_verticalAlign="center"
+            app:pv_progressMode="indeterminate"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center_horizontal|center_vertical"
+            android:visibility="visible"
+            />
+    </LinearLayout>
+
+</LinearLayout>

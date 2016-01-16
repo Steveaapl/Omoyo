@@ -56,8 +56,6 @@ import butterknife.ButterKnife;
 public class subshopcategory extends ActionBarActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.slidemenu)
-    ListView slidemenu;
     @Bind(R.id.hozintalscroolview)
     HorizontalScrollView horizontalscrollview;
     @Bind(R.id.drawerlayout)
@@ -96,32 +94,6 @@ public class subshopcategory extends ActionBarActivity {
         });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        slidemenu.setAdapter(new slidemenuadapter(getApplicationContext()));
-        slidemenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    startActivity(new Intent(getApplicationContext(), shoppage.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-                if (position == 1) {
-                    startActivity(new Intent(getApplicationContext(), shoplist.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-                if (position == 2) {
-                    startActivity(new Intent(getApplicationContext(), subshopcategory.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-                if (position == 3) {
-                    startActivity(new Intent(getApplicationContext(), firstpage.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
-                }
-            }
-        });
-        //request for category
-       // categoryloader();
-        //adsloader();
-        //grid layout
 
         if(Omoyo.shared.contains("ads")){
          //   Omoyo.toast("contains ads",getApplicationContext());

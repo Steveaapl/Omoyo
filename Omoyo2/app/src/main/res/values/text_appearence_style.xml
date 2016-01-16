@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="item_view_of_navigation_view_style">
+        <item name="android:textSize">20dp</item>
+        <item name="android:gravity">center_horizontal|center_vertical</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+<style name="text_input_view_hint_appearence">
+    <item name="android:textColor">@color/appcolor</item>
+    <item name="android:textSize">15dp</item>
+</style>
+    <style name="text_appearence_for_button_on_user_name_dialog">
+        <item name="android:gravity">center_horizontal|center_vertical</item>
+        <item name="android:text">@string/done</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

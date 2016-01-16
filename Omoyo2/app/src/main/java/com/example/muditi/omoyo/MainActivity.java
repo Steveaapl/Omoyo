@@ -1,19 +1,26 @@
 package com.example.muditi.omoyo;
 
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -21,10 +28,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -33,6 +42,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.pkmmte.view.CircularImageView;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.TimePickerDialog;
 import com.squareup.okhttp.Call;
@@ -45,16 +66,18 @@ import com.squareup.okhttp.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements dialog_class.DialogListener{
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.slidemenu)
-    ListView slidemenu;
     @Bind(R.id.hozintalscroolview)
     HorizontalScrollView horizontalscrollview;
     @Bind(R.id.drawerlayout)
@@ -67,15 +90,17 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout linear_layout_for_search;
     @Bind(R.id.parentScrollView)
     ScrollView scrollView ;
-    String location;
+    @Bind(R.id.navigation_view)
+    NavigationView navigation_view;
+    String location,temp_user_name , temp_user_email;
     int count;
     boolean query_submit_check=false;
+    CircularImageView circularImageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        materialDialog();
         Display display=getWindowManager().getDefaultDisplay();
         Omoyo.screendisplay=display;
         Omoyo.widthofscreen=display.getWidth();
@@ -102,16 +127,81 @@ public class MainActivity extends AppCompatActivity {
         });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        slidemenu.setAdapter(new slidemenuadapter(getApplicationContext()));
-        slidemenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerlayout,toolbar,
+                R.string.open_of_navigation_view_slider, R.string.close_of_navigation_view_slider){
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    startActivity(new Intent(getApplicationContext(),SmsVarification.class));
-                    drawerlayout.closeDrawer(Gravity.LEFT);
+            public void onDrawerClosed(View drawerView) {
+
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+
+        drawerlayout.setDrawerListener(actionBarDrawerToggle);
+
+
+        actionBarDrawerToggle.syncState();
+
+
+        navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch(id){
+
                 }
+                return true;
             }
         });
+
+        int headerCount =navigation_view.getHeaderCount();
+        if(headerCount>0){
+            Log.d("TAG", "HEADER_OF_NAVI");
+            View navigation_viewHeaderView = navigation_view.getHeaderView(0);
+            navigation_viewHeaderView.setBackgroundColor(getResources().getColor(R.color.appcolor));
+            circularImageView = ButterKnife.findById(navigation_viewHeaderView,R.id.circular_image_view_for_dialog_header_user_profile);
+            if(Omoyo.shared.contains("userProfileImage")){
+                byte[] decodedByte = Base64.decode(Omoyo.shared.getString("userProfileImage","1"), 0);
+                Bitmap bit = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                circularImageView.setImageBitmap(bit);
+            }
+            circularImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            Omoyo.Request_Code);
+
+                }
+            });
+            ImageView image_view_for_user_name_edit = ButterKnife.findById(navigation_viewHeaderView,R.id.image_view_for_user_name_edit);
+            image_view_for_user_name_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog_class dialog =  new dialog_class();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("type_of", 1);
+                    dialog.setArguments(bundle);
+                    dialog.show(getSupportFragmentManager(), "Hello");
+
+                }
+            });
+
+        }
+
         //request for category
           categoryloader();
           adsloader();
@@ -119,6 +209,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Omoyo.Request_Code && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                bitmap.recycle();;
+                bitmap=null;
+                byte[] b = baos.toByteArray();
+                String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+                Omoyo.edit.putString("userProfileImage",imageEncoded);
+                Omoyo.edit.commit();
+                byte[] decodedByte = Base64.decode(imageEncoded, 0);
+                Bitmap bit = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                circularImageView.setImageBitmap(bit);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+        @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -562,8 +680,85 @@ private  void queryResponse(String query){
         }
     });
 }
-private void materialDialog(){
-    TimePickerDialog dialog =new TimePickerDialog(getApplicationContext());
-    dialog.show();
-}
+
+    private class UriSerializer implements JsonSerializer<Uri> {
+        public JsonElement serialize(Uri src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.toString());
+        }
+    }
+
+   private  class UriDeserializer implements JsonDeserializer<Uri> {
+        @Override
+        public Uri deserialize(final JsonElement src, final Type srcType,
+                               final JsonDeserializationContext context) throws JsonParseException {
+            return Uri.parse(src.getAsString());
+        }
+    }
+
+    @Override
+    public void onSubmitOfUserData(DialogFragment dialog, String user_name, String user_email) {
+        temp_user_email=user_email;
+        temp_user_name=user_name;
+        saveUserDataToServer();
+    }
+
+    public void saveUserDataToServer(){
+        OkHttpClient okhttp=new OkHttpClient();
+        String json=String.format("{\"user_id\" : \"%s\",\"user_name\" : \"%s\",\"user_email\" : \"%s\"}",Omoyo.shared.getString("user_id","1007"),temp_user_name,temp_user_email);
+        final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+        RequestBody requestbody=RequestBody.create(JSON, json);
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/userNameDataEntry/").post(requestbody).build();
+        Call call=okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        snackBar();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                   if(response.isSuccessful()){
+                       final String data = response.body().string();
+                         runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                  Log.d("TAG",data);
+                             }
+                         });
+                   }
+            }
+        });
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
+    }
+
+    private  void snackBar(){
+        final Snackbar snackbar =Snackbar.make(findViewById(R.id.drawerlayout), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
+        final View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.snackbar_back));
+        final TextView textView =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_text);
+        final TextView textViewAction =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_action);
+        textView.setTextColor(Color.WHITE);
+        snackbar.setText(R.string.internet_not_available);
+        snackbar.setAction(getResources().getString(R.string.try_again), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                             saveUserDataToServer();
+            }
+        });
+        snackbar.setDuration(Snackbar.LENGTH_LONG);
+        textViewAction.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+        snackbar.show();
+    }
+
 }
