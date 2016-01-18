@@ -51,13 +51,23 @@
 
 </LinearLayout>
         <LinearLayout
+            android:id="@+id/linear_layout_for_offer_upload_click"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/royalblue"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             >
-
+<TextView
+    android:layout_width="match_parent"
+    android:id="@+id/text_view_for_offer_upload_click"
+    android:layout_height="match_parent"
+    android:textColor="@color/white"
+    android:textSize="20dp"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:gravity="center_horizontal|center_vertical"
+    android:visibility="gone"
+    />
         </LinearLayout>
         <ImageView
             android:id="@+id/image_view_for_cross"

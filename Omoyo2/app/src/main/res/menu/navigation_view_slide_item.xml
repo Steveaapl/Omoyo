@@ -17,7 +17,7 @@
         android:checked="false"
         android:icon="@mipmap/ic_launcher"
         android:title="@string/are_you_a_shop"
-
+        android:checkable="true"
         />
     <item
         android:id="@+id/favourites"

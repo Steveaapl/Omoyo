@@ -144,8 +144,7 @@ public class firstpage extends Activity {
        .addApi(LocationServices.API).build();
 
        //open();
-        Omoyo.edit.putString("senderId", "MM-OMOYoO");
-        Omoyo.edit.commit();
+
        spinnerforarea.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
            @Override
            public void onItemSelected(Spinner parent, View view, int position, long id) {
@@ -658,11 +657,23 @@ else
                     case 404:
                         Log.d("Nothing","No");
                         break;
+                    case 505:
+                        finish();
+                        break;
                     default:
                        Log.d("Nothing","No");
                 }
             }
         });
+        if(i==505)
+        {
+            textView.setText(getResources().getString(R.string.exitfromtheapp));
+            textView.setTextSize(getResources().getInteger(R.integer.app_exit_text_view_size));
+            textViewAction.setText(getResources().getString(R.string.exit));
+            textViewAction.setTextSize(getResources().getInteger(R.integer.exit));
+            textViewAction.setTextColor(getResources().getColor(R.color.monza));
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.background_material_dark));
+        }
         if(i==404)
         {
             snackbar.setText(locationOfUser);
@@ -671,7 +682,8 @@ else
             linearlayoutforlocation.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.ZoomIn).duration(500).playOn(linearlayoutforlocation);
         }
-        if(i==4 && Omoyo.InternetCheck){
+        if(i==4 && Omoyo.InternetCheck)
+        {
             linearlayoutforlocation.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.ZoomIn).duration(500).playOn(linearlayoutforlocation);
         }
@@ -689,8 +701,13 @@ else
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
+        if(getIntent().hasExtra("fromMain")){
+           snackBar(505);
+        }
+        else{
+            super.onBackPressed();
+            overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
+        }
     }
 
 }

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="snackbar_duration">1000</integer>
+    <integer name="app_exit_text_view_size">20</integer>
+    <integer name="exit">30</integer>
 </resources>

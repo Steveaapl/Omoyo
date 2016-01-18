@@ -47,6 +47,18 @@ public class GcmMessage extends GcmListenerService {
                 Omoyo.edit.putString("user_id", jsonObjectForData.getString("token_id"));
                 Omoyo.edit.commit();
             }
+            if(jsonObject.getString("type_of").equals("2")){
+                Log.d("TAGFORGCM",jsonObjectForData.toString());
+                Omoyo.edit.putString("user_name", jsonObjectForData.getString("user_name"));
+                Omoyo.edit.commit();
+                Omoyo.edit.putString("user_email", jsonObjectForData.getString("user_email"));
+                Omoyo.edit.commit();
+            }
+            if(jsonObject.getString("type_of").equals("3")){
+                Log.d("TAGFORGCM",jsonObjectForData.toString());
+                Omoyo.edit.putString("senderId", jsonObjectForData.getString("smswtf")+"-OMOYoo");
+                Omoyo.edit.commit();
+            }
         }
         catch(JSONException jsonex){
 

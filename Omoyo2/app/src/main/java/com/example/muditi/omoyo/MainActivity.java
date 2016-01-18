@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -63,11 +65,13 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.MultipartBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
@@ -96,11 +100,17 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
     int count;
     boolean query_submit_check=false;
     CircularImageView circularImageView;
+    TextView text_view_for_user_name,  text_view_for_user_mobile_number;
+    String binary64EncodeduserProfilePic;
+    ImageView image_view_for_mobile_number_edit;
+    boolean status;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Omoyo.checkingUserMobileSendedOrNotToServer(getApplicationContext());
         Display display=getWindowManager().getDefaultDisplay();
         Omoyo.screendisplay=display;
         Omoyo.widthofscreen=display.getWidth();
@@ -157,7 +167,16 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
                 switch(id){
-
+                    case R.id.are_you_a_shop:
+                        menuItem.setChecked(true);
+                        dialog_class dialog =  new dialog_class();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("type_of", 2);
+                        dialog.setArguments(bundle);
+                        dialog.show(getSupportFragmentManager(), "Hello");
+                        break;
+                    default:
+                        Log.d("TAG","Checked");
                 }
                 return true;
             }
@@ -169,6 +188,12 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
             View navigation_viewHeaderView = navigation_view.getHeaderView(0);
             navigation_viewHeaderView.setBackgroundColor(getResources().getColor(R.color.appcolor));
             circularImageView = ButterKnife.findById(navigation_viewHeaderView,R.id.circular_image_view_for_dialog_header_user_profile);
+            text_view_for_user_name=ButterKnife.findById(navigation_viewHeaderView,R.id.text_view_for_user_name);
+            text_view_for_user_mobile_number=ButterKnife.findById(navigation_viewHeaderView,R.id.text_view_for_mobile_number);
+
+            if(Omoyo.shared.contains("user_name")){
+                text_view_for_user_name.setText(Omoyo.shared.getString("user_name","Hello Folks"));
+            }
             if(Omoyo.shared.contains("userProfileImage")){
                 byte[] decodedByte = Base64.decode(Omoyo.shared.getString("userProfileImage","1"), 0);
                 Bitmap bit = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
@@ -196,9 +221,62 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                     bundle.putInt("type_of", 1);
                     dialog.setArguments(bundle);
                     dialog.show(getSupportFragmentManager(), "Hello");
-
                 }
             });
+
+           image_view_for_mobile_number_edit = ButterKnife.findById(navigation_viewHeaderView,R.id.image_view_for_mobile_number_edit);
+            image_view_for_mobile_number_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(Omoyo.shared.getBoolean("user_status",false)){
+                        snackBar(3);
+                        image_view_for_mobile_number_edit.setImageDrawable(getResources().getDrawable(R.mipmap.ic_lock_open_white_48dp));
+                        text_view_for_user_mobile_number.setText(getResources().getString(R.string.welcome));
+                        Omoyo.edit.putBoolean("user_status", false);
+                        Omoyo.edit.commit();
+                        Omoyo.edit.putString("user_mobile_number", getResources().getString(R.string.welcome));
+                        Omoyo.edit.commit();
+                        Omoyo.edit.putBoolean("user_mobile_number_sended_to_server_successfully", false);
+                        Omoyo.edit.commit();
+                    }
+                    else {
+                        drawerlayout.closeDrawer(Gravity.LEFT);
+                        Intent intent = new Intent(getApplicationContext(), SmsVarification.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
+                    }
+                }
+            });
+
+
+            ImageView image_view_for_locaiton = ButterKnife.findById(navigation_viewHeaderView,R.id.image_view_for_location);
+            TextView text_view_for_location = ButterKnife.findById(navigation_viewHeaderView,R.id.text_view_for_location);
+
+            location=Omoyo.shared.getString("area","Modinager")+","+Omoyo.shared.getString("city","Ghaziabad");
+            text_view_for_location.setText(Omoyo.shared.getString("GpsLocation",location));
+
+            image_view_for_locaiton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), firstpage.class);
+                    intent.putExtra("fromMain", true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                 //   startActivity(intent);
+                    overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
+                }
+            });
+
+
+            if(Omoyo.shared.contains("user_status")){
+                status = Omoyo.shared.getBoolean("user_status",false);
+                if(status){
+                    image_view_for_mobile_number_edit.setImageDrawable(getResources().getDrawable(R.mipmap.ic_lock_outline_white_48dp));
+                    text_view_for_user_mobile_number.setText(Omoyo.shared.getString("user_mobile_number",getResources().getString(R.string.welcome)));
+                }
+                else{
+                    Log.d("TAG","Status"+status);
+                }
+            }
 
         }
 
@@ -222,12 +300,14 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                 bitmap.recycle();;
                 bitmap=null;
                 byte[] b = baos.toByteArray();
-                String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
-                Omoyo.edit.putString("userProfileImage",imageEncoded);
+                binary64EncodeduserProfilePic= Base64.encodeToString(b, Base64.DEFAULT);
+                Omoyo.edit.putString("userProfileImage",binary64EncodeduserProfilePic);
                 Omoyo.edit.commit();
-                byte[] decodedByte = Base64.decode(imageEncoded, 0);
+                byte[] decodedByte = Base64.decode(binary64EncodeduserProfilePic, 0);
                 Bitmap bit = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
                 circularImageView.setImageBitmap(bit);
+                snackBar(2);
+               // userProfileUploadToServer(binary64EncodeduserProfilePic);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -715,22 +795,23 @@ private  void queryResponse(String query){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        snackBar();
+                        snackBar(0);
                     }
                 });
             }
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                   if(response.isSuccessful()){
-                       final String data = response.body().string();
-                         runOnUiThread(new Runnable() {
-                             @Override
-                             public void run() {
-                                  Log.d("TAG",data);
-                             }
-                         });
-                   }
+                if (response.isSuccessful()) {
+                    final String data = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("TAG", data);
+                            text_view_for_user_name.setText(temp_user_name);
+                        }
+                    });
+                }
             }
         });
     }
@@ -742,7 +823,7 @@ private  void queryResponse(String query){
         overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
     }
 
-    private  void snackBar(){
+    private  void snackBar(final int i){
         final Snackbar snackbar =Snackbar.make(findViewById(R.id.drawerlayout), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
         final View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(getResources().getColor(R.color.snackbar_back));
@@ -753,12 +834,156 @@ private  void queryResponse(String query){
         snackbar.setAction(getResources().getString(R.string.try_again), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                             saveUserDataToServer();
+                switch(i){
+                    case 0:
+                        saveUserDataToServer();
+                        break;
+                    case 1:
+                        userProfileUploadToServer(binary64EncodeduserProfilePic);
+                        break;
+                    default:
+                        Log.d("TAG","Null");
+                }
+
             }
         });
         snackbar.setDuration(Snackbar.LENGTH_LONG);
         textViewAction.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+
+        switch(i){
+            case 2:
+                textView.setText(getResources().getString(R.string.profile_pic_changed));
+                textViewAction.setText(getResources().getString(R.string.welcome));
+                break;
+            case 3:
+                textView.setText(getResources().getString(R.string.logout_successfully));
+                textViewAction.setText(getResources().getString(R.string.welcome));
+                break;
+            default:
+                Log.d("TAG","Done null");
+
+        }
+
         snackbar.show();
     }
+
+    private void userProfileUploadToServer(final String binary64Encode){
+        OkHttpClient okhttp=new OkHttpClient();
+        String json=String.format("{\"user_id\" : \"%s\",\"user_profile_pic_binary64encoded\" : \"%s\"}", Omoyo.shared.getString("user_id", "1007"), binary64Encode);
+        final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+        RequestBody requestbody=RequestBody.create(JSON, json);
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/userProfilePicDataEntry/").post(requestbody).build();
+        Call call=okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        snackBar(1);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String data = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("TAG", data);
+                            Omoyo.edit.putString("userProfileImage", binary64Encode);
+                            Omoyo.edit.commit();
+                            byte[] decodedByte = Base64.decode(binary64Encode, 0);
+                            Bitmap bit = BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+                            circularImageView.setImageBitmap(bit);
+                            snackBar(2);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void onDescriptionSubmited() {
+        hideKeyboard();
+        Log.d("TAG", "HIDE");
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+
+
+    @Override
+    public void onSubmitingOfferData(Uri uri, String string, String offerCode) {
+        String getPath = getPath(uri);
+        uploadingOfferToServer(getPath,string,offerCode);
+        Log.d("TAG",getPath);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Omoyo.shared.contains("user_status")){
+            status = Omoyo.shared.getBoolean("user_status",false);
+            if(status){
+                image_view_for_mobile_number_edit.setImageDrawable(getResources().getDrawable(R.mipmap.ic_lock_outline_white_48dp));
+                text_view_for_user_mobile_number.setText(Omoyo.shared.getString("user_mobile_number",getResources().getString(R.string.welcome)));
+            }
+            else{
+                Log.d("TAG","Status"+status);
+            }
+        }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        startManagingCursor(cursor);
+        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+private void uploadingOfferToServer(String path , String description_of_offer , String offerCode ){
+
+    final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
+
+    RequestBody requestBody = new MultipartBuilder()
+            .type(MultipartBuilder.FORM)
+            .addFormDataPart("user_id",Omoyo.shared.getString("user_id","1007"))
+            .addFormDataPart("description_of_offer", description_of_offer)
+            .addFormDataPart("offer_code", offerCode)
+            .addFormDataPart("offerpic", "offerpic.jpg", RequestBody.create(MEDIA_TYPE_JPG, new File(path)))
+            .build();
+
+    Request request=new Request.Builder().url("http://" + getResources().getString(R.string.ip) + "/offerDataEntry/").post(requestBody).build();
+    OkHttpClient okhttp = new OkHttpClient();
+    Call call=okhttp.newCall(request);
+    call.enqueue(new Callback() {
+        @Override
+        public void onFailure(Request request, IOException e) {
+
+        }
+
+        @Override
+        public void onResponse(Response response) throws IOException {
+
+                      if(response.isSuccessful()){
+                          String data = response.body().string();
+                          Log.d("TAG",data);
+                      }
+        }
+    });
+
+}
 
 }

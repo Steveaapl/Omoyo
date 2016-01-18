@@ -2,9 +2,26 @@
 <resources>
     <string name="user_name">Hello Folks</string>
     <string name="user_address">126 Ashwamedh nagartaramandal road gorkhpur</string>
-    <string name="user_contact_number">9897433253</string>
+    <string name="user_contact_number">Welcome</string>
     <string name="number_of_alert">2</string>
     <string name="welcome">Welcome</string>
     <string name="enter_user_name">User Name</string>
     <string name="enter_user_email_address">Email Address</string>
+    <string name="profile_pic_changed">Profile Picture Changed</string>
+    <string name="invalide_mobile_number">Invaide Mobile Number</string>
+    <string name="varifing">Varifing ...</string>
+    <string name="varified">Varified</string>
+    <string name="alreadyvarified">Yours SmartPhone is Already Varified</string>
+    <string name="logout_successfully">Logout Successfully</string>
+    <string name="exitfromtheapp">Want to Exit From OMOYoo !</string>
+    <string name="exit">Exit!</string>
+    <string name="offer_upload">Upload Pic Of Offer</string>
+    <string name="image_view_of_offer_upload_content_description">Image of the offer</string>
+    <string name="edit_view_hint_for_offer_upload">Please Enter the description of the offer </string>
+    <string name="text_for_offer_upload">Send To Us</string>
+    <string name="description_of_offer">Description  your offer </string>
+    <string name="atlest_50_character_description_of_offer">Atleast</string>
+    <string name="say_something_atleast">Describe in atleast 50 letter</string>
+    <string name="contact_us_after_submiting">Thanks for your work , Contact Us after submiting your Offer </string>
+    <string name="submit_your_offer">Submit Your Offer</string>
 </resources>

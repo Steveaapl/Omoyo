@@ -1,20 +1,29 @@
 package com.example.muditi.omoyo;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsMessage;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
@@ -22,8 +31,10 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.rey.material.app.Dialog;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -47,45 +58,64 @@ public class SmsVarification extends AppCompatActivity {
     CardView cardView;
     @Bind(R.id.next)
     LinearLayout next;
-    @Bind(R.id.mobilenumberofuser)
-    EditText userMobileNumber;
+    @Bind(R.id.text_input_view_for_user_mobile_number)
+    TextInputLayout text_input_view_for_user_mobile_number;
+    @Bind(R.id.image_view_for_sms_varification)
+    ImageView image_view_for_sms_varification;
+    @Bind(R.id.text_view_for_next_in_sms_varification)
+    TextView text_view_for_next_in_sms_varification ;
+    OTPSMSReceiverBroadCast otp;
     ArrayList<Character> filterList=new ArrayList<Character>();
+    String user_mobile_number;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms_varification);
         ButterKnife.bind(this);
-        LayoutInflater inflate =(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflate.inflate(R.layout.snak_bar_,null);
-        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
+
+        toolbar.setNavigationIcon(R.mipmap.ic_keyboard_backspace_white_48dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                Omoyo.toast("Clicked",getApplicationContext());
+            }
+        });
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setSubtitleTextColor(Color.WHITE);
-        toolbar.showOverflowMenu();
         setSupportActionBar(toolbar);
+        //BroadCast
+        otp = new OTPSMSReceiverBroadCast();
+        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        registerReceiver(otp,filter);
+
         filterArrayFill();
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final  Snackbar snackbar =Snackbar.make(findViewById(R.id.card_view),"Hello Snack",Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("OMOYoo!", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Omoyo.toast("Hello Snack", getApplicationContext());
-                    }
-                });
-                snackbar.setActionTextColor(Color.RED);
-                 snackbar.show();
-                 String user_mobile_number = userMobileNumber.getText().toString();
+                 user_mobile_number = text_input_view_for_user_mobile_number.getEditText().getText().toString();
                  if(filterOfMobileNumber(user_mobile_number)){
-                    // String message = String.format("Your OTP is %s \n \" Hope The Force Is With You \" ",OTPGenerator());
-                  //   Omoyo.toast(message,getApplicationContext());
-                    sendVarificationSms(user_mobile_number);
+
+                     if(Omoyo.shared.getBoolean("user_status",false)){
+                              snackBar(0);
+                     }
+                     else {
+                         hideKeyboard();
+                         text_input_view_for_user_mobile_number.setErrorEnabled(false);
+                         text_input_view_for_user_mobile_number.setHint("");
+                         image_view_for_sms_varification.setImageDrawable(getResources().getDrawable(R.mipmap.ic_autorenew_white_48dp));
+                         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.dialog_box_cross_rotation);
+                         image_view_for_sms_varification.setAnimation(animation);
+                         text_view_for_next_in_sms_varification.setText(getResources().getString(R.string.varifing));
+
+                         sendVarificationSms(user_mobile_number);
+                     }
                  }
                 else {
+                     text_input_view_for_user_mobile_number.setError(getResources().getString(R.string.invalide_mobile_number));
                      YoYo.with(Techniques.Pulse).duration(100).playOn(findViewById(R.id.card_view));
-                     Omoyo.toast("Fill Valide Mobile Number Sir/Mam",getApplicationContext());
                  }
             }
         });
@@ -123,7 +153,8 @@ public class SmsVarification extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Omoyo.toast("Error : " + e.getMessage(), getApplicationContext());
+                       // Omoyo.toast("Error : " + e.getMessage(), getApplicationContext());
+                        snackBar(1);
                     }
                 });
             }
@@ -135,7 +166,8 @@ public class SmsVarification extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Omoyo.toast(data, getApplicationContext());
+                         Log.d("TAG",data);
+                         //   Omoyo.toast(data, getApplicationContext());
                         }
                     });
                 }
@@ -149,7 +181,7 @@ public class SmsVarification extends AppCompatActivity {
 
         String mobiles = userMobileNumber;
 
-        String senderId = "OMOYoO";
+        String senderId = "OMOYoo";
 
         String message = String.format("Your OTP is .%s. \n \" Hope The Force Is With You \" ",OTPGenerator());
      //    Omoyo.toast(message,getApplicationContext());
@@ -165,7 +197,7 @@ public class SmsVarification extends AppCompatActivity {
         sbPostData.append("&mobiles="+mobiles);
         sbPostData.append("&message="+encoded_message);
         sbPostData.append("&route="+route);
-        sbPostData.append("&sender="+senderId);
+        sbPostData.append("&sender=" + senderId);
 
         mainUrl = sbPostData.toString();
 
@@ -195,7 +227,7 @@ public class SmsVarification extends AppCompatActivity {
                 random=tmp.substring(0,tmp.length());
             }
         }
-        Omoyo.edit.putString("OTPGenerated",random);
+        Omoyo.edit.putString("OTPGenerated", random);
         Omoyo.edit.commit();
         return random;
 
@@ -224,4 +256,124 @@ public class SmsVarification extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
+    }
+
+    private class OTPSMSReceiverBroadCast  extends BroadcastReceiver {
+        private  String SMS_BUNDLE="pdus",address,messageBody;
+        private Context context;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            this.context=context;
+           // Omoyo.toast("1777",context);
+            Omoyo.shared=context.getSharedPreferences("omoyo", Context.MODE_PRIVATE);
+            Omoyo.edit=Omoyo.shared.edit();
+            Bundle smsBundle = intent.getExtras();
+            if(smsBundle != null){
+                Object[] sms = (Object[])smsBundle.get(SMS_BUNDLE);
+
+                for (int i = 0; i < sms.length; ++i) {
+                    SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) sms[i]);
+                    messageBody= smsMessage.getMessageBody().toString();
+                    address = smsMessage.getOriginatingAddress();
+                 //    Omoyo.toast("Message:"+messageBody+"Length:"+messageBody.length(),context);
+                }
+                if(varifivationOfSenderId(address))
+                {
+                   //  Omoyo.toast("1",context);
+                    String  OTPCodeReceived = messageBody.substring(13,18);
+                    //  Omoyo.toast("OTP:"+OTPCodeReceived + "Length:"+OTPCodeReceived.length(),context);
+                    if(loginCheck(OTPCodeReceived))
+                    {
+                                       image_view_for_sms_varification.clearAnimation();
+                                       image_view_for_sms_varification.setImageDrawable(getResources().getDrawable(R.mipmap.ic_check_circle_white_48dp));
+                                       text_view_for_next_in_sms_varification.setText(getResources().getString(R.string.varified));
+                                       Omoyo.edit.putBoolean("user_status", true);
+                                       Omoyo.edit.commit();
+                                       Omoyo.edit.putString("user_mobile_number", user_mobile_number);
+                                       Omoyo.edit.commit();
+                                       Omoyo.sendMobileNumberToServer(getApplicationContext(),user_mobile_number);
+                    }
+                    else
+                    {
+                        //     Omoyo.toast("Login Unsuccessful :" + OTPCodeReceived ,context);
+                    }
+
+                }
+                else
+                {
+                    //Some other Source Sms Received
+                }
+            }
+        }
+
+        private Boolean varifivationOfSenderId(String senderId){
+            if(Omoyo.shared.getString("senderId","HP-OMOYoo").equals(senderId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private Boolean loginCheck(String OTPCodeReceived){
+            if(OTPCodeReceived.equals(Omoyo.shared.getString("OTPGenerated","OTPGenerated")))
+                return true;
+
+            else
+                return  false;
+
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(otp);
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+    private  void snackBar(final int i){
+        final Snackbar snackbar =Snackbar.make(findViewById(R.id.drawerlayout), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
+        final View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.snackbar_back));
+        final TextView textView =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_text);
+        final TextView textViewAction =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_action);
+        textView.setTextColor(Color.WHITE);
+        snackbar.setText(R.string.alreadyvarified);
+        snackbar.setAction(getResources().getString(R.string.welcome), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (i == 1) {
+                    sendVarificationSms(user_mobile_number);
+                }
+            }
+        });
+        snackbar.setDuration(Snackbar.LENGTH_LONG);
+        textViewAction.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+        if(i==1){
+            textViewAction.setText(getResources().getString(R.string.try_again));
+            textView.setText(getResources().getString(R.string.internet_not_available));
+        }
+        snackbar.show();
+    }
+
+
+
 }

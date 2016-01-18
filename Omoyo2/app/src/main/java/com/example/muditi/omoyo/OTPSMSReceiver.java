@@ -34,6 +34,8 @@ private static String SMS_BUNDLE="pdus",address,messageBody;
                  if(loginCheck(OTPCodeReceived))
                  {
                          //    Omoyo.toast("Login Successful",context);
+
+
                  }
                  else
                  {
@@ -43,7 +45,7 @@ private static String SMS_BUNDLE="pdus",address,messageBody;
                  }
             else
              {
-                 Omoyo.toast("2",context);
+          //Some other Source Sms Received
                  }
         }
     }
