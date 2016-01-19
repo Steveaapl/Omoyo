@@ -54,13 +54,16 @@
     <string name="notification_point">Notification Point</string>
     <string name="subscribe">Subscribe</string>
     <string name="help">Help</string>
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">Contact</string>
     <string name="submit_query">Submit Query</string>
     <string name="rate_us">Rate Us</string>
-    <string name="social_connections">Social Connections</string>
+    <string name="social_connections">Social Media</string>
     <string name="who_we_are">Who We Are</string>
     <string name="our_ambitious_ambition">Our Ambition</string>
     <string name="offers">Offer\'s</string>
     <string name="open_of_navigation_view_slider">Open</string>
     <string name="close_of_navigation_view_slider">Close</string>
+    <string name="title_activity_help">Help</string>
+    <string name="title_activity_help_description">HelpDescriptionActivity</string>
+    <string name="title_activity_license">License</string>
 </resources>

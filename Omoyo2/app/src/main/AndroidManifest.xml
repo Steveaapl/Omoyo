@@ -10,7 +10,10 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -31,9 +34,10 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
-            android:configChanges="orientation|screenSize|keyboardHidden"
             android:name=".firstpage"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,27 +47,29 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            >
-            <intent-filter >
-                <action android:name="android.intent.action.SEARCH"/>
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/search"/>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/search" />
         </activity>
         <activity
             android:name=".shoppage"
-            android:label="@string/title_activity_shoppage"></activity>
+            android:label="@string/title_activity_shoppage" />
         <activity
             android:name=".shoplist"
-            android:label="@string/title_activity_shoplist"></activity>
+            android:label="@string/title_activity_shoplist" />
         <activity
             android:name=".subshopcategory"
-            android:label="@string/title_activity_subshopcategory"></activity>
+            android:label="@string/title_activity_subshopcategory" />
 
         <service
             android:name=".GcmMessage"
@@ -104,9 +110,7 @@
 
         <activity
             android:name=".SmsVarification"
-            android:label="@string/title_activity_sms_varification"></activity>
-
-
+            android:label="@string/title_activity_sms_varification" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -116,10 +120,19 @@
             android:name=".Search"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
-            android:noHistory="true"
-            >
-
-        </activity>
+            android:noHistory="true" />
+        <activity
+            android:name=".Help"
+            android:label="@string/title_activity_help"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".HelpDescriptionActivity"
+            android:label="@string/title_activity_help_description"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".License"
+            android:label="@string/title_activity_license"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

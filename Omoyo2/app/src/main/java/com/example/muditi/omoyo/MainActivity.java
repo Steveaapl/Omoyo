@@ -20,6 +20,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
@@ -93,8 +95,10 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
     TextView text_view_for_user_name,  text_view_for_user_mobile_number;
     String binary64EncodeduserProfilePic;
     ImageView image_view_for_mobile_number_edit;
+    String path_of_offer_upload_pic_file,description_of_offer_upload,code_of_offer_uploadede;
     boolean status;
-
+    dialog_class dialog;
+    Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,12 +163,18 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                 switch(id){
                     case R.id.are_you_a_shop:
                         menuItem.setChecked(true);
-                        dialog_class dialog =  new dialog_class();
-                        Bundle bundle = new Bundle();
+                        dialog =  new dialog_class();
+                        bundle = new Bundle();
                         bundle.putInt("type_of", 2);
                         dialog.setArguments(bundle);
                         dialog.show(getSupportFragmentManager(), "Hello");
                         break;
+                    case R.id.help:
+                        menuItem.setChecked(true);
+                        drawerlayout.closeDrawer(Gravity.LEFT);
+                        Intent intent = new Intent(getApplicationContext(), Help.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
                     default:
                         Log.d("TAG","Checked");
                 }
@@ -831,6 +841,12 @@ private  void queryResponse(String query){
                     case 1:
                         userProfileUploadToServer(binary64EncodeduserProfilePic);
                         break;
+                    case 4:
+                        uploadingOfferToServer(path_of_offer_upload_pic_file,description_of_offer_upload,code_of_offer_uploadede);
+                        break ;
+                    case 5:
+                        makeCallToOMOYoo();
+                        break;
                     default:
                         Log.d("TAG","Null");
                 }
@@ -847,6 +863,16 @@ private  void queryResponse(String query){
                 break;
             case 3:
                 textView.setText(getResources().getString(R.string.logout_successfully));
+                textViewAction.setText(getResources().getString(R.string.welcome));
+                break;
+            case 5:
+                textView.setText("Successfully submited /n OFFER CODE - "+ code_of_offer_uploadede );
+                textViewAction.setText(getResources().getString(R.string.contact_us));
+                snackbar.setDuration(Snackbar.LENGTH_INDEFINITE);
+                break;
+            case 6:
+                textView.setText(getResources().getString(R.string.submiting)+"  ...");
+                textView.setTextSize(30);
                 textViewAction.setText(getResources().getString(R.string.welcome));
                 break;
             default:
@@ -915,9 +941,12 @@ private  void queryResponse(String query){
 
     @Override
     public void onSubmitingOfferData(Uri uri, String string, String offerCode) {
-        String getPath = getPath(uri);
-        uploadingOfferToServer(getPath,string,offerCode);
-        Log.d("TAG",getPath);
+        path_of_offer_upload_pic_file= getPath(uri);
+        description_of_offer_upload = string;
+        code_of_offer_uploadede = offerCode;
+        snackBar(6);
+        uploadingOfferToServer(path_of_offer_upload_pic_file,description_of_offer_upload,code_of_offer_uploadede);
+        Log.d("TAG",path_of_offer_upload_pic_file);
     }
 
     @Override
@@ -961,19 +990,45 @@ private void uploadingOfferToServer(String path , String description_of_offer , 
     call.enqueue(new Callback() {
         @Override
         public void onFailure(Request request, IOException e) {
-
+            snackBar(4);
         }
 
         @Override
         public void onResponse(Response response) throws IOException {
 
-                      if(response.isSuccessful()){
-                          String data = response.body().string();
-                          Log.d("TAG",data);
-                      }
+            if (response.isSuccessful()) {
+                String data = response.body().string();
+                Log.d("TAG", data);
+                snackBar(5);
+            }
         }
     });
 
 }
+
+    private void makeCallToOMOYoo(){
+
+        CallToOMOYooStateListener phoneListener = new CallToOMOYooStateListener();
+        TelephonyManager telephonyManager =
+                (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(phoneListener,PhoneStateListener.LISTEN_CALL_STATE);
+        try {
+            String uri = "tel:"+Omoyo.shared.getString("OMOYoo_contact_number","100");
+            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
+            startActivity(callIntent);
+        }catch(Exception e) {
+            Log.d("TAG","Error:"+e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    private class CallToOMOYooStateListener extends android.telephony.PhoneStateListener{
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            super.onCallStateChanged(state, incomingNumber);
+            Log.d("TAGFORCALL",incomingNumber+"STATEOFCALL "+state);
+        }
+    }
 
 }

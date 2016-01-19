@@ -186,12 +186,15 @@ public class dialog_class extends DialogFragment {
                     linear_layout_for_offer_upload_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                               dialogListener.onSubmitingOfferData(Omoyo.uri,Omoyo.offer_description,Omoyo.generatedOfferCode);
+                              alertDialog.cancel();
                     }
                 });
 
                 linear_layout_for_enter_child.addView(view_for_child);
+                break;
+            case 3:
+
                 break;
             default:
                 Log.d("TAG", "Child Attached !");

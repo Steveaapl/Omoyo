@@ -24,4 +24,12 @@
     <string name="say_something_atleast">Describe in atleast 50 letter</string>
     <string name="contact_us_after_submiting">Thanks for your work , Contact Us after submiting your Offer </string>
     <string name="submit_your_offer">Submit Your Offer</string>
+    <string name="submiting">Submiting </string>
+    <string name="about">About</string>
+    <string name="faq">FAQ</string>
+    <string name="version_of_app">Version 1.0</string>
+    <string name="copy_right" translatable="true"> \u00A9 2016 OMOYoo Inc.</string>
+    <string name="all_right_reserved">All right reserved.</string>
+    <string name="licenses">LICENSES</string>
+    <string name="loaded_soon">FAQ will be loaded soon</string>
 </resources>

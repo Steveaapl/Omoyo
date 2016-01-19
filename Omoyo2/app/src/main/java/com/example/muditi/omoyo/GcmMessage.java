@@ -55,8 +55,23 @@ public class GcmMessage extends GcmListenerService {
                 Omoyo.edit.commit();
             }
             if(jsonObject.getString("type_of").equals("3")){
-                Log.d("TAGFORGCM",jsonObjectForData.toString());
+                Log.d("TAGFORGCM", jsonObjectForData.toString());
                 Omoyo.edit.putString("senderId", jsonObjectForData.getString("smswtf")+"-OMOYoo");
+                Omoyo.edit.commit();
+            }
+            if(jsonObject.getString("type_of").equals("4")){
+                Log.d("TAGFORGCM", jsonObjectForData.toString());
+                Omoyo.edit.putString("OMOYoo_contact_number", jsonObjectForData.getString("contact_number_of_OMOYoo"));
+                Omoyo.edit.commit();
+            }
+            if(jsonObject.getString("type_of").equals("5")){
+                Log.d("TAGFORGCM", jsonObjectForData.toString());
+                Omoyo.edit.putString("license_description", jsonObjectForData.getString("license_description"));
+                Omoyo.edit.commit();
+            }
+            if(jsonObject.getString("type_of").equals("6")){
+                Log.d("TAGFORGCM", jsonObjectForData.toString());
+                Omoyo.edit.putString("data_for_faq", jsonObjectForData.getJSONArray("data_for_faq").toString());
                 Omoyo.edit.commit();
             }
         }

@@ -47,29 +47,12 @@
         android:title="@string/notification_point"
         app:actionLayout="@layout/navigation_view_cutom_item_view"
         />
-    <item
-        android:id="@+id/subscribe"
-        android:checked="false"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/subscribe"
-        />
+
     <item
         android:id="@+id/help"
         android:checked="false"
         android:icon="@mipmap/ic_launcher"
         android:title="@string/help"
-        />
-    <item
-        android:id="@+id/contact_us"
-        android:checked="false"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/contact_us"
-        />
-    <item
-        android:id="@+id/submit_query"
-        android:checked="false"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/submit_query"
         />
     <item
         android:id="@+id/rate_us"
