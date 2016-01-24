@@ -37,18 +37,23 @@
         <item name="android:src">@mipmap/ic_launcher</item>
 
     </style>
-<style name="about" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:title">About</item>
-</style>
+
+    <style name="about" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:title">About</item>
+    </style>
+
     <style name="faq" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:title">FAQ</item>
     </style>
+
     <style name="contact_us" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:title">Contact us</item>
     </style>
+
     <style name="submit_query" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:title">Submit Query</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

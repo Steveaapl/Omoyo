@@ -113,6 +113,10 @@ public class firstpage extends Activity {
                 mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                 if (mLastLocation != null) {
                     Log.d("TAG","Lati:"+mLastLocation.getLatitude()+"Longi:"+mLastLocation.getLongitude());
+                    Omoyo.edit.putFloat("latitude", (float)mLastLocation.getLatitude());
+                    Omoyo.edit.commit();
+                    Omoyo.edit.putFloat("longitude", (float)mLastLocation.getLongitude());
+                    Omoyo.edit.commit();
                     if (!Geocoder.isPresent()) {
                         Omoyo.toast("No GeoCoder Avilabe",getApplicationContext());
                         return;
@@ -397,6 +401,10 @@ done.setOnClickListener(new View.OnClickListener() {
 
 
     public void cityloader() {
+
+        progressbarnetworkcheck.setVisibility(View.VISIBLE);
+
+
         OkHttpClient okhttp = new OkHttpClient();
 
         Request request=new Request.Builder().url("http://" + getResources().getString(R.string.ip) + "/getcity/").build();

@@ -9,7 +9,6 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     card_view:cardElevation="2dp"
-    android:layout_marginBottom="3dp"
     card_view:cardCornerRadius="2dp"
     card_view:cardBackgroundColor="@color/appcolor"
     card_view:backgroundTint="@color/appcolor"
@@ -20,6 +19,32 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/text_view_for_shop_id"
+            android:layout_gravity="center_horizontal|left"
+            android:gravity="center_horizontal|left"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/text_view_for_product_id"
+            android:layout_gravity="center_horizontal|left"
+            android:gravity="center_horizontal|left"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:layout_width="0dp"

@@ -8,14 +8,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatEditText;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -25,17 +24,26 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.rey.material.widget.Button;
+import com.rey.material.widget.Slider;
+import com.rey.material.widget.Spinner;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,9 +68,12 @@ public class dialog_class extends DialogFragment {
     public DialogListener dialogListener;
     public  ViewFlipper view_flipper_for_offer_upload ;
     public boolean view_flipper_status = false;
+    private int distance=0 ;
+    private String category;
+    Bundle bundle;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
+        bundle = getArguments();
         int type_of = bundle.getInt("type_of");
         pattern = Pattern.compile(EMAIL_PATTERN);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -71,6 +82,7 @@ public class dialog_class extends DialogFragment {
         alertDialog.getWindow().setGravity(Gravity.TOP | Gravity.CENTER_VERTICAL);
         LayoutInflater inflater = (LayoutInflater)getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view =inflater.inflate(R.layout.dialog_layout, null);
+        TextView text_view_for_welcome_in_dialog = ButterKnife.findById(view,R.id.text_view_for_welcome_in_dialog);
         LinearLayout linear_layout_for_enter_child =ButterKnife.findById(view,R.id.linear_layout_for_dialog_child_insert);
         ImageView image_view_for_cross = ButterKnife.findById(view, R.id.image_view_for_cross);
         Animation animation = AnimationUtils.loadAnimation(getActivity(),R.anim.dialog_box_cross_rotation);
@@ -182,7 +194,6 @@ public class dialog_class extends DialogFragment {
                         }
                     }
                 });
-
                     linear_layout_for_offer_upload_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -190,11 +201,196 @@ public class dialog_class extends DialogFragment {
                               alertDialog.cancel();
                     }
                 });
-
                 linear_layout_for_enter_child.addView(view_for_child);
                 break;
             case 3:
+                inflate = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view_for_child = inflate.inflate(R.layout.social_media_layout, null);
+                ImageView circular_image_view_for_facebook = ButterKnife.findById(view_for_child,R.id.circular_image_view_for_facebook);
+                ImageView circular_image_view_for_twitter = ButterKnife.findById(view_for_child,R.id.circular_image_view_for_twitter);
+                ImageView circular_image_view_for_pinterest = ButterKnife.findById(view_for_child,R.id.circular_image_view_for_pinterest);
+                ImageView circular_image_view_for_google = ButterKnife.findById(view_for_child,R.id.circular_image_view_for_google);
+                ImageView circular_image_view_for_instagram = ButterKnife.findById(view_for_child,R.id.circular_image_view_for_instagram);
+                ImageView circular_image_view_for_blog = ButterKnife.findById(view_for_child,R.id.circular_image_view_for_blog);
+                circular_image_view_for_facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://" + getResources().getString(R.string.facebook_page_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+                circular_image_view_for_twitter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+getResources().getString(R.string.facebook_page_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+                circular_image_view_for_pinterest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+getResources().getString(R.string.pinterest_page_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+                circular_image_view_for_google.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+getResources().getString(R.string.google_page_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+                circular_image_view_for_instagram.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://"+getResources().getString(R.string.instagram_page_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+                circular_image_view_for_blog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+getResources().getString(R.string.blog_page_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+                linear_layout_for_enter_child.addView(view_for_child);
+                break;
+            case 4:
+                inflate = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view_for_child = inflate.inflate(R.layout.offer_filter_dialog_layout, null);
+               final TextView text_view_for_offer_filter_by_distance = ButterKnife.findById(view_for_child,R.id.text_view_for_offer_filter_by_distance);
+                final TextView text_view_for_offer_filter_by_category = ButterKnife.findById(view_for_child,R.id.text_view_for_offer_filter_by_category);
+                Slider slider_for_offer_filter_by_category = ButterKnife.findById(view_for_child,R.id.slider_for_offer_filter_by_distance);
+                final ArrayList<String> arrayList = new ArrayList<>();
+                arrayList.add("Restaurants");
+                arrayList.add("Entertainment");
+                arrayList.add("Medical");
+                arrayList.add("Travel");
+                arrayList.add("Flight's");
+                arrayList.add("Bus");
+                arrayList.add("Hotel");
+                arrayList.add("Car , Cab , Taxi");
+                arrayList.add("Movie");
+                arrayList.add("Doctor");
+                arrayList.add("Hospital");
+                arrayList.add("Chemists");
+                arrayList.add("Flowers");
+                arrayList.add("Labs");
+                arrayList.add("Daily Needs");
+                arrayList.add("Personal Care");
+                arrayList.add("Courier");
+                Spinner spinner_for_filter_of_offer = ButterKnife.findById(view_for_child,R.id.spinner_for_offer_filter_by_category);
+                ArrayAdapter adapterforcity=new firstpagespinneradapter("City",getContext(),R.layout.offer_filter_spinner_layout,arrayList);
+                spinner_for_filter_of_offer.setAdapter(adapterforcity);
+                text_view_for_welcome_in_dialog.setText(getResources().getString(R.string.apply_filter));
+                text_view_for_welcome_in_dialog.setTextColor(getResources().getColor(R.color.ebonyclay));
+                linear_layout_for_enter_child.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                linear_layout_for_enter_child.addView(view_for_child);
 
+
+                spinner_for_filter_of_offer.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(Spinner parent, View view, int position, long id) {
+                        text_view_for_offer_filter_by_category.setText(getResources().getString(R.string.category) + " " + arrayList.get(position));
+                        category = arrayList.get(position);
+                        dialogListener.onSubmitingFilterData(category, Integer.valueOf(distance));
+                    }
+                });
+
+
+                slider_for_offer_filter_by_category.setOnPositionChangeListener(new Slider.OnPositionChangeListener() {
+                    @Override
+                    public void onPositionChanged(Slider view, boolean fromUser, float oldPos, float newPos, int oldValue, int newValue) {
+                           text_view_for_offer_filter_by_distance.setText(getResources().getString(R.string.distance)+" "+ newValue +"  meters");
+                           distance = newValue;
+                        dialogListener.onSubmitingFilterData(category,Integer.valueOf(distance));
+                    }
+                });
+               break;
+            case 5:
+                final String id = bundle.getString("_id");
+                inflate = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view_for_child = inflate.inflate(R.layout.ads_show_on_dialog_layout, null);
+                try{
+                    JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("ads","ads"));
+                    for(int i =0; i<jsonArray.length() ; i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        if(jsonObject.getString("ads_id").equals(id)){
+                            JSONArray jsonArray1 = jsonObject.getJSONArray("ads_item");
+                            JSONObject jsonObject1 = jsonArray1.getJSONObject(0);
+                            TextView text_view_for_item_name_dialog_of_shop_page = ButterKnife.findById(view_for_child, R.id.text_view_for_item_name_dialog_of_shop_page);
+                            text_view_for_item_name_dialog_of_shop_page.setText(jsonObject1.getString("item"));
+                            TextView text_view_for_item_price_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_price_dialog_of_shop_page);
+                            text_view_for_item_price_dialog_of_shop_page.setText(jsonObject1.getString("price"));
+                            TextView text_view_for_item_offer_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_offer_dialog_of_shop_page);
+                            text_view_for_item_offer_dialog_of_shop_page.setText(jsonObject1.getString("offer"));
+                            TextView text_view_for_item_description_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_description_dialog_of_shop_page);
+                            text_view_for_item_description_dialog_of_shop_page.setText(jsonObject.getString("ads_description"));
+                            final ImageView image_view_for_adding_favorets = ButterKnife.findById(view_for_child,R.id.image_view_for_adding_offer_as_favorets);
+                            image_view_for_adding_favorets.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                       image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_grade_white_48dp));
+                                       Omoyo.addtofavorets(id,0);
+                                }
+                            });
+                           final LinearLayout linearLayout = ButterKnife.findById(view_for_child,R.id.linear_layout_for_item_show);
+                            Glide.with(getContext()).load(jsonObject.getString("ads_bitmap_url")).asBitmap().into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    linearLayout.setBackgroundDrawable(new BitmapDrawable(
+                                            getResources(), resource));
+                                }
+                            });
+                        }
+                    }
+                }
+                catch(JSONException jx){
+
+                }
+                linear_layout_for_enter_child.addView(view_for_child);
+                break;
+            case 6:
+              final   String ids = bundle.getString("_id");
+                inflate = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view_for_child = inflate.inflate(R.layout.ads_show_on_dialog_layout, null);
+                try{
+                    JSONArray jsonArray = new JSONArray(Omoyo.currentSerachData);
+                    for(int i =0; i<jsonArray.length() ; i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        if(jsonObject.getString("product_id").equals(ids)){
+                            TextView text_view_for_item_name_dialog_of_shop_page = ButterKnife.findById(view_for_child, R.id.text_view_for_item_name_dialog_of_shop_page);
+                            text_view_for_item_name_dialog_of_shop_page.setText(jsonObject.getString("product_name"));
+                            TextView text_view_for_item_price_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_price_dialog_of_shop_page);
+                            text_view_for_item_price_dialog_of_shop_page.setText(jsonObject.getString("product_price"));
+                            TextView text_view_for_item_offer_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_offer_dialog_of_shop_page);
+                            text_view_for_item_offer_dialog_of_shop_page.setText(jsonObject.getString("product_offer"));
+                            TextView text_view_for_item_description_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_description_dialog_of_shop_page);
+                            text_view_for_item_description_dialog_of_shop_page.setText(jsonObject.getString("product_description"));
+                            final LinearLayout linearLayout = ButterKnife.findById(view_for_child,R.id.linear_layout_for_item_show);
+                            final ImageView image_view_for_adding_favorets = ButterKnife.findById(view_for_child,R.id.image_view_for_adding_offer_as_favorets);
+                            image_view_for_adding_favorets.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_grade_white_48dp));
+                                    Omoyo.addtofavorets(ids,1);
+                                }
+                            });
+                            Glide.with(getContext()).load(jsonObject.getString("product_bitmap_url")).asBitmap().into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    linearLayout.setBackgroundDrawable(new BitmapDrawable(
+                                            getResources(), resource));
+                                }
+                            });
+                        }
+                    }
+                }
+                catch(JSONException jx){
+
+                }
+                linear_layout_for_enter_child.addView(view_for_child);
                 break;
             default:
                 Log.d("TAG", "Child Attached !");
@@ -249,6 +445,7 @@ public interface  DialogListener{
     public void onSubmitOfUserData(DialogFragment dialog , String user_name , String user_email);
     public void onDescriptionSubmited();
     public void onSubmitingOfferData(Uri uri, String string , String offerCode);
+    public void onSubmitingFilterData(String category , Integer distance);
 }
 
     @Override
@@ -309,4 +506,7 @@ public interface  DialogListener{
         return random;
 
     }
+
+
+
 }

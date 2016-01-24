@@ -4,17 +4,10 @@
     android:layout_height="match_parent"  tools:context=".MainActivity"
     android:id="@+id/drawerlayout"
     >
-<ScrollView
-    android:id="@+id/parentScrollView"
-    android:background="@color/appcolor"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="match_parent">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -22,16 +15,46 @@
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="top"
             />
-
-<LinearLayout
+        <GridView
+            android:id="@+id/grid_for_search"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:numColumns="1"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:layout_below="@+id/card_view_for_offer"
+            android:visibility="gone"
+            />
+        <com.rey.material.widget.ProgressView
+            android:id="@+id/process_bar_for_search"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal|top"
+            android:gravity="center_horizontal|top"
+            app:pv_circular="true"
+            app:pv_autostart="true"
+            app:pv_progressStyle="@style/CircularProgressForSearch"
+            android:visibility="gone"
+            android:layout_marginTop="50dp"
+            />
+<ScrollView
+    android:id="@+id/parentScrollView"
+    android:background="@color/appcolor"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/linear_layout_for_search_result"
-    android:orientation="vertical"
-    android:visibility="gone"
+    android:layout_height="fill_parent"
     >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</LinearLayout>
+
+
+
+
+
 <HorizontalScrollView
     android:id="@+id/hozintalscroolview"
     android:layout_width="match_parent"
@@ -60,7 +83,7 @@
 
     </LinearLayout>
 </ScrollView>
-
+    </LinearLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_height="match_parent"

@@ -32,4 +32,22 @@
     <string name="all_right_reserved">All right reserved.</string>
     <string name="licenses">LICENSES</string>
     <string name="loaded_soon">FAQ will be loaded soon</string>
+    <string name="happy_to_contact">We will Happy to hear you. \n Make a call to us.</string>
+    <string name="call_us">Call to OMOYoo!</string>
+    <string name="write_your_query_here"> Write your query here \n We will love to Answer you </string>
+    <string name="submit_your_query">Submit your query</string>
+    <string name="successfully_submit">Successfully submit.</string>
+    <string name="facebook_page_link">www.facebook.com</string>
+    <string name="twitter_page_link">twitter.com</string>
+    <string name="pinterest_page_link">in.pinterest.com</string>
+    <string name="google_page_link">plus.google.com</string>
+    <string name="instagram_page_link">www.instagram.com</string>
+    <string name="blog_page_link">www.igramm.in</string>
+    <string name="filter">Filter</string>
+    <string name="apply_filter">Apply Filter to Offer</string>
+    <string name="select_category">Select Category</string>
+    <string name="distance">Distance :</string>
+    <string name="category">Category :</string>
+    <string name="app_key">AIzaSyDDktt4Gs4qFm8ln7HNLDETpaL_vn_-IzE</string>
+    <string name="click_to_login">Click to login</string>
 </resources>

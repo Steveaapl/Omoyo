@@ -1,19 +1,26 @@
 package com.example.muditi.omoyo;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,25 +32,38 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 
+
 public class shoppage extends ActionBarActivity {
-@Bind(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.collapsingtoolbar)
     CollapsingToolbarLayout collapsingtoolbar;
-@Bind(R.id.recycleview)
+    @Bind(R.id.recycleview)
     RecyclerView recyclerView;
     @Bind(R.id.appbar)
     AppBarLayout appbar;
+    SearchView searchView;
+    @Bind(R.id.drawerlayout)
+    DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,16 +85,31 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setExpandedTitleColor(Color.WHITE);
         collapsingtoolbar.setExpandedTitleTextAppearance(R.style.collapsebartitleexpanding);
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(new shoppageadapter(getApplicationContext()));
-        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+     //   recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(new shoppageadapter(getApplicationContext(),getSupportFragmentManager()));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,
+                R.string.open_of_navigation_view_slider, R.string.close_of_navigation_view_slider){
+
             @Override
-            public void onClick(View v) {
-                onBackPressed();
+            public void onDrawerClosed(View drawerView) {
+
+                super.onDrawerClosed(drawerView);
             }
-        });
-        Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/shop/shop.jpg").asBitmap()
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        actionBarDrawerToggle.syncState();
+
+        toolbar.setNavigationIcon(R.mipmap.ic_reorder_white_36dp);
+        Glide.with(getApplicationContext()).load("http://"+getResources().getString(R.string.ip)+"/bitmap/shop/shop.jpg").asBitmap()
                 .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(), 250) {
                     @Override
                     public void onResourceReady(Bitmap bitmap,
@@ -86,9 +121,9 @@ public class shoppage extends ActionBarActivity {
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             @Override
                             public void onGenerated(Palette palette) {
-                                int mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                                collapsingtoolbar.setContentScrimColor(palette.getDarkMutedColor(R.color.appcolor));
-                                collapsingtoolbar.setStatusBarScrimColor(palette.getDarkMutedColor(R.color.appcolor));
+                                int mutedColor = palette.getMutedColor(getResources().getColor(R.color.appcolor));
+                                collapsingtoolbar.setContentScrimColor(palette.getDarkMutedColor(getResources().getColor(R.color.appcolor)));
+                                collapsingtoolbar.setStatusBarScrimColor(palette.getDarkMutedColor(getResources().getColor(R.color.appcolor)));
                             }
                         });
 
@@ -121,10 +156,11 @@ public class shoppage extends ActionBarActivity {
         });
     }
 
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        getMenuInflater().inflate(R.menu.menu_shoppage, menu);
+        MenuItem item = menu.findItem(R.id.searchItem);
+        // Get the SearchView and set the searchable configuration
         return true;
     }
 
@@ -137,12 +173,71 @@ public class shoppage extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            return true;
+        }
+
+        if(id == R.id.searchItem){
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+private void showTheJam(){
+    Intent intent = getIntent();
+    dialog_class dialog =  new dialog_class();
+    Bundle bundle = new Bundle();
+    if(intent.getIntExtra("type_of",1007) == 0){
+        bundle.putInt("type_of",5);
+        bundle.putString("_id", intent.getStringExtra("_id"));
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "Hello");
+    }
+    if(intent.getIntExtra("type_of",1007) == 1){
+        bundle.putInt("type_of",6);
+        bundle.putString("_id", intent.getStringExtra("_id"));
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "Hello");
+    }
+    if(intent.getIntExtra("type_of",1007) == 2){
+        bundle.putInt("type_of",7);
+    }
 
+}
+
+    private void downloadCoordinateOfShop(){
+        try{
+            String defaultlocation=String.format("[{\"location_id\" : \"%s\"}]","1008");
+            JSONObject jsonObject = new JSONObject(Omoyo.shared.getString("location", defaultlocation));
+            final  String location_id=jsonObject.getString("location_id");
+            OkHttpClient okhttp=new OkHttpClient();
+            String json=String.format("{\"location_id\" : \"%s\"}",location_id);
+            final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+            RequestBody requestbody=RequestBody.create(JSON, json);
+            Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/coordinateOfShop/").post(requestbody).build();
+            Call call=okhttp.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    if(response.isSuccessful()) {
+                        String data = response.body().string();
+                        Omoyo.edit.putString("coordinateOfShop", data);
+                        Omoyo.edit.commit();
+                    }
+                }
+            });
+        }
+        catch(JSONException ex) {
+
+        }
+    }
 
 }

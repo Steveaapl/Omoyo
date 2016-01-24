@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    >
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@null"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_view_for_offer_filter_by_category"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/select_category"
+        android:textSize="20dp"
+        android:textColor="@color/ebonyclay"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
+    <com.rey.material.widget.Spinner
+        style="@style/Material.Widget.Spinner"
+        android:id="@+id/spinner_for_offer_filter_by_category"
+        android:layout_width="match_parent"
+        app:rd_style="@style/Material.Drawable.Ripple.Wave"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="10dp"
+        app:spn_arrowSize="7dp"
+        app:spn_arrowColor="@color/appcolor"
+        android:popupBackground="@color/aliceblue"
+        app:spn_dividerColor="@color/appcolor"
+        app:spn_dividerHeight="3dp"
+        app:spn_arrowAnimClockwise="true"
+        >
+    </com.rey.material.widget.Spinner>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/text_view_for_offer_filter_by_distance"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/distance"
+        android:textSize="20dp"
+        android:textColor="@color/ebonyclay"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
+        />
+    <com.rey.material.widget.Slider
+        android:id="@+id/slider_for_offer_filter_by_distance"
+        style="@style/Material.Widget.Slider"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        app:sl_minValue="0"
+        app:sl_maxValue="1609"
+        app:sl_value="0"
+        app:sl_trackCap="butt"
+        android:layout_marginTop="10dp"
+        app:sl_discreteMode="true"
+        app:sl_stepValue="10"
+        app:sl_primaryColor="@color/royalblue"
+        app:sl_secondaryColor="@color/monza"
+        android:layout_marginBottom="10dp"
+        />
+</LinearLayout>
+</RelativeLayout>

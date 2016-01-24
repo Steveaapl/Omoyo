@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/linear_layout_for_dialog"
+    android:background="@null"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -28,6 +29,7 @@
     android:layout_gravity="center_vertical|start|left"/>
 
         <TextView
+            android:id="@+id/text_view_for_welcome_in_dialog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="9"

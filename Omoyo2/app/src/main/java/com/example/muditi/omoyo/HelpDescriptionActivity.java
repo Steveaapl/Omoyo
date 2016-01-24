@@ -3,14 +3,18 @@ package com.example.muditi.omoyo;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
-public class HelpDescriptionActivity extends AppCompatActivity {
+import butterknife.ButterKnife;
+
+public class HelpDescriptionActivity extends AppCompatActivity implements HelpFragment.Fragment_Interface {
     int type_of;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
@@ -89,5 +93,38 @@ public class HelpDescriptionActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_transition_backword_in, R.anim.activity_transition_backword_out);
     }
+    private  void snackBar(final int i ){
+        final Snackbar snackbar =Snackbar.make(findViewById(R.id.relative_layout_for_query_submit_check_temp), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
+        final View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.snackbar_back));
+        final TextView textView = ButterKnife.findById(snackbarView, android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.setText(R.string.internet_not_available);
+        snackbar.setDuration(Snackbar.LENGTH_LONG);
 
+
+if(i==1){
+    textView.setText(getResources().getString(R.string.successfully_submit));
+}
+        if(i==2){
+            textView.setText(getResources().getString(R.string.submiting)+"...");
+        }
+
+        snackbar.show();
+    }
+
+    @Override
+    public void onerror() {
+          snackBar(0);
+    }
+
+    @Override
+    public void onsuccess() {
+        snackBar(1);
+    }
+
+    @Override
+    public void onsubmitting() {
+        snackBar(2);
+    }
 }

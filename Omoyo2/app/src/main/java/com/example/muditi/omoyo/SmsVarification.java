@@ -314,7 +314,7 @@ public class SmsVarification extends AppCompatActivity {
         }
 
         private Boolean varifivationOfSenderId(String senderId){
-            if(Omoyo.shared.getString("senderId","HP-OMOYoo").equals(senderId))
+            if(Omoyo.shared.getString("senderIdddddd","OMOYoo").equals(senderId.substring(3,senderId.length())))
             {
                 return true;
             }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 
 import android.support.v7.widget.SearchView;
@@ -15,32 +16,30 @@ import android.view.MenuItem;
 public class Search extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-      // queryRunner(getIntent());
+
+        handleIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-      //  queryRunner(intent);
+        super.onNewIntent(intent);
+
+        handleIntent(intent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
+    private void handleIntent(Intent intent) {
 
-        return true;
-    }
-
-    private void queryRunner(Intent intent){
-        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+           Log.d("TAGS",query);
+            showResults(query);
         }
     }
 
-
+    private void showResults(String query) {
+        // Query your data set and show results
+        // ...
+    }
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appcolor"
+    android:id="@+id/relative_layout_for_query_submit_check_temp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.muditi.omoyo.HelpDescriptionActivity"
     tools:showIn="@layout/activity_help_description">

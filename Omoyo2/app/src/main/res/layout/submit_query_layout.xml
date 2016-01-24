@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@mipmap/ic_launcher"
+                android:background="@null"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:gravity="center_horizontal|center_vertical"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/image_view_in_submit_query"
+                />
+            <EditText
+                android:id="@+id/edit_view_for_submiting_query"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:hint="@string/write_your_query_here"
+                />
+            <LinearLayout
+                android:id="@+id/linear_layout_for_submiting_query"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginBottom="5dp"
+                android:background="@android:color/holo_red_dark"
+                >
+                <TextView
+                    android:id="@+id/text_view_for_submiting_query"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="@string/submit_your_query"
+                    android:textColor="@android:color/white"
+                    android:textSize="20dp"
+                    />
+                <ImageView
+                    android:id="@+id/image_view_for_submiting_query"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:contentDescription="@null"
+                    android:src="@mipmap/ic_trending_flat_white_48dp"
+                    android:layout_marginRight="10dp"
+                    />
+            </LinearLayout>
+
+
+    </LinearLayout>

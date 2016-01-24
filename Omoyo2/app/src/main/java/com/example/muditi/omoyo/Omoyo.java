@@ -15,6 +15,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -34,6 +38,7 @@ public class Omoyo {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     public static  int fromWhereCode=0;
+    public static  String currentSerachData;
     public static  String generatedOfferCode;
     public static String offer_description="";
     public static final String PACKAGE_NAME =
@@ -108,6 +113,155 @@ public class Omoyo {
         }
     }
 
+
+    private void calculateDistance(Context context , final String shop_id){
+        final JSONArray putArray = new JSONArray();
+
+        try {
+                JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("coordinateOfShop", "coordinate"));
+                String latitude=null,longitude=null;
+                for(int i=0 ; i<jsonArray.length() ; i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if(jsonObject.getString("shop_id").equals(shop_id))
+                    {
+                        latitude = jsonObject.getString("shop_latitude");
+                        longitude = jsonObject.getString("shop_longitude");
+                    }
+                }
+                OkHttpClient okhttp = new OkHttpClient();
+                StringBuilder builder = new StringBuilder("https://maps.googleapis.com/maps/api/distancematrix/json?");
+                builder.append("origins=" + Omoyo.shared.getString("latitude", "41.000") + "," + Omoyo.shared.getString("longitude", "41.0"));
+                builder.append("&");
+                builder.append("destinations=" +latitude+","+longitude);
+                builder.append("&");
+                builder.append("language=en");
+                builder.append("&");
+                builder.append("mode=driving");
+                builder.append("&");
+                builder.append("key="+context.getString(R.string.app_key));
+                Request request = new Request.Builder().url(builder.toString()).get().build();
+                Call call = okhttp.newCall(request);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+
+                        if(response.isSuccessful()) {
+                            final String data = response.body().string();
+                            try {
+                                JSONObject putObject = new JSONObject();
+                                JSONObject jsonObject1 = new JSONObject(data);
+                                if(jsonObject1.getString("status").equals("OK"))
+                                    try {
+                                        putObject.put("shop_id", shop_id);
+                                        putObject.put("distance", jsonObject1.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getString("value"));
+                                        JSONArray jsonArray1 = new JSONArray(Omoyo.shared.getString("distance",""));
+                                        jsonArray1.put(jsonArray1.length(),putObject);
+                                        Omoyo.edit.putString("distance", jsonArray1.toString());
+                                        Omoyo.edit.commit();
+                                    } catch (JSONException jx) {
+
+                                    }
+                            }
+                            catch(JSONException jj){
+
+                            }
+                        }
+                    }
+                });
+
+        }
+        catch(JSONException jx){
+
+        }
+
+    }
+
+    public static  void  addtofavorets(String id,int type_of){
+        try {
+            if (!Omoyo.shared.contains("favorets")) {
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("type_of", type_of);
+                jsonObject.put("_id", id);
+                jsonArray.put(0, jsonObject);
+                Omoyo.edit.putString("favorets", jsonArray.toString());
+                Omoyo.edit.commit();
+
+            } else {
+                JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("favorets", ""));
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("type_of", type_of);
+                jsonObject.put("_id", id);
+                jsonArray.put(jsonArray.length(), jsonObject);
+                Omoyo.edit.putString("favorets", jsonArray.toString());
+                Omoyo.edit.commit();
+            }
+        }
+        catch(JSONException ej){
+
+        }
+    }
+
+    public static  void  addtoCall(String id , String shopName){
+        try {
+            if (!Omoyo.shared.contains("call_log")) {
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("_id", id);
+                jsonObject.put("shopName",shopName);
+                jsonArray.put(0, jsonObject);
+                Omoyo.edit.putString("call_log", jsonArray.toString());
+                Omoyo.edit.commit();
+
+            } else {
+                JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("call_log", ""));
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("_id", id);
+                jsonObject.put("shopName",shopName);
+                jsonArray.put(jsonArray.length(), jsonObject);
+                Omoyo.edit.putString("call_log", jsonArray.toString());
+                Omoyo.edit.commit();
+            }
+        }
+        catch(JSONException ej){
+
+        }
+    }
+
+
+    public static  void  addtoSms(String id , String shopName){
+        try {
+            if (!Omoyo.shared.contains("sms_log")) {
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("_id", id);
+                jsonObject.put("shopName",shopName);
+                jsonArray.put(0, jsonObject);
+                Omoyo.edit.putString("sms_log", jsonArray.toString());
+                Omoyo.edit.commit();
+
+            } else {
+                JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("sms_log", ""));
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("_id", id);
+                jsonObject.put("shopName",shopName);
+                jsonArray.put(jsonArray.length(), jsonObject);
+                Omoyo.edit.putString("sms_log", jsonArray.toString());
+                Omoyo.edit.commit();
+            }
+        }
+        catch(JSONException ej){
+
+        }
+    }
 
 }
 

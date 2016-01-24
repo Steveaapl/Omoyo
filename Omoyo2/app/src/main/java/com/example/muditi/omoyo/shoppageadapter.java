@@ -1,8 +1,14 @@
 package com.example.muditi.omoyo;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Image;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +16,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.pkmmte.view.CircularImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,16 +31,17 @@ import butterknife.ButterKnife;
 /**
  * Created by muditi on 03-12-2015.
  */
-public class shoppageadapter extends RecyclerView.Adapter<shoppageadapter.CustomViewHolder> {
+public class shoppageadapter extends RecyclerView.Adapter<shoppageadapter.CustomViewHolder> implements OnMapReadyCallback {
 Context context;
     String[] textdata;
     CustomViewHolder viewholder;
     View view;
-    int count=0;
     JSONObject jsonobject;
     String item;
-    public shoppageadapter(Context context){
+    FragmentManager fragmentManager;
+    public shoppageadapter(Context context,FragmentManager fragmentManager){
         this.context=context;
+        this.fragmentManager =fragmentManager;
         try {
              jsonobject=new JSONObject(Omoyo.shared.getString("shop", "shop"));
             JSONArray jsonArray=jsonobject.getJSONArray("shop_item");
@@ -48,89 +60,108 @@ Context context;
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
        // Omoyo.toast("Running count :"+count,context);
-        if(count!=6) {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shopdatalayout, null);
+
+        switch(i){
+            case 0:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.call_sms_layout, null);
+                CircularImageView circularImageView_for_call = ButterKnife.findById(view,R.id.circular_image_view_for_call_to_shop);
+                CircularImageView circularImageView_for_sms = ButterKnife.findById(view,R.id.circular_image_view_for_sms_to_shop);
+                 if(Omoyo.shared.getBoolean("user_status",false)){
+                     circularImageView_for_call.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View view) {
+                             try {
+                                 Omoyo.addtoCall(Omoyo.currentShopId, jsonobject.getString("shop_name"));
+                             }
+                             catch(JSONException ex){
+
+                             }
+                         }
+                     });
+
+                     circularImageView_for_sms.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View view) {
+                             try {
+                                 Omoyo.addtoSms(Omoyo.currentShopId, jsonobject.getString("shop_name"));
+                             }
+                             catch(JSONException ex){
+
+                             }
+                         }
+                     });
+                 }
+                else{
+                     alert();
+                 }
+                break;
+            case 1:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.address_of_shop_layout, null);
+                TextView text_view_for_adress_of_shop = ButterKnife.findById(view,R.id.text_view_for_address_of_shop);
+                if(Omoyo.shared.getBoolean("user_status",false)) {
+                    try {
+                        text_view_for_adress_of_shop.setText(jsonobject.getString("shop_address"));
+                    } catch (JSONException jx) {
+
+                    }
+                }
+                else{
+                    text_view_for_adress_of_shop.setText(context.getResources().getString(R.string.click_to_login));
+                    CardView card_view_for_address = ButterKnife.findById(view,R.id.card_view_for_address_of_shop);
+                    card_view_for_address.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            context.startActivity(new Intent(context,SmsVarification.class));
+                        }
+                    });
+                }
+                break;
+            case 2:
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.google_map_position_of_shop, null);
+                CardView card_view_for_map_image_view = ButterKnife.findById(view,R.id.card_view_google_map_image_of_shop);
+                break;
+            default:
+                Log.d("Hello","Null");
         }
-        else {
-           // Omoyo.toast("+"+i,context);
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shopfeedback, null);
-        }
+
+
         viewholder = new CustomViewHolder(view,i);
-        count++;
         return viewholder;
     }
 
     @Override
     public int getItemCount() {
-        return 7;
+        return 3;
     }
 
     @Override
     public void onBindViewHolder(CustomViewHolder viewHolder, int i) {
-        try {
-            if (i != 6) {
-                viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
-                viewHolder.linearlayout2.setMinimumWidth(Omoyo.screendisplay.getWidth() / 2);
-                switch (i) {
-                    case 0:
-                        viewHolder.textview1.setText(jsonobject.getString("shop_mobile_number"));
-                        viewHolder.textview2.setText(jsonobject.getString("shop_mobile_number"));
-                        break;
-                    case 1:
-                        viewHolder.textview1.setText(jsonobject.getString("shop_address"));
-                        viewHolder.textview2.setText(jsonobject.getString("shop_id"));
-                        break;
-                    case 2:
-                        viewHolder.textview1.setText(textdata[4]);
-                        viewHolder.textview2.setText(textdata[5]);
-                        break;
-                    case 3:
-                        viewHolder.linearlayout2.setVisibility(View.GONE);
-                        viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
-                        viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 5);
-                        viewHolder.textview1.setText(jsonobject.getString("shop_description"));
-                        viewHolder.textview1.setTextSize(12);
-                        break;
-                    case 4:
-                        viewHolder.linearlayout2.setVisibility(View.GONE);
-                        viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
-                        viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 10);
-                        viewHolder.textview1.setText(jsonobject.getString("shop_timing"));
-                        viewHolder.textview1.setTextSize(12);
-                        break;
-                    case 5:
 
-                        viewHolder.linearlayout2.setVisibility(View.GONE);
-                        viewHolder.linearlayout1.setMinimumWidth(Omoyo.screendisplay.getWidth());
-                        viewHolder.linearlayout1.setMinimumHeight(Omoyo.screendisplay.getHeight() / 5);
-                        viewHolder.textview1.setText(item);
-                        viewHolder.textview1.setTextSize(12);
-                        break;
-                }
-            }
-        }
-        catch(JSONException e){
-
-        }
     }
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-       protected LinearLayout linearlayout2;
-        protected  LinearLayout linearlayout1;
-        protected TextView textview1,textview2;
-        protected ImageView imageview1,imageview2;
-       int position;
+
         public CustomViewHolder(View view,int position) {
             super(view);
-            if(position!=6) {
-                this.position = position;
-                this.linearlayout1 = ButterKnife.findById(view, R.id.linearlayoutshoppage1);
-                this.linearlayout2 = ButterKnife.findById(view, R.id.linearlayoutshoppage2);
-                this.textview1 = ButterKnife.findById(view, R.id.textshoppage1);
-                this.textview2 = ButterKnife.findById(view, R.id.textshoppage2);
-                this.imageview1 = ButterKnife.findById(view, R.id.iconshoppage1);
-                this.imageview2 = ButterKnife.findById(view, R.id.iconshoppage2);
-            }
 
         }
     }
+
+   private void alert(){
+       final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+       builder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialogInterface, int i) {
+               context.startActivity(new Intent(context,SmsVarification.class));
+           }
+       });
+       builder.setNegativeButton("Nope", new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialogInterface, int i) {
+
+           }
+       });
+       builder.create().show();
+   }
+
+
 }

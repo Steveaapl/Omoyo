@@ -63,7 +63,11 @@
         </activity>
         <activity
             android:name=".shoppage"
-            android:label="@string/title_activity_shoppage" />
+            android:label="@string/title_activity_shoppage"
+            >
+            <meta-data android:name="android.app.default_searchable"
+                android:value=".Search" />
+        </activity>
         <activity
             android:name=".shoplist"
             android:label="@string/title_activity_shoplist" />
@@ -120,7 +124,18 @@
             android:name=".Search"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
-            android:noHistory="true" />
+             >
+
+                <intent-filter>
+                    <action android:name="android.intent.action.SEARCH" />
+                </intent-filter>
+                <meta-data android:name="android.app.searchable"
+                    android:resource="@xml/search"/>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".Help"
             android:label="@string/title_activity_help"
@@ -132,6 +147,10 @@
         <activity
             android:name=".License"
             android:label="@string/title_activity_license"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Offer"
+            android:label="@string/title_activity_offer"
             android:theme="@style/AppTheme"></activity>
     </application>
 

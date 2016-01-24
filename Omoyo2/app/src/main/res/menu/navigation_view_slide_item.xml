@@ -61,22 +61,11 @@
         android:title="@string/rate_us"
         />
     <item
-        android:id="@+id/social_connections"
+        android:id="@+id/social_media"
         android:checked="false"
         android:icon="@mipmap/ic_launcher"
         android:title="@string/social_connections"
         />
-    <item
-        android:id="@+id/who_we_are"
-        android:checked="false"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/who_we_are"
-        />
-    <item
-        android:id="@+id/our_ambitious_ambition"
-        android:checked="false"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/our_ambitious_ambition"
-        />
+
 </group>
 </menu>
