@@ -36,7 +36,7 @@
             android:layout_gravity="center_vertical|center_horizontal"
             android:layout_marginRight="50dp"
             android:gravity="center_horizontal|center_vertical"
-            android:textColor="@color/white"
+            android:textColor="@color/ebonyclay"
             android:textSize="20dp"
             android:text="@string/welcome"
             />

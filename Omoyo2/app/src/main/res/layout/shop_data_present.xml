@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<include
+    android:id="@+id/include_for_communication"
+    layout="@layout/call_sms_layout"
+    />
+    <include
+        android:id="@+id/include_for_address"
+        layout="@layout/address_of_shop_layout"
+        />
+    <include
+        android:id="@+id/include_for_description"
+        layout="@layout/description_of_shop"
+        />
+    <include android:id="@+id/include_for_map"
+        layout="@layout/google_map_position_of_shop"
+        />
+    <include android:id="@+id/include_for_item_of_shop"
+                 layout="@layout/include_shop_item"
+        />
+</RelativeLayout>

@@ -350,7 +350,7 @@ public class SmsVarification extends AppCompatActivity {
         }
     }
     private  void snackBar(final int i){
-        final Snackbar snackbar =Snackbar.make(findViewById(R.id.drawerlayout), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar =Snackbar.make(findViewById(R.id.relative_layout_for_sms_varification), getResources().getString(R.string.internet_not_available), Snackbar.LENGTH_INDEFINITE);
         final View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(getResources().getColor(R.color.snackbar_back));
         final TextView textView =ButterKnife.findById(snackbarView,android.support.design.R.id.snackbar_text);

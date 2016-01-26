@@ -188,7 +188,7 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                     }
                     textitem.setText(stringBuilder.toString());
                     stringBuilder.delete(0, stringBuilder.length());
-                    Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                    Glide.with(getApplicationContext()).load("http://"+getResources().getString(R.string.ip)+"/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             relativeLayout.setBackgroundDrawable(new BitmapDrawable(

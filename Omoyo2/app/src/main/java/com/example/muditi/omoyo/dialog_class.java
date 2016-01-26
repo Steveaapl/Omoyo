@@ -27,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -71,6 +72,7 @@ public class dialog_class extends DialogFragment {
     private int distance=0 ;
     private String category;
     Bundle bundle;
+    private  boolean flager =true;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         bundle = getArguments();
@@ -315,31 +317,60 @@ public class dialog_class extends DialogFragment {
                 try{
                     JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("ads","ads"));
                     for(int i =0; i<jsonArray.length() ; i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        final JSONObject jsonObject = jsonArray.getJSONObject(i);
                         if(jsonObject.getString("ads_id").equals(id)){
                             JSONArray jsonArray1 = jsonObject.getJSONArray("ads_item");
                             JSONObject jsonObject1 = jsonArray1.getJSONObject(0);
                             TextView text_view_for_item_name_dialog_of_shop_page = ButterKnife.findById(view_for_child, R.id.text_view_for_item_name_dialog_of_shop_page);
-                            text_view_for_item_name_dialog_of_shop_page.setText(jsonObject1.getString("item"));
+                        //    text_view_for_item_name_dialog_of_shop_page.setText(jsonObject1.getString("item"));
                             TextView text_view_for_item_price_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_price_dialog_of_shop_page);
-                            text_view_for_item_price_dialog_of_shop_page.setText(jsonObject1.getString("price"));
+                        //    text_view_for_item_price_dialog_of_shop_page.setText(jsonObject1.getString("price"));
                             TextView text_view_for_item_offer_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_offer_dialog_of_shop_page);
-                            text_view_for_item_offer_dialog_of_shop_page.setText(jsonObject1.getString("offer"));
+                        //    text_view_for_item_offer_dialog_of_shop_page.setText(jsonObject1.getString("offer"));
                             TextView text_view_for_item_description_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_description_dialog_of_shop_page);
-                            text_view_for_item_description_dialog_of_shop_page.setText(jsonObject.getString("ads_description"));
+                        //    text_view_for_item_description_dialog_of_shop_page.setText(jsonObject.getString("ads_description"));
                             final ImageView image_view_for_adding_favorets = ButterKnife.findById(view_for_child,R.id.image_view_for_adding_offer_as_favorets);
+
+                            try{
+                                JSONArray jsonArray2 = new JSONArray(Omoyo.shared.getString("favorets",""));
+                                Log.d("X",jsonArray2.toString());
+                                for(int k=0 ; k<jsonArray2.length() ;k++){
+                                    JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                                    Log.d("XX",jsonObject2.toString());
+                                    if(jsonObject2.getString("type_of").equals("0")){
+                                        JSONObject jsonObject3 = jsonObject2.getJSONObject("data");
+                                        Log.d("XXX",jsonObject3.toString());
+                                        if(jsonObject3.getString("ads_id").equals(jsonObject.getString("ads_id"))){
+                                            Log.d("XXXX","XX");
+                                            image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favorite_black_48dp));
+                                            flager=false;
+                                        }
+                                    }
+                                }
+                            }
+                            catch(JSONException jx){
+                                Log.d("TAGER",jx.getMessage());
+                            }
+                            if(flager)
                             image_view_for_adding_favorets.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                       image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_grade_white_48dp));
-                                       Omoyo.addtofavorets(id,0);
+                                    if(flager) {
+                                        image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favorite_black_48dp));
+                                        Omoyo.addtofavorets(0, jsonObject);
+                                        flager=false;
+                                    }
+                                    else {
+                                        flager = false;
+                                    }
+
                                 }
                             });
-                           final LinearLayout linearLayout = ButterKnife.findById(view_for_child,R.id.linear_layout_for_item_show);
+                            final RelativeLayout relativeLayout= ButterKnife.findById(view_for_child, R.id.relative_layout_for_item_show);
                             Glide.with(getContext()).load(jsonObject.getString("ads_bitmap_url")).asBitmap().into(new SimpleTarget<Bitmap>() {
                                 @Override
                                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                    linearLayout.setBackgroundDrawable(new BitmapDrawable(
+                                    relativeLayout.setBackgroundDrawable(new BitmapDrawable(
                                             getResources(), resource));
                                 }
                             });
@@ -358,7 +389,8 @@ public class dialog_class extends DialogFragment {
                 try{
                     JSONArray jsonArray = new JSONArray(Omoyo.currentSerachData);
                     for(int i =0; i<jsonArray.length() ; i++){
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                      final   JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        if(jsonObject.has("product_id"))
                         if(jsonObject.getString("product_id").equals(ids)){
                             TextView text_view_for_item_name_dialog_of_shop_page = ButterKnife.findById(view_for_child, R.id.text_view_for_item_name_dialog_of_shop_page);
                             text_view_for_item_name_dialog_of_shop_page.setText(jsonObject.getString("product_name"));
@@ -366,21 +398,49 @@ public class dialog_class extends DialogFragment {
                             text_view_for_item_price_dialog_of_shop_page.setText(jsonObject.getString("product_price"));
                             TextView text_view_for_item_offer_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_offer_dialog_of_shop_page);
                             text_view_for_item_offer_dialog_of_shop_page.setText(jsonObject.getString("product_offer"));
-                            TextView text_view_for_item_description_dialog_of_shop_page = ButterKnife.findById(view_for_child,R.id.text_view_for_item_description_dialog_of_shop_page);
+                            TextView text_view_for_item_description_dialog_of_shop_page  =  ButterKnife.findById(view_for_child,R.id.text_view_for_item_description_dialog_of_shop_page);
                             text_view_for_item_description_dialog_of_shop_page.setText(jsonObject.getString("product_description"));
-                            final LinearLayout linearLayout = ButterKnife.findById(view_for_child,R.id.linear_layout_for_item_show);
+                            final RelativeLayout relativeLayout= ButterKnife.findById(view_for_child, R.id.relative_layout_for_item_show);
                             final ImageView image_view_for_adding_favorets = ButterKnife.findById(view_for_child,R.id.image_view_for_adding_offer_as_favorets);
-                            image_view_for_adding_favorets.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_grade_white_48dp));
-                                    Omoyo.addtofavorets(ids,1);
+
+                            try{
+                                JSONArray jsonArray2 = new JSONArray(Omoyo.shared.getString("favorets",""));
+                                Log.d("X",jsonArray2.toString());
+                                for(int k=0 ; k<jsonArray2.length() ;k++){
+                                    JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                                    Log.d("XX",jsonObject2.toString());
+                                    if(jsonObject2.getString("type_of").equals("1")){
+                                        JSONObject jsonObject3 = jsonObject2.getJSONObject("data");
+                                        Log.d("XXX",jsonObject3.toString());
+                                        if(jsonObject3.getString("product_id").equals(jsonObject.getString("product_id"))){
+                                            Log.d("XXXXX","true");
+                                            image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favorite_black_48dp));
+                                            flager=false;
+                                        }
+                                    }
                                 }
-                            });
+                            }
+                            catch(JSONException jx){
+                                Log.d("EROR",jx.getMessage());
+                            }
+                            if(flager)
+                                image_view_for_adding_favorets.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if(flager) {
+                                            image_view_for_adding_favorets.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favorite_black_48dp));
+                                            Omoyo.addtofavorets(1, jsonObject);
+                                            flager=false;
+                                        }
+                                        else{
+                                            flager = false;
+                                        }
+                                    }
+                                });
                             Glide.with(getContext()).load(jsonObject.getString("product_bitmap_url")).asBitmap().into(new SimpleTarget<Bitmap>() {
                                 @Override
                                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                    linearLayout.setBackgroundDrawable(new BitmapDrawable(
+                                    relativeLayout.setBackgroundDrawable(new BitmapDrawable(
                                             getResources(), resource));
                                 }
                             });
@@ -454,8 +514,7 @@ public interface  DialogListener{
         try {
             dialogListener = (DialogListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement NoticeDialogListener");
+
         }
     }
 

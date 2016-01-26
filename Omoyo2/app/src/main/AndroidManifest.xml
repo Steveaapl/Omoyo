@@ -63,9 +63,9 @@
         </activity>
         <activity
             android:name=".shoppage"
-            android:label="@string/title_activity_shoppage"
-            >
-            <meta-data android:name="android.app.default_searchable"
+            android:label="@string/title_activity_shoppage">
+            <meta-data
+                android:name="android.app.default_searchable"
                 android:value=".Search" />
         </activity>
         <activity
@@ -118,23 +118,23 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDDktt4Gs4qFm8ln7HNLDETpaL_vn_-IzE" />
+            android:value="AIzaSyBA9YGUisvoIkRnT2G9hL25zDGph08WV3c" />
 
         <activity
             android:name=".Search"
             android:label="@string/title_activity_search"
-            android:launchMode="singleTop"
-             >
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
 
-                <intent-filter>
-                    <action android:name="android.intent.action.SEARCH" />
-                </intent-filter>
-                <meta-data android:name="android.app.searchable"
-                    android:resource="@xml/search"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/search" />
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".Help"
@@ -151,6 +151,14 @@
         <activity
             android:name=".Offer"
             android:label="@string/title_activity_offer"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Marked"
+            android:label="@string/title_activity_marked"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Log_Activity"
+            android:label="@string/title_activity_log_"
             android:theme="@style/AppTheme"></activity>
     </application>
 

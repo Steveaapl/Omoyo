@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
     boolean status;
     dialog_class dialog;
     Bundle bundle , bundleForSearch;
+    TextView text_view_for_offer_num,text_view_for_fav_num ,text_view_for_call_num ,text_view_for_message_num ,text_view_for_notification_num  ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setSubtitleTextColor(Color.WHITE);
         location=Omoyo.shared.getString("area","Modinager")+","+Omoyo.shared.getString("city","Ghaziabad");
-        toolbar.setSubtitle(Omoyo.shared.getString("GpsLocation",location));
+        toolbar.setSubtitle(Omoyo.shared.getString("GpsLocation", location));
         toolbar.showOverflowMenu();
         View view=getLayoutInflater().inflate(R.layout.serachbox, null);
         final EditText searchboxedittext=ButterKnife.findById(view, R.id.searchboxedittext);
@@ -164,6 +165,56 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
 
         actionBarDrawerToggle.syncState();
+
+
+        Menu menu = navigation_view.getMenu();
+        MenuItem item_offer = menu.findItem(R.id.offers);
+        View offer_view = item_offer.getActionView();
+        text_view_for_offer_num = ButterKnife.findById(offer_view, R.id.text_view_for_navigation_action_view);
+
+        MenuItem item_fav = menu.findItem(R.id.favourites);
+        View fav_view = item_fav.getActionView();
+        text_view_for_fav_num = ButterKnife.findById(fav_view, R.id.text_view_for_navigation_action_view);
+
+        MenuItem item_call = menu.findItem(R.id.call_log);
+        View call_view = item_call.getActionView();
+        text_view_for_call_num = ButterKnife.findById(call_view, R.id.text_view_for_navigation_action_view);
+
+        MenuItem item_message = menu.findItem(R.id.message_log);
+        View message_view = item_message.getActionView();
+        text_view_for_message_num = ButterKnife.findById(message_view, R.id.text_view_for_navigation_action_view);
+
+        MenuItem item_notification = menu.findItem(R.id.notification_point);
+        View notification_view = item_notification.getActionView();
+        text_view_for_notification_num = ButterKnife.findById(notification_view, R.id.text_view_for_navigation_action_view);
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("favorets", ""));
+            text_view_for_fav_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("call_log", ""));
+            text_view_for_call_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("sms_log", ""));
+            text_view_for_message_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("system_notification", ""));
+            text_view_for_notification_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
 
         navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -198,13 +249,32 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                         dialog.setArguments(bundle);
                         dialog.show(getSupportFragmentManager(), "Hello");
                         break;
+                    case R.id.favourites:
+                        Intent intent_for_fave = new Intent(getApplicationContext(), Marked.class);
+                        startActivity(intent_for_fave);
+                        overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
+                        break;
+                    case R.id.call_log:
+                        Intent intent2 = new Intent(getApplicationContext(),Log_Activity.class);
+                        intent2.putExtra("type_of",0);
+                        startActivity(intent2);
+                        break;
+                    case R.id.message_log:
+                        Intent intent3 = new Intent(getApplicationContext(),Log_Activity.class);
+                        intent3.putExtra("type_of",1);
+                        startActivity(intent3);
+                        break;
+                    case R.id.notification_point:
+                        Intent intent4 = new Intent(getApplicationContext(),Log_Activity.class);
+                        intent4.putExtra("type_of",2);
+                        startActivity(intent4);
+                        break;
                     default:
                         Log.d("TAG","Checked");
                 }
                 return true;
             }
         });
-
         int headerCount =navigation_view.getHeaderCount();
         if(headerCount>0){
             Log.d("TAG", "HEADER_OF_NAVI");
@@ -482,6 +552,7 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                             public void run() {
                                 try {
                                         JSONArray jsonArray = new JSONArray(data);
+                                    text_view_for_offer_num.setText(""+jsonArray.length());
                                     for(int i=0;i<jsonArray.length();i++){
                                         final JSONObject jsonObject=jsonArray.getJSONObject(i);
                                         LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -1012,6 +1083,35 @@ private  void queryResponse(String query){
     @Override
     protected void onResume() {
         super.onResume();
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("favorets", ""));
+            text_view_for_fav_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("call_log", ""));
+            text_view_for_call_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("sms_log", ""));
+            text_view_for_message_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+        try {
+            JSONArray jsonArray_for_fav = new JSONArray(Omoyo.shared.getString("system_notification", ""));
+            text_view_for_notification_num.setText(""+jsonArray_for_fav.length());
+        }
+        catch(JSONException e){
+
+        }
+
         if(Omoyo.shared.contains("user_status")){
             status = Omoyo.shared.getBoolean("user_status",false);
             if(status){

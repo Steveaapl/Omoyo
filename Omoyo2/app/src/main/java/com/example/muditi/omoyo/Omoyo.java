@@ -3,7 +3,10 @@ package com.example.muditi.omoyo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Log;
 import android.view.Display;
 import android.widget.Toast;
 
@@ -181,14 +184,13 @@ public class Omoyo {
 
     }
 
-    public static  void  addtofavorets(String id,int type_of){
+    public static  void  addtofavorets(int type_of , JSONObject data){
         try {
             if (!Omoyo.shared.contains("favorets")) {
-
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("type_of", type_of);
-                jsonObject.put("_id", id);
+                jsonObject.put("data",data);
                 jsonArray.put(0, jsonObject);
                 Omoyo.edit.putString("favorets", jsonArray.toString());
                 Omoyo.edit.commit();
@@ -197,7 +199,7 @@ public class Omoyo {
                 JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("favorets", ""));
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("type_of", type_of);
-                jsonObject.put("_id", id);
+                jsonObject.put("data",data);
                 jsonArray.put(jsonArray.length(), jsonObject);
                 Omoyo.edit.putString("favorets", jsonArray.toString());
                 Omoyo.edit.commit();
@@ -208,14 +210,13 @@ public class Omoyo {
         }
     }
 
-    public static  void  addtoCall(String id , String shopName){
+    public static  void  addtoCall( JSONObject data){
         try {
             if (!Omoyo.shared.contains("call_log")) {
 
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("_id", id);
-                jsonObject.put("shopName",shopName);
+                jsonObject.put("data",data);
                 jsonArray.put(0, jsonObject);
                 Omoyo.edit.putString("call_log", jsonArray.toString());
                 Omoyo.edit.commit();
@@ -223,8 +224,7 @@ public class Omoyo {
             } else {
                 JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("call_log", ""));
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("_id", id);
-                jsonObject.put("shopName",shopName);
+                jsonObject.put("data",data);
                 jsonArray.put(jsonArray.length(), jsonObject);
                 Omoyo.edit.putString("call_log", jsonArray.toString());
                 Omoyo.edit.commit();
@@ -236,14 +236,14 @@ public class Omoyo {
     }
 
 
-    public static  void  addtoSms(String id , String shopName){
+    public static  void  addtoSms(JSONObject data){
         try {
             if (!Omoyo.shared.contains("sms_log")) {
 
                 JSONArray jsonArray = new JSONArray();
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("_id", id);
-                jsonObject.put("shopName",shopName);
+
+                jsonObject.put("data",data);
                 jsonArray.put(0, jsonObject);
                 Omoyo.edit.putString("sms_log", jsonArray.toString());
                 Omoyo.edit.commit();
@@ -251,8 +251,8 @@ public class Omoyo {
             } else {
                 JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("sms_log", ""));
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("_id", id);
-                jsonObject.put("shopName",shopName);
+
+                jsonObject.put("data",data);
                 jsonArray.put(jsonArray.length(), jsonObject);
                 Omoyo.edit.putString("sms_log", jsonArray.toString());
                 Omoyo.edit.commit();
@@ -262,6 +262,20 @@ public class Omoyo {
 
         }
     }
+    public static  boolean isConnectingToInternet( Context context){
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
 
+        }
+        return false;
+    }
 }
 

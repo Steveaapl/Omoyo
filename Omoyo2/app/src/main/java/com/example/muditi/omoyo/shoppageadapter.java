@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,17 +32,17 @@ import butterknife.ButterKnife;
 /**
  * Created by muditi on 03-12-2015.
  */
-public class shoppageadapter extends RecyclerView.Adapter<shoppageadapter.CustomViewHolder> implements OnMapReadyCallback {
-Context context;
+public class shoppageadapter extends RecyclerView.Adapter<shoppageadapter.CustomViewHolder>{
+    Context context;
     String[] textdata;
     CustomViewHolder viewholder;
     View view;
     JSONObject jsonobject;
     String item;
-    FragmentManager fragmentManager;
-    public shoppageadapter(Context context,FragmentManager fragmentManager){
+    android.app.FragmentManager fragmentManager;
+    public shoppageadapter(Context context , android.app.FragmentManager fragmentManager){
         this.context=context;
-        this.fragmentManager =fragmentManager;
+        this.fragmentManager = fragmentManager;
         try {
              jsonobject=new JSONObject(Omoyo.shared.getString("shop", "shop"));
             JSONArray jsonArray=jsonobject.getJSONArray("shop_item");
@@ -58,11 +59,11 @@ Context context;
     }
 
     @Override
-    public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public shoppageadapter.CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
        // Omoyo.toast("Running count :"+count,context);
-
+         Log.d("TAG",""+i);
         switch(i){
-            case 0:
+            case 2:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.call_sms_layout, null);
                 CircularImageView circularImageView_for_call = ButterKnife.findById(view,R.id.circular_image_view_for_call_to_shop);
                 CircularImageView circularImageView_for_sms = ButterKnife.findById(view,R.id.circular_image_view_for_sms_to_shop);
@@ -70,29 +71,23 @@ Context context;
                      circularImageView_for_call.setOnClickListener(new View.OnClickListener() {
                          @Override
                          public void onClick(View view) {
-                             try {
-                                 Omoyo.addtoCall(Omoyo.currentShopId, jsonobject.getString("shop_name"));
-                             }
-                             catch(JSONException ex){
 
-                             }
+                                 Omoyo.addtoCall(jsonobject);
+
                          }
                      });
 
                      circularImageView_for_sms.setOnClickListener(new View.OnClickListener() {
                          @Override
                          public void onClick(View view) {
-                             try {
-                                 Omoyo.addtoSms(Omoyo.currentShopId, jsonobject.getString("shop_name"));
-                             }
-                             catch(JSONException ex){
 
-                             }
+                                 Omoyo.addtoSms(jsonobject);
+
                          }
                      });
                  }
                 else{
-                     alert();
+                    // alert();
                  }
                 break;
             case 1:
@@ -101,7 +96,7 @@ Context context;
                 if(Omoyo.shared.getBoolean("user_status",false)) {
                     try {
                         text_view_for_adress_of_shop.setText(jsonobject.getString("shop_address"));
-                    } catch (JSONException jx) {
+                    } catch(JSONException jx) {
 
                     }
                 }
@@ -116,9 +111,13 @@ Context context;
                     });
                 }
                 break;
-            case 2:
+            case 0:
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.google_map_position_of_shop, null);
-                CardView card_view_for_map_image_view = ButterKnife.findById(view,R.id.card_view_google_map_image_of_shop);
+                CardView card_view_for_map_image_view = ButterKnife.findById(view, R.id.card_view_google_map_image_of_shop);
+                android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                MapFragmentForAddress fragment = new MapFragmentForAddress();
+                fragmentTransaction.add(R.id.fram_layout_for_map,fragment);
+                fragmentTransaction.commit();
                 break;
             default:
                 Log.d("Hello","Null");
@@ -131,37 +130,21 @@ Context context;
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 1;
     }
 
     @Override
-    public void onBindViewHolder(CustomViewHolder viewHolder, int i) {
+    public void onBindViewHolder(shoppageadapter.CustomViewHolder viewHolder, int i) {
 
     }
     public class CustomViewHolder extends RecyclerView.ViewHolder {
 
         public CustomViewHolder(View view,int position) {
             super(view);
-
+            Log.d("POSITION:",""+position);
         }
     }
 
-   private void alert(){
-       final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-       builder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialogInterface, int i) {
-               context.startActivity(new Intent(context,SmsVarification.class));
-           }
-       });
-       builder.setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialogInterface, int i) {
-
-           }
-       });
-       builder.create().show();
-   }
 
 
 }

@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -61,20 +62,80 @@ public class shoppage extends ActionBarActivity {
     RecyclerView recyclerView;
     @Bind(R.id.appbar)
     AppBarLayout appbar;
+    @Bind(R.id.float_for_way)
+    FloatingActionButton float_for_way;
+    @Bind(R.id.float_for_faverotes)
+    FloatingActionButton float_for_faverotes;
     SearchView searchView;
-    @Bind(R.id.drawerlayout)
-    DrawerLayout drawerLayout;
+    private boolean flager = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoppage);
         ButterKnife.bind(this);
-        //toolbar.setTitle(getResources().getString(R.string.app_name));
+
+
+        try{
+            JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("favorets",""));
+            for(int i=0 ; i<jsonArray.length() ;i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if(jsonObject.getString("type_of").equals("2")){
+                    JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+                    if(jsonObject1.getString("shop_id").equals(Omoyo.currentShopId)){
+                        float_for_faverotes.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favorite_black_48dp));
+                        flager= false;
+                    }
+                }
+            }
+        }
+        catch(JSONException jx){
+           Log.d("TAGERROR",jx.getMessage());
+        }
+
+
+        showTheJam();
+
+        if(!Omoyo.shared.getBoolean("user_status",false)) {
+            Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
+            Bundle bundle = new Bundle();
+            bundle.putInt("type_of", 7);
+            dialog_for_shop_page.setArguments(bundle);
+            dialog_for_shop_page.show(getSupportFragmentManager(),"h");
+        }
+
+
+        if(Omoyo.shared.getBoolean("user_status",false)) {
+           showTheJam();
+        }
+
+       if(flager)
+        float_for_faverotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   float_for_faverotes.setImageDrawable(getResources().getDrawable(R.mipmap.ic_favorite_black_48dp));
+                try {
+                    Omoyo.addtofavorets(2, new JSONObject(Omoyo.shared.getString("shop", "shop")));
+                }
+                catch(JSONException ex){
+
+                }
+                Log.d("swx", Omoyo.shared.getString("shop", "shop"));
+            }
+        });
+
+        float_for_way.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               showTheJam();
+            }
+        });
+
         toolbar.showOverflowMenu();
         try {
             collapsingtoolbar.setTitle(new JSONObject(Omoyo.shared.getString("shop", "shop")).getString("shop_name"));
         }
-        catch(JSONException e){
+        catch(JSONException e)
+        {
 
         }
         setSupportActionBar(toolbar);
@@ -85,30 +146,10 @@ public class shoppage extends ActionBarActivity {
         collapsingtoolbar.setExpandedTitleColor(Color.WHITE);
         collapsingtoolbar.setExpandedTitleTextAppearance(R.style.collapsebartitleexpanding);
         collapsingtoolbar.setCollapsedTitleTextAppearance(R.style.collapsebartitlecollapsing);
-     //   recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(new shoppageadapter(getApplicationContext(),getSupportFragmentManager()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(new Shop_Page_Adapter_Class(getApplicationContext(), getFragmentManager() , getSupportFragmentManager()));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,
-                R.string.open_of_navigation_view_slider, R.string.close_of_navigation_view_slider){
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-
-                super.onDrawerClosed(drawerView);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-        actionBarDrawerToggle.syncState();
-
-        toolbar.setNavigationIcon(R.mipmap.ic_reorder_white_36dp);
+        toolbar.setNavigationIcon(R.mipmap.ic_launcher);
         Glide.with(getApplicationContext()).load("http://"+getResources().getString(R.string.ip)+"/bitmap/shop/shop.jpg").asBitmap()
                 .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(), 250) {
                     @Override
@@ -240,4 +281,17 @@ private void showTheJam(){
         }
     }
 
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!Omoyo.shared.getBoolean("user_status",false)) {
+            Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
+            Bundle bundle = new Bundle();
+            bundle.putInt("type_of", 7);
+            dialog_for_shop_page.setArguments(bundle);
+            dialog_for_shop_page.show(getSupportFragmentManager(), "h");
+        }
+    }
 }

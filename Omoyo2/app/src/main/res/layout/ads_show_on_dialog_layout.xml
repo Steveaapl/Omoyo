@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linear_layout_for_item_show"
+    android:id="@+id/relative_layout_for_item_show"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <LinearLayout
@@ -16,18 +16,23 @@
         android:id="@+id/text_view_for_item_name_dialog_of_shop_page"
         android:textSize="15dp"
         android:textColor="@color/ebonyclay"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:gravity="center_horizontal|center_vertical"
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
+        android:layout_marginLeft="10dp"
+        android:text="@string/description_of_offer"
         />
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
+        android:layout_marginTop="20dp"
         android:id="@+id/text_view_for_item_price_dialog_of_shop_page"
         android:textSize="15dp"
         android:textColor="@color/ebonyclay"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:gravity="center_horizontal|center_vertical"
+        android:layout_gravity="right|center_horizontal"
+        android:gravity="right|center_vertical"
+        android:layout_marginRight="10dp"
+        android:text="@string/description_of_offer"
         />
 </LinearLayout>
     <ImageView
@@ -35,33 +40,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@mipmap/ic_grade_black_48dp"
+        android:src="@mipmap/ic_favorite_white_48dp"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+       android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         >
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="4"
             android:id="@+id/text_view_for_item_offer_dialog_of_shop_page"
             android:textSize="15dp"
             android:textColor="@color/ebonyclay"
-            android:layout_gravity="center_horizontal|center_vertical"
+            android:text="@string/description_of_offer"
             android:gravity="center_horizontal|center_vertical"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginBottom="20dp"
             />
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
             android:id="@+id/text_view_for_item_description_dialog_of_shop_page"
             android:textSize="15dp"
             android:textColor="@color/ebonyclay"
-            android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center_horizontal|center_vertical"
+            android:text="@string/description_of_offer"
             />
-    </LinearLayout>
+        </LinearLayout>
+
 </RelativeLayout>
