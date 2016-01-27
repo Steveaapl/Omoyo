@@ -1,10 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.muditi.omoyo.shoplist">
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:icon="@mipmap/ic_launcher" android:id="@+id/search" android:title="Search Shop's"
-        app:showAsAction="always"  android:orderInCategory="1"
-        ></item>
+
+    <item
+        android:id="@+id/searchItem"
+        android:title="@string/searchLabel"
+        android:icon="@mipmap/ic_search_white_48dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        />
+
 </menu>

@@ -54,6 +54,7 @@ public class Marked extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(getResources().getString(R.string.favorite_offer));
         image_view_for_ads.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +65,7 @@ public class Marked extends AppCompatActivity {
                 image_view_for_ads.setBackgroundColor(Color.WHITE);
                 image_view_for_shop.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
                 image_view_for_product.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
+                setTitle(getResources().getString(R.string.favorite_offer));
             }
         });
         image_view_for_shop.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +78,7 @@ public class Marked extends AppCompatActivity {
                 image_view_for_ads.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
                 image_view_for_shop.setBackgroundColor(Color.WHITE);
                 image_view_for_product.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
+                setTitle(getResources().getString(R.string.favorite_product));
             }
         });
         image_view_for_product.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +91,7 @@ public class Marked extends AppCompatActivity {
                 image_view_for_ads.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
                 image_view_for_shop.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
                 image_view_for_product.setBackgroundColor(Color.WHITE);
+                setTitle(getResources().getString(R.string.favorite_shop));
             }
         });
         grid_for_ads.setAdapter(new GridViewAdapterForMark(0, getApplicationContext()));

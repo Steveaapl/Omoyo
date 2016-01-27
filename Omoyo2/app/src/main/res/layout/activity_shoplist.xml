@@ -1,15 +1,11 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appcolor"
+    android:orientation="vertical"
     tools:context="com.example.muditi.omoyo.shoplist">
 
-<LinearLayout
-    android:id="@+id/linearlayoutadder"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+
 
 
 
@@ -20,8 +16,86 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="top"
         />
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view_for_offer"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="@color/appcolor"
+        android:layout_alignParentTop="true"
+        card_view:cardCornerRadius="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:id="@+id/image_view_for_shop_list_wide"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_view_agenda_black_48dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                />
+            <ImageView
+                android:id="@+id/image_view_for_shop_list_narrow"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_reorder_black_48dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                />
+            <ImageView
+                android:id="@+id/image_view_for_shop_list_grid"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_view_module_black_48dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 
+    <GridView
+        android:id="@+id/grid_view_for_shop_list_wide"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="1"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:layout_below="@+id/card_view_for_offer"
+        />
+
+    <GridView
+        android:id="@+id/grid_view_for_shop_list_narrow"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="1"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:layout_below="@+id/card_view_for_offer"
+        android:visibility="gone"
+        />
+
+    <GridView
+        android:id="@+id/grid_view_for_shop_list_grid"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:columnWidth="100dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        android:layout_below="@+id/card_view_for_offer"
+        android:visibility="gone"
+        />
 
 </LinearLayout>
-</ScrollView>

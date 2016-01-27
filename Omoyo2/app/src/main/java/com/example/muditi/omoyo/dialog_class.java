@@ -360,9 +360,6 @@ public class dialog_class extends DialogFragment {
                                         Omoyo.addtofavorets(0, jsonObject);
                                         flager=false;
                                     }
-                                    else {
-                                        flager = false;
-                                    }
 
                                 }
                             });

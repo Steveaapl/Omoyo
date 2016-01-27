@@ -75,13 +75,14 @@ public class BaseAdapterForConnection extends BaseAdapter {
         final CardView cardView =ButterKnife.findById(view1,R.id.card_view_for_connection);
         try{
          JSONObject jsonObject = jsonArray.getJSONObject(i);
-            Log.d("OfShop",jsonObject.toString()+"H");
+            JSONObject jsonObject1 = jsonObject.getJSONObject("data");
+            Log.d("OfShop",jsonObject1.toString()+"H");
             Log.d("TYPE-",""+type_of);
         if(type_of == 0 || type_of ==1){
 
-             textView.setText(jsonObject.getString("shop_id"));
-             textView1.setText(jsonObject.getString("shop_name"));
-             Glide.with(context).load(jsonObject.getString("shop_bitmap_url")).asBitmap().into(new SimpleTarget<Bitmap>() {
+             textView.setText(jsonObject1.getString("shop_id"));
+             textView1.setText(jsonObject1.getString("shop_name"));
+             Glide.with(context).load(jsonObject1.getString("shop_bitmap_url")).asBitmap().into(new SimpleTarget<Bitmap>() {
                  @Override
                  public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                      cardView.setBackgroundDrawable(new BitmapDrawable(

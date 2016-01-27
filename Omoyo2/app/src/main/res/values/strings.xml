@@ -46,6 +46,7 @@
     <string name="gpslocationtext">Near you</string>
     <string name="title_activity_search">Search</string>
     <string name="searchHint">Search  items and  shops </string>
+    <string name="searchHint2">Search shops by name </string>
     <string name="searchLabel">Search</string>
     <string name="are_you_a_shop">Are you a shop </string>
     <string name="favourites">Favourites</string>

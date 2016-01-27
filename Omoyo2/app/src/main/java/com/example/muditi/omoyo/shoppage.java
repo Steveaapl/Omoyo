@@ -291,7 +291,7 @@ private void showTheJam(){
             Bundle bundle = new Bundle();
             bundle.putInt("type_of", 7);
             dialog_for_shop_page.setArguments(bundle);
-            dialog_for_shop_page.show(getSupportFragmentManager(), "h");
+            dialog_for_shop_page.show(getSupportFragmentManager(),"h");
         }
     }
 }

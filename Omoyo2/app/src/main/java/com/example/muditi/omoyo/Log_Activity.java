@@ -39,6 +39,19 @@ public class Log_Activity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if(getIntent().getIntExtra("type_of",5)==0){
+            toolbar.setTitle(getResources().getString(R.string.call_log));
+            setTitle(getResources().getString(R.string.call_log));
+        }
+        if(getIntent().getIntExtra("type_of",5)==1){
+            toolbar.setTitle(getResources().getString(R.string.messsge_log));
+            setTitle(getResources().getString(R.string.messsge_log));
+        }
+        if(getIntent().getIntExtra("type_of",5)==2){
+            toolbar.setTitle(getResources().getString(R.string.notification_point));
+            setTitle(getResources().getString(R.string.notification_point));
+        }
+        toolbar.setNavigationIcon(getResources().getDrawable(R.mipmap.ic_keyboard_backspace_white_48dp));
         Log.d("TYPE",""+getIntent().getIntExtra("type_of",2));
         gridView.setAdapter(new BaseAdapterForConnection(getIntent().getIntExtra("type_of", 5), getApplicationContext()));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

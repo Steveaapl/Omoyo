@@ -13,8 +13,8 @@
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        card_view:cardElevation="1dp"
-        card_view:cardBackgroundColor="@color/madang"
+        card_view:cardElevation="0dp"
+        card_view:cardBackgroundColor="@color/appcolor"
         android:layout_alignParentTop="true"
         card_view:cardCornerRadius="0dp">
         <LinearLayout

@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
@@ -96,6 +97,16 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
     ScrollView scrollView ;
     @Bind(R.id.navigation_view)
     NavigationView navigation_view;
+    @Bind(R.id.progress_bar_for_ads)
+    ProgressView progress_bar_for_ads;
+    @Bind(R.id.progres_bar_for_category)
+    ProgressView progress_bar_for_category;
+    @Bind(R.id.card_view_for_category)
+    CardView card_view_for_category;
+    @Bind(R.id.image_view_for_category_narrow_list)
+    ImageView image_view_for_category_narrow_list;
+    @Bind(R.id.image_view_for_category_wide_list)
+    ImageView image_view_for_category_wide_list;
     SearchView searchView;
     String location,temp_user_name , temp_user_email;
     int count , i;
@@ -380,8 +391,8 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
         grid_view_for_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                try{
-                    TextView text_view_for_quick_search = ButterKnife.findById(view,R.id.text_view_for_quick_search);
+                try {
+                    TextView text_view_for_quick_search = ButterKnife.findById(view, R.id.text_view_for_quick_search);
                     String text_to_search = String.valueOf(text_view_for_quick_search.getText());
                     searchView.setQueryHint(text_to_search);
                     searchView.setQuery(text_to_search, false);
@@ -389,18 +400,53 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                     grid_view_for_search.setVisibility(View.GONE);
                     queryResponse(text_to_search);
                     hideKeyboard();
-                }
-                catch(Exception e){
-                        TextView text_view_for_shop_id = ButterKnife.findById(view,R.id.text_view_for_shop_id);
-                        TextView text_view_for_type = ButterKnife.findById(view,R.id.item_type);
-                        TextView text_view_for_product_id = ButterKnife.findById(view,R.id.text_view_for_product_id);
-                        Omoyo.currentShopId = String.valueOf(text_view_for_shop_id.getText());
-                        shopLoadForSearch(String.valueOf(text_view_for_type.getText()),String.valueOf(text_view_for_product_id.getText()));
+                } catch (Exception e) {
+                    TextView text_view_for_shop_id = ButterKnife.findById(view, R.id.text_view_for_shop_id);
+                    TextView text_view_for_type = ButterKnife.findById(view, R.id.item_type);
+                    TextView text_view_for_product_id = ButterKnife.findById(view, R.id.text_view_for_product_id);
+                    Omoyo.currentShopId = String.valueOf(text_view_for_shop_id.getText());
+                    shopLoadForSearch(String.valueOf(text_view_for_type.getText()), String.valueOf(text_view_for_product_id.getText()));
                 }
             }
         });
 
+        image_view_for_category_narrow_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gridlayout.removeAllViews();
+                image_view_for_category_wide_list.setBackgroundColor(getResources().getColor(R.color.appcolor));
+                image_view_for_category_narrow_list.setBackgroundColor(getResources().getColor(R.color.white));
+                //gridlayout.setColumnCount(1);
+                try {
+                    JSONArray jsonarray = new JSONArray(Omoyo.shared.getString("category", ""));
+                    for (int i = 0; i < jsonarray.length(); i++) {
+                        JSONObject jsonobject = jsonarray.getJSONObject(i);
+                        categoryshopcountloader(jsonobject, 1);
+                    }
+                } catch (JSONException jx) {
 
+                }
+            }
+        });
+
+        image_view_for_category_wide_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gridlayout.removeAllViews();
+                image_view_for_category_wide_list.setBackgroundColor(getResources().getColor(R.color.white));
+                image_view_for_category_narrow_list.setBackgroundColor(getResources().getColor(R.color.appcolor));
+             //   gridlayout.setColumnCount(1);
+                try {
+                    JSONArray jsonarray = new JSONArray(Omoyo.shared.getString("category", ""));
+                    for (int i = 0; i < jsonarray.length(); i++) {
+                        JSONObject jsonobject = jsonarray.getJSONObject(i);
+                        categoryshopcountloader(jsonobject, 0);
+                    }
+                } catch (JSONException jx) {
+
+                }
+            }
+        });
     }
 
     @Override
@@ -550,6 +596,8 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                progress_bar_for_ads.setVisibility(View.GONE);
+                                horizontalscrollview.setVisibility(View.VISIBLE);
                                 try {
                                         JSONArray jsonArray = new JSONArray(data);
                                     text_view_for_offer_num.setText(""+jsonArray.length());
@@ -574,7 +622,7 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                                         }
                                         textitem.setText(stringBuilder.toString());
                                         stringBuilder.delete(0, stringBuilder.length());
-                                        Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                                        Glide.with(getApplicationContext()).load("http://"+getResources().getString(R.string.ip)+"/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
                                             @Override
                                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                                                 relativeLayout.setBackgroundDrawable(new BitmapDrawable(
@@ -629,11 +677,15 @@ public void categoryloader(){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
+                            gridlayout.setVisibility(View.VISIBLE);
+                            card_view_for_category.setVisibility(View.VISIBLE);
+                            progress_bar_for_category.setVisibility(View.GONE);
                             try {
                                 JSONArray jsonarray = new JSONArray(data);
                                 for (int i = 0; i < jsonarray.length(); i++) {
                                     JSONObject jsonobject = jsonarray.getJSONObject(i);
-                                    categoryshopcountloader(jsonobject);
+                                    categoryshopcountloader(jsonobject , 0);
                                 }
 
                             } catch (JSONException jsonexc) {
@@ -645,100 +697,106 @@ public void categoryloader(){
             }
         });
 }
-    public void categoryshopcountloader(final JSONObject category) {
+    public void categoryshopcountloader(final JSONObject category , final int type_of ) {
         try {
-            OkHttpClient okhttp = new OkHttpClient();
-            String json = String.format("{\"category_id\" : \"%s\"}", category.getString("category_id"));
-            final MediaType JSON = MediaType.parse("application/json;charset=utf-8");
-            RequestBody requestbody = RequestBody.create(JSON, json);
-            Request request = new Request.Builder().url("http://" + getResources().getString(R.string.ip) + "/categoryshopcount/").post(requestbody).build();
-            Call call = okhttp.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Request request, IOException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Omoyo.toast("Error in loader",getApplicationContext());
-                        }
-                    });
+            Log.d("XX","X");
+                                if(type_of==0) {
+
+                                    LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                                    View view = inflate.inflate(R.layout.shoppageviewadder, null);
+                                    LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.linearlayoutasadder);
+                                    final RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayoutgridlayout);
+                                    TextView textshopcount = ButterKnife.findById(view, R.id.shopcount);
+                                    textshopcount.setText("");
+                                    TextView textcategoryname = ButterKnife.findById(view, R.id.categoryname);
+                                    String value = category.getString("category_name").substring(0, 1).toUpperCase() + category.getString("category_name").substring(1, category.getString("category_name").length());
+                                    textcategoryname.setText(value);
+                                    StringBuilder builder = new StringBuilder();
+                                    try {
+                                        JSONArray jsonArray = category.getJSONArray("category_item");
+                                        for (int k = 0; k < jsonArray.length(); k++) {
+                                            String valueofitem = jsonArray.getJSONObject(k).getString("item").substring(0, 1).toUpperCase() + jsonArray.getJSONObject(k).getString("item").substring(1, jsonArray.getJSONObject(k).getString("item").length());
+                                            builder.append(valueofitem + "       ");
+                                        }
+                                        TextView textitem = ButterKnife.findById(view, R.id.itemincategory);
+                                        textitem.setText(builder.toString());
+                                        builder.delete(0, builder.length());
+                                    } catch (JSONException e) {
+
+                                    }
+
+                                    Glide.with(getApplicationContext()).load("http://" + getResources().getString(R.string.ip) + "/bitmap/category/category.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                            relativeLayout.setBackgroundDrawable(new BitmapDrawable(
+                                                    getResources(), resource));
+                                        }
+                                    });
+                                    //categoryclick
+                                    linearLayout2.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+
+                                                shopListLoader(category.getString("category_id"));
+
+                                            } catch (JSONException e) {
+                                                 Log.d("EXXXX:",e.getLocalizedMessage());
+                                            }
+                                        }
+                                    });
+                                    gridlayout.addView(linearLayout2);
+                                }
+            if(type_of == 1){
+                LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                View view = inflate.inflate(R.layout.category_narrow_layout, null);
+                LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.linearlayoutasadder);
+                final RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayoutgridlayout);
+                TextView textshopcount = ButterKnife.findById(view, R.id.shopcount);
+                textshopcount.setText("");
+                TextView textcategoryname = ButterKnife.findById(view, R.id.categoryname);
+                String value = category.getString("category_name").substring(0, 1).toUpperCase() + category.getString("category_name").substring(1, category.getString("category_name").length());
+                textcategoryname.setText(value);
+                StringBuilder builder = new StringBuilder();
+                try {
+                    JSONArray jsonArray = category.getJSONArray("category_item");
+                    for (int k = 0; k < jsonArray.length(); k++) {
+                        String valueofitem = jsonArray.getJSONObject(k).getString("item").substring(0, 1).toUpperCase() + jsonArray.getJSONObject(k).getString("item").substring(1, jsonArray.getJSONObject(k).getString("item").length());
+                        builder.append(valueofitem + "       ");
+                    }
+                    TextView textitem = ButterKnife.findById(view, R.id.itemincategory);
+                    textitem.setText(builder.toString());
+                    builder.delete(0, builder.length());
+                } catch (JSONException e) {
+
                 }
 
-                @Override
-                public void onResponse(Response response) throws IOException {
+                Glide.with(getApplicationContext()).load("http://" + getResources().getString(R.string.ip) + "/bitmap/category/category.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        relativeLayout.setBackgroundDrawable(new BitmapDrawable(
+                                getResources(), resource));
+                    }
+                });
+                //categoryclick
+                linearLayout2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
 
-                    final String data = response.body().string();
+                            shopListLoader(category.getString("category_id"));
 
+                        } catch (JSONException e) {
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                           // Omoyo.toast(data,getApplicationContext());
-                            try {
-                                JSONObject jsonobjectcount =new JSONObject(data);
-                                String numberOfShop = jsonobjectcount.getString("count");
-                                LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                                View view = inflate.inflate(R.layout.shoppageviewadder, null);
-                                LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.linearlayoutasadder);
-                                final  RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayoutgridlayout);
-                                TextView textshopcount=ButterKnife.findById(view,R.id.shopcount);
-                                textshopcount.setText(numberOfShop);
-                                TextView textcategoryname=ButterKnife.findById(view,R.id.categoryname);
-                                String value=category.getString("category_name").substring(0,1).toUpperCase()+category.getString("category_name").substring(1, category.getString("category_name").length());
-                                textcategoryname.setText(value);
-                                StringBuilder builder=new StringBuilder();
-                                try {
-                                    JSONArray jsonArray =category.getJSONArray("category_item");
-                                    for (int k = 0; k < jsonArray.length(); k++) {
-                                        String valueofitem=jsonArray.getJSONObject(k).getString("item").substring(0,1).toUpperCase()+jsonArray.getJSONObject(k).getString("item").substring(1,jsonArray.getJSONObject(k).getString("item").length());
-                                        builder.append(valueofitem+"       ");
-                                    }
-                                    TextView textitem=ButterKnife.findById(view,R.id.itemincategory);
-                                    textitem.setText(builder.toString());
-                                    builder.delete(0, builder.length());
-                                }
-                                catch(JSONException e){
+                        }
+                    }
+                });
+                gridlayout.addView(linearLayout2);
+            }
 
-                                }
-
-                            Glide.with(getApplicationContext()).load("http://192.168.0.113:15437/bitmap/category/category.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                    relativeLayout.setBackgroundDrawable(new BitmapDrawable(
-                                            getResources(), resource));
-                                }
-                            });
-                                //categoryclick
-                                linearLayout2.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                       try{
-                                           if(category.getString("sub_category")=="true") {
-                                               subcategoryloader(category.getString("category_id"));
-                                           }
-                                           else  {
-                                                shopListLoader(category.getString("category_id"));
-                                           }
-                                        }
-                                       catch(JSONException e){
-
-                                       }
-                                    }
-                                });
-
-
-                                gridlayout.addView(linearLayout2);
                             } catch (JSONException e) {
                          Omoyo.toast("Error in json",getApplicationContext());
                             }
-                        }
-                    });
-                }
-            });
-        }
-        catch(JSONException e){
-            Log.d("E:",e.getMessage());
-        }
     }
     public  void shoploader(final String ads_id){
         OkHttpClient okhttp=new OkHttpClient();
@@ -764,6 +822,7 @@ public void categoryloader(){
                             intent.putExtra("type_of",0);
                             intent.putExtra("_id",ads_id);
                             startActivity(intent);
+                            overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
                         }
                     });
                     try {
@@ -809,6 +868,7 @@ public void categoryloader(){
                                 Intent intent = new Intent(getApplicationContext(), subshopcategory.class);
                                 intent.putExtra("category_id", category_id);
                                 startActivity(intent);
+                                overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
                             }
                         });
                     }
@@ -845,6 +905,7 @@ private void shopListLoader(final String category_id)
                 Intent intent = new Intent(getApplicationContext(), shoplist.class);
                 intent.putExtra("category_id", category_id);
                 startActivity(intent);
+                overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
             }
         }
     });

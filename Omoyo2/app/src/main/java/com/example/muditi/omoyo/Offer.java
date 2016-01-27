@@ -73,8 +73,8 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                 grid_for_offer_wide.setVisibility(View.GONE);
                 grid_for_offer_narrow.setVisibility(View.GONE);
                 image_view_for_filter_grid_list.setBackgroundColor(Color.WHITE);
-                image_view_for_filter_narrow_list.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
-                image_view_for_filter_wide_list.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
+                image_view_for_filter_narrow_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
+                image_view_for_filter_wide_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
             }
         });
         image_view_for_filter_narrow_list.setOnClickListener(new View.OnClickListener() {
@@ -84,9 +84,9 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                 YoYo.with(Techniques.FadeIn).duration(500).playOn(grid_for_offer_narrow);
                 grid_for_offer_wide.setVisibility(View.GONE);
                 grid_for_offer_grid.setVisibility(View.GONE);
-                image_view_for_filter_grid_list.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
+                image_view_for_filter_grid_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
                 image_view_for_filter_narrow_list.setBackgroundColor(Color.WHITE);
-                image_view_for_filter_wide_list.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
+                image_view_for_filter_wide_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
             }
         });
         image_view_for_filter_wide_list.setOnClickListener(new View.OnClickListener() {
@@ -96,8 +96,8 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                 YoYo.with(Techniques.FadeIn).duration(500).playOn(grid_for_offer_wide);
                 grid_for_offer_grid.setVisibility(View.GONE);
                 grid_for_offer_narrow.setVisibility(View.GONE);
-                image_view_for_filter_grid_list.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
-                image_view_for_filter_narrow_list.setBackground(new ColorDrawable(getResources().getColor(R.color.madang)));
+                image_view_for_filter_grid_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
+                image_view_for_filter_narrow_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
                 image_view_for_filter_wide_list.setBackgroundColor(Color.WHITE);
             }
         });

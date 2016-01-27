@@ -63,7 +63,7 @@ public class MapFragmentForAddress extends Fragment implements OnMapReadyCallbac
             PolylineOptions polylineOptions = new PolylineOptions();
             LatLng User = new LatLng((double)Omoyo.shared.getFloat("latitude",41),(double)Omoyo.shared.getFloat("longitude",14));
             CameraPosition cameraPosition = new CameraPosition.Builder().target(User)
-                .zoom(25)                   // Sets the zoom
+                .zoom(20)                   // Sets the zoom
                 .bearing(90)                // Sets the orientation of the camera to east
                 .tilt(30)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder

@@ -52,4 +52,7 @@
     <string name="click_to_login">Click to login</string>
     <string name="send_sms">Send SMS to shop</string>
     <string name="sms_is_free">Sms is free for you</string>
+    <string name="favorite_offer">Favorite Offer</string>
+    <string name="favorite_shop">Favorite Shop</string>
+    <string name="favorite_product">Favorite Product</string>
 </resources>
