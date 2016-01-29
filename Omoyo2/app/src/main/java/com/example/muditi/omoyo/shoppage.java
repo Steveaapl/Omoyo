@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
@@ -66,15 +67,18 @@ public class shoppage extends ActionBarActivity {
     FloatingActionButton float_for_way;
     @Bind(R.id.float_for_faverotes)
     FloatingActionButton float_for_faverotes;
+    @Bind(R.id.text_view_for_timing_of_shop)
+    TextView text_view_for_timing_of_shop;
     SearchView searchView;
-    private boolean flager = true;
+    private boolean flager = true , loginflag=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shoppage);
         ButterKnife.bind(this);
-
-
+        if(!Omoyo.shared.contains("gpsposition")){
+            downloadCoordinateOfShop();
+        }
         try{
             JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("favorets",""));
             for(int i=0 ; i<jsonArray.length() ;i++){
@@ -93,19 +97,22 @@ public class shoppage extends ActionBarActivity {
         }
 
 
-        showTheJam();
+        //showTheJam();
 
         if(!Omoyo.shared.getBoolean("user_status",false)) {
+            loginflag = false;
             Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
             Bundle bundle = new Bundle();
             bundle.putInt("type_of", 7);
             dialog_for_shop_page.setArguments(bundle);
-            dialog_for_shop_page.show(getSupportFragmentManager(),"h");
+            dialog_for_shop_page.show(getSupportFragmentManager(), "h");
+            Log.d("DIALOG-C:","X");
         }
 
 
         if(Omoyo.shared.getBoolean("user_status",false)) {
            showTheJam();
+            Log.d("DIALOG-C:X", "X");
         }
 
        if(flager)
@@ -133,6 +140,7 @@ public class shoppage extends ActionBarActivity {
         toolbar.showOverflowMenu();
         try {
             collapsingtoolbar.setTitle(new JSONObject(Omoyo.shared.getString("shop", "shop")).getString("shop_name"));
+            text_view_for_timing_of_shop.setText(new JSONObject(Omoyo.shared.getString("shop", "shop")).getString("shop_timing"));
         }
         catch(JSONException e)
         {
@@ -244,10 +252,32 @@ private void showTheJam(){
         dialog.show(getSupportFragmentManager(), "Hello");
     }
     if(intent.getIntExtra("type_of",1007) == 2){
-        bundle.putInt("type_of",7);
+       // bundle.putInt("type_of",7);
     }
 
 }
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!Omoyo.shared.getBoolean("user_status",false) && loginflag) {
+            Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
+            Bundle bundle = new Bundle();
+            bundle.putInt("type_of", 7);
+            dialog_for_shop_page.setArguments(bundle);
+            dialog_for_shop_page.show(getSupportFragmentManager(), "h");
+            Log.d("DIALOG-C:XX", "X");
+        }
+        else{
+            loginflag = true ;
+        }
+        Log.d("DIALOG-C:XXX", "X");
+
+
+    }
 
     private void downloadCoordinateOfShop(){
         try{
@@ -268,11 +298,9 @@ private void showTheJam(){
 
                 @Override
                 public void onResponse(Response response) throws IOException {
-                    if(response.isSuccessful()) {
-                        String data = response.body().string();
-                        Omoyo.edit.putString("coordinateOfShop", data);
-                        Omoyo.edit.commit();
-                    }
+                    final String data = response.body().string();
+                    Omoyo.edit.putString("gpsposition",data);
+                    Omoyo.edit.commit();
                 }
             });
         }
@@ -283,15 +311,6 @@ private void showTheJam(){
 
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(!Omoyo.shared.getBoolean("user_status",false)) {
-            Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
-            Bundle bundle = new Bundle();
-            bundle.putInt("type_of", 7);
-            dialog_for_shop_page.setArguments(bundle);
-            dialog_for_shop_page.show(getSupportFragmentManager(),"h");
-        }
-    }
+
 }
+

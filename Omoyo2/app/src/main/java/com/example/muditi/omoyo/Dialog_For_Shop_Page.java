@@ -3,14 +3,18 @@ package com.example.muditi.omoyo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -212,13 +216,51 @@ public class Dialog_For_Shop_Page extends DialogFragment {
                    linear_layout_for_enter_child.addView(view_of_ads);
                }
                break;
+           case 505:
+               try {
+                   String shopdata = getArguments().getString("object");
+                   JSONObject jsonObject = new JSONObject(shopdata);
+                   JSONArray jsonArray = jsonObject.getJSONArray("shop_contact_number");
+                   final CharSequence[] number = new CharSequence[jsonArray.length()];
+                   final CharSequence[] numberTemp = new CharSequence[jsonArray.length()];
+                   for(int i=0; i <jsonArray.length();i++){
+                       JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                       number[i]=jsonObject1.getString("contact_number");
+                       numberTemp[i]=" Mobile Number - "+(i+1)+" st";
+                   }
+                   builder.setItems(numberTemp, new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           makeCallToShop(String.valueOf(number[i]));
+                       }
+                   });
+               }
+               catch(JSONException jx){
+                 final  CharSequence[] number = new CharSequence[2];
+                   number[0]="100";
+                   number[1]="100";
+                   builder.setItems(number, new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           makeCallToShop(String.valueOf(number[i]));
+                       }
+                   });
+               }
+               break;
            default:
                Log.d("Hello", "nu@ll");
        }
 
-        alertDialog.setView(view);
-        setCancelable(false);
-        return alertDialog;
+         if(type_of != 505) {
+             alertDialog.setView(view);
+             setCancelable(false);
+             return alertDialog;
+         }
+        else{
+             return builder.create();
+         }
+
+
     }
 
     private void sendVarificationSms(String userMobileNumber , String data)
@@ -270,6 +312,30 @@ public class Dialog_For_Shop_Page extends DialogFragment {
 
         return mainUrl;
     }
+    private void makeCallToShop(String number){
 
+        CallToOMOYooStateListener phoneListener = new CallToOMOYooStateListener();
+        TelephonyManager telephonyManager =
+                (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+        try {
+            String uri = "tel:"+number;
+            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
+            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(callIntent);
+        }catch(Exception e) {
+            Log.d("TAG","Error:"+e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    private class CallToOMOYooStateListener extends android.telephony.PhoneStateListener{
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            super.onCallStateChanged(state, incomingNumber);
+            Log.d("TAGFORCALL",incomingNumber+"STATEOFCALL "+state);
+        }
+    }
 
 }

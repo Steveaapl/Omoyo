@@ -103,15 +103,6 @@
                 android:gravity="start|left|center_vertical"
                 android:layout_marginLeft="5dp"
                 />
-            <ImageView
-                android:id="@+id/image_view_for_location"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="5dp"
-                android:src="@mipmap/ic_mode_edit_white_48dp"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:gravity="center_horizontal|center_vertical"
-                />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

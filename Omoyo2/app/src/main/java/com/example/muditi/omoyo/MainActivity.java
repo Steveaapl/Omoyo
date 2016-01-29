@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -76,6 +77,7 @@ import java.lang.reflect.Type;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import tourguide.tourguide.TourGuide;
 
 
 public class MainActivity extends AppCompatActivity implements dialog_class.DialogListener{
@@ -126,9 +128,10 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        //
-    //    if(!Omoyo.shared.contains("coordinateOfShop"))
-    //    downloadCoordinateOfShop();
+        //gpsPosition
+        if(!Omoyo.shared.contains("gpsposition")){
+            downloadCoordinateOfShop();
+        }
 
         Omoyo.checkingUserMobileSendedOrNotToServer(getApplicationContext());
         Display display=getWindowManager().getDefaultDisplay();
@@ -176,6 +179,8 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
         drawerlayout.setDrawerListener(actionBarDrawerToggle);
 
         actionBarDrawerToggle.syncState();
+
+
 
 
         Menu menu = navigation_view.getMenu();
@@ -306,13 +311,18 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
             circularImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Select File"),
-                            Omoyo.Request_Code);
+                    try {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(
+                                Intent.createChooser(intent, "Select File"),
+                                Omoyo.Request_Code);
+                    }
+                    catch(Exception ex){
+
+                    }
                 }
             });
             ImageView image_view_for_user_name_edit = ButterKnife.findById(navigation_viewHeaderView,R.id.image_view_for_user_name_edit);
@@ -333,6 +343,13 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                 public void onClick(View view) {
                     if(Omoyo.shared.getBoolean("user_status",false)){
                         snackBar(3);
+                        try {
+                            Vibrator vibrate = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrate.vibrate(200);
+                        }
+                        catch(Exception ex){
+
+                        }
                         image_view_for_mobile_number_edit.setImageDrawable(getResources().getDrawable(R.mipmap.ic_lock_open_white_48dp));
                         text_view_for_user_mobile_number.setText(getResources().getString(R.string.welcome));
                         Omoyo.edit.putBoolean("user_status", false);
@@ -352,22 +369,13 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
             });
 
 
-            ImageView image_view_for_locaiton = ButterKnife.findById(navigation_viewHeaderView,R.id.image_view_for_location);
+
             TextView text_view_for_location = ButterKnife.findById(navigation_viewHeaderView,R.id.text_view_for_location);
 
             location=Omoyo.shared.getString("area","Modinager")+","+Omoyo.shared.getString("city","Ghaziabad");
-            text_view_for_location.setText(Omoyo.shared.getString("GpsLocation",location));
+            text_view_for_location.setText(Omoyo.shared.getString("GpsLocation", location));
 
-            image_view_for_locaiton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), firstpage.class);
-                    intent.putExtra("fromMain", true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                 //   startActivity(intent);
-                    overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
-                }
-            });
+
 
 
             if(Omoyo.shared.contains("user_status")){
@@ -635,6 +643,7 @@ public class MainActivity extends AppCompatActivity implements dialog_class.Dial
                                             public void onClick(View v) {
                                                 Omoyo.currentShopId=textshopid.getText().toString();
                                                 shoploader(String.valueOf(text_view_for_ads_id.getText()));
+                                                snackBar(8);
                                             }
                                         });
                                         adslayout.addView(linearLayout2);
@@ -737,7 +746,7 @@ public void categoryloader(){
                                         @Override
                                         public void onClick(View v) {
                                             try {
-
+                                                 snackBar(8);
                                                 shopListLoader(category.getString("category_id"));
 
                                             } catch (JSONException e) {
@@ -783,7 +792,7 @@ public void categoryloader(){
                     @Override
                     public void onClick(View v) {
                         try {
-
+                            snackBar(8);
                             shopListLoader(category.getString("category_id"));
 
                         } catch (JSONException e) {
@@ -808,7 +817,12 @@ public void categoryloader(){
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       snackBar(9);
+                                   }
+                               });
             }
 
             @Override
@@ -891,7 +905,7 @@ private void shopListLoader(final String category_id)
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Omoyo.toast("Error in Network", getApplicationContext());
+                   snackBar(8);
                 }
             });
         }
@@ -1062,11 +1076,20 @@ private  void queryResponse(String query){
                 break;
             case 6:
                 textView.setText(getResources().getString(R.string.submiting)+"  ...");
-                textView.setTextSize(30);
+                textView.setTextSize(20);
                 textViewAction.setText(getResources().getString(R.string.welcome));
                 break;
             case 7:
                 textViewAction.setText("");
+                break;
+            case 8:
+                textView.setText(getResources().getString(R.string.loading));
+                textView.setTextSize(25);
+                textViewAction.setText(getResources().getString(R.string.welcome));
+                snackbar.setDuration(Snackbar.LENGTH_SHORT);
+                break;
+            case 9:
+                textViewAction.setText(getResources().getString(R.string.welcome));
             default:
                 Log.d("TAG","Done null");
 
@@ -1275,7 +1298,7 @@ private void uploadingOfferToServer(String path , String description_of_offer , 
                        runOnUiThread(new Runnable() {
                            @Override
                            public void run() {
-                               snackBar(7);
+                             //  snackBar(7);
                            }
                        });
                 }
@@ -1286,9 +1309,9 @@ private void uploadingOfferToServer(String path , String description_of_offer , 
                           runOnUiThread(new Runnable() {
                               @Override
                               public void run() {
-                                  Omoyo.edit.putString("coordinateOfShop",data);
+                                  Omoyo.edit.putString("gpsposition", data);
                                   Omoyo.edit.commit();
-                                  calculateDistance();
+                                 // calculateDistance();
                               }
                           });
                 }

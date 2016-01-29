@@ -1,5 +1,8 @@
 package com.example.muditi.omoyo;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,7 +12,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridLayout;
@@ -31,10 +38,19 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,8 +68,17 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
     ImageView image_view_for_filter_wide_list;
     @Bind(R.id.image_view_for_filter_narrow_list)
     ImageView image_view_for_filter_narrow_list;
+    @Bind(R.id.grid_for_category_list)
+    GridView grid_for_category_list;
+    @Bind(R.id.card_view_for_offer)
+    CardView card_view_for_offer;
     dialog_class dialog;
     Bundle bundle;
+    JSONArray jsonArray;
+    JSONArray jsonArray1 ;
+    JSONArray jsonArray2;
+    SearchView searchView;
+    int visi=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +100,7 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                 image_view_for_filter_grid_list.setBackgroundColor(Color.WHITE);
                 image_view_for_filter_narrow_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
                 image_view_for_filter_wide_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
+                visi=2;
             }
         });
         image_view_for_filter_narrow_list.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +113,7 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                 image_view_for_filter_grid_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
                 image_view_for_filter_narrow_list.setBackgroundColor(Color.WHITE);
                 image_view_for_filter_wide_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
+                visi=1;
             }
         });
         image_view_for_filter_wide_list.setOnClickListener(new View.OnClickListener() {
@@ -99,25 +126,66 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                 image_view_for_filter_grid_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
                 image_view_for_filter_narrow_list.setBackground(new ColorDrawable(getResources().getColor(R.color.appcolor)));
                 image_view_for_filter_wide_list.setBackgroundColor(Color.WHITE);
+                visi = 0;
             }
         });
         try{
-            JSONArray jsonArray = new JSONArray(Omoyo.shared.getString("ads","ads"));
+            jsonArray2 = new JSONArray(Omoyo.shared.getString("category", ""));
+            jsonArray = new JSONArray(Omoyo.shared.getString("ads","ads"));
             grid_for_offer_wide.setAdapter(new gridViewAdapter(0 ,jsonArray));
             grid_for_offer_narrow.setAdapter(new gridViewAdapter(1,jsonArray));
             grid_for_offer_grid.setAdapter(new gridViewAdapter(2,jsonArray));
         }
         catch(JSONException es){
-
+       Log.d("OfferX:",es.getLocalizedMessage());
         }
 
+      grid_for_category_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+          @Override
+          public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+              hideKeyboard();
+              jsonArray1 = new JSONArray();
+              TextView textView = ButterKnife.findById(view,R.id.text_view_for_quick_search);
+              String text = textView.getText().toString();
+             // searchView.setQuery(text,false);
+              String id = null ;
+              try{
 
-        grid_for_offer_narrow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                  for(int k =0;k<jsonArray2.length();k++){
+                      JSONObject jsonObject = jsonArray2.getJSONObject(k);
+                     if(jsonObject.getString("category_name").equals(text)){
+                         id = jsonObject.getString("category_id");
+                     }
 
-            }
-        });
+                  }
+
+                  for(int k =0 ;k<jsonArray.length();k++){
+                      JSONObject jsonObject = jsonArray.getJSONObject(k);
+                      if(jsonObject.getString("category_id").equals(id)){
+                          jsonArray1.put(jsonArray1.length(),jsonObject);
+                      }
+                  }
+
+                  grid_for_offer_wide.setAdapter(new gridViewAdapter(0 ,jsonArray1));
+                  grid_for_offer_narrow.setAdapter(new gridViewAdapter(1,jsonArray1));
+                  grid_for_offer_grid.setAdapter(new gridViewAdapter(2,jsonArray1));
+                  grid_for_category_list.setVisibility(View.GONE);
+                  card_view_for_offer.setVisibility(View.VISIBLE);
+if(visi==0){
+    grid_for_offer_wide.setVisibility(View.VISIBLE);
+}
+                  else if(visi==1){
+    grid_for_offer_narrow.setVisibility(View.VISIBLE);
+                  }
+                  else{
+    grid_for_offer_grid.setVisibility(View.VISIBLE);
+                  }
+              }
+              catch (JSONException jx){
+
+              }
+          }
+      });
     }
 
 
@@ -156,7 +224,7 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
         public View getView(int i, View viewP, ViewGroup viewGroup) {
            try{
 
-                    JSONObject jsonObject=jsonArray.getJSONObject(i);
+                    final JSONObject jsonObject=jsonArray.getJSONObject(i);
                     LayoutInflater inflate = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
                switch(inden){
@@ -169,44 +237,55 @@ public class Offer extends AppCompatActivity implements dialog_class.DialogListe
                    case 2:
                        view = inflate.inflate(R.layout.offer_grid_layout, null);
                        break;
+                   case 3:
+                       view = inflate.inflate(R.layout.search_suggestion_layout, null);
                    default:
                        Log.d("TAG","E!");
                }
+if(inden !=3) {
+    LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.adslinearlayout);
+    final RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayouthorizantalscroll);
+    TextView textshopcaption = ButterKnife.findById(view, R.id.textshopcaption);
+    textshopcaption.setText(jsonObject.getString("ads_description"));
+    TextView textitem = ButterKnife.findById(view, R.id.textitem);
+    final TextView textshopid = ButterKnife.findById(view, R.id.textshopid);
+    textshopid.setText(jsonObject.getString("shop_id"));
+    StringBuilder stringBuilder = new StringBuilder();
+    JSONArray jsonArray1 = jsonObject.getJSONArray("ads_item");
+    for (int k = 0; k < jsonArray1.length(); k++) {
+        stringBuilder.append(jsonArray1.getJSONObject(k).getString("item") + "      ");
+    }
+    textitem.setText(stringBuilder.toString());
+    stringBuilder.delete(0, stringBuilder.length());
+    Glide.with(getApplicationContext()).load("http://" + getResources().getString(R.string.ip) + "/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+        @Override
+        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+            relativeLayout.setBackgroundDrawable(new BitmapDrawable(
+                    getResources(), resource));
+        }
+    });
 
-                    LinearLayout linearLayout2 = ButterKnife.findById(view, R.id.adslinearlayout);
-                    final RelativeLayout relativeLayout = ButterKnife.findById(view, R.id.relativelayouthorizantalscroll);
-                    TextView textshopcaption=ButterKnife.findById(view,R.id.textshopcaption);
-                    textshopcaption.setText(jsonObject.getString("ads_description"));
-                    TextView textitem=ButterKnife.findById(view,R.id.textitem);
-                    final  TextView textshopid=ButterKnife.findById(view,R.id.textshopid);
-                    textshopid.setText(jsonObject.getString("shop_id"));
-                    StringBuilder stringBuilder=new StringBuilder();
-                    JSONArray jsonArray1=jsonObject.getJSONArray("ads_item");
-                    for(int k=0;k<jsonArray1.length();k++)
-                    {
-                        stringBuilder.append(jsonArray1.getJSONObject(k).getString("item")+"      ");
-                    }
-                    textitem.setText(stringBuilder.toString());
-                    stringBuilder.delete(0, stringBuilder.length());
-                    Glide.with(getApplicationContext()).load("http://"+getResources().getString(R.string.ip)+"/bitmap/ads/ads.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            relativeLayout.setBackgroundDrawable(new BitmapDrawable(
-                                    getResources(), resource));
-                        }
-                    });
+    linearLayout2.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Omoyo.currentShopId = textshopid.getText().toString();
+            try {
+                shoploader(jsonObject.getString("ads_id"));
+            }
+            catch(JSONException jx){
 
-                    linearLayout2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Omoyo.currentShopId=textshopid.getText().toString();
-                            //  shoploader();
-                        }
-                    });
-
+            }
+        }
+    });
+}
+               else{
+                    TextView textView = ButterKnife.findById(view,R.id.text_view_for_quick_search);
+                    textView.setText(jsonObject.getString("category_name"));
+               }
                return view;
             }
             catch(JSONException e){
+                Log.d("OfferXXX:",e.getLocalizedMessage());
 return null;
             }
 
@@ -215,21 +294,124 @@ return null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.offer_filter_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_shoplist, menu);
+
+        MenuItem item = menu.findItem(R.id.searchItem);
+        SearchManager searchManager =(SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) item.getActionView();
+
+        if(searchView != null) {
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    try{
+                        searchCategory(query.trim());
+                    }
+                    catch(Exception ex){
+                        searchCategory(query);
+                    }
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if(newText.length()==0){
+                        jsonArray1 = jsonArray2;
+                        grid_for_category_list.setAdapter(new gridViewAdapter(3,jsonArray1));
+                    }
+                    else{
+                        grid_for_category_list.setVisibility(View.VISIBLE);
+                        grid_for_offer_narrow.setVisibility(View.GONE);
+                        grid_for_offer_grid.setVisibility(View.GONE);
+                        grid_for_offer_wide.setVisibility(View.GONE);
+                        card_view_for_offer.setVisibility(View.GONE);
+                        try{
+                         searchCategory(newText.trim());
+                        }
+                        catch(Exception ex){
+                         searchCategory(newText);
+                        }
+                    }
+                    return true;
+                }
+            });
+            searchView.setIconified(true);
+            searchView.setIconifiedByDefault(true);
+
+            MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    grid_for_category_list.setVisibility(View.VISIBLE);
+                    grid_for_offer_narrow.setVisibility(View.GONE);
+                    grid_for_offer_grid.setVisibility(View.GONE);
+                    grid_for_offer_wide.setVisibility(View.GONE);
+                    card_view_for_offer.setVisibility(View.GONE);
+                        jsonArray1 = jsonArray2;
+                        grid_for_category_list.setAdapter(new gridViewAdapter(3,jsonArray1));
+                       Log.d("OfferXX:",jsonArray1.toString()+"XX");
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    grid_for_offer_wide.setAdapter(new gridViewAdapter(0, jsonArray));
+                    grid_for_offer_narrow.setAdapter(new gridViewAdapter(1, jsonArray));
+                    grid_for_offer_grid.setAdapter(new gridViewAdapter(2, jsonArray));
+                    grid_for_category_list.setVisibility(View.GONE);
+                    if(visi==0){
+                        grid_for_offer_wide.setVisibility(View.VISIBLE);
+                    }
+                    else if(visi==1){
+                        grid_for_offer_narrow.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        grid_for_offer_grid.setVisibility(View.VISIBLE);
+                    }
+                    card_view_for_offer.setVisibility(View.VISIBLE);
+                    return true;
+                }
+            });
+
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        else{
+            Omoyo.toast("NUll", getApplicationContext());
+        }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id==R.id.offer_filter){
-            dialog =  new dialog_class();
-            bundle = new Bundle();
-            bundle.putInt("type_of", 4);
-            dialog.setArguments(bundle);
-            dialog.show(getSupportFragmentManager(), "Hello");
-        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void searchCategory(String chr){
+        jsonArray1 = new JSONArray();
+        try {
+            for(int i =0; i<jsonArray2.length();i++){
+                JSONObject jsonObject = jsonArray2.getJSONObject(i);
+                if(jsonObject.getString("category_name").toLowerCase().contains(chr.toLowerCase())){
+                    jsonArray1.put(jsonArray1.length(),jsonObject);
+                }
+            }
+            grid_for_category_list.setAdapter(new gridViewAdapter(3,jsonArray1));
+        }
+        catch(JSONException xj){
+
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     @Override
@@ -340,4 +522,46 @@ return null;
 
         }
     }
+    public  void shoploader(final String ads_id){
+        OkHttpClient okhttp=new OkHttpClient();
+        String json=String.format("{\"shop_id\" : \"%s\"}", Omoyo.currentShopId);
+        final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
+        RequestBody requestbody=RequestBody.create(JSON, json);
+        Request request=new Request.Builder().url("http://"+getResources().getString(R.string.ip)+"/shop/").post(requestbody).build();
+        Call call=okhttp.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String data = response.body().string();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(getApplicationContext(), shoppage.class);
+                            intent.putExtra("type_of",0);
+                            intent.putExtra("_id",ads_id);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.activity_transition_forword_in, R.anim.activity_transition_forword_out);
+                        }
+                    });
+                    try {
+                        JSONArray jsonArray = new JSONArray(data);
+                        Omoyo.edit.putString("shop",jsonArray.getJSONObject(0).toString());
+                        Omoyo.edit.commit();
+                    }
+                    catch(JSONException e){
+
+                    }
+
+                }
+            }
+        });
+    }
+
+
 }

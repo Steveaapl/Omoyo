@@ -55,4 +55,8 @@
     <string name="favorite_offer">Favorite Offer</string>
     <string name="favorite_shop">Favorite Shop</string>
     <string name="favorite_product">Favorite Product</string>
+    <string name="search_category">Search by category</string>
+    <string name="please_login_again">Please Select Area Manually then Login</string>
+    <string name="system_notification">Notification</string>
+    <string name="loading">Loading .......</string>
 </resources>

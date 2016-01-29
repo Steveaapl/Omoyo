@@ -92,7 +92,7 @@ public class BaseAdapterForConnection extends BaseAdapter {
 
         }
         else{
-            textView.setText("System Notification");
+            textView.setText(context.getResources().getString(R.string.system_notification));
             textView1.setText(jsonObject.getString("notification_description"));
         }
         }

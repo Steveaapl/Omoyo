@@ -175,7 +175,7 @@ public class dialog_class extends DialogFragment {
                     }
                 });
 
-                linear_layout_for_offer_upload.setOnClickListener(new View.OnClickListener() {
+                image_view_for_offer_upload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (!view_flipper_status) {

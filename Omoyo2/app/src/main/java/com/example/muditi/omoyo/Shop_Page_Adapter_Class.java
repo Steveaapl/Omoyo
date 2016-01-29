@@ -1,5 +1,6 @@
 package com.example.muditi.omoyo;
 
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -46,14 +49,15 @@ public class Shop_Page_Adapter_Class extends RecyclerView.Adapter<Shop_Page_Adap
     public FragmentManager fragmentManager;
     public android.support.v4.app.FragmentManager fragmentManagerSms;
     private JSONObject jsonObject;
-    private  JSONArray jsonArray;
+    private  JSONArray jsonArray = new JSONArray();
     public Shop_Page_Adapter_Class(Context context , FragmentManager fragmentManager , android.support.v4.app.FragmentManager fragmentManagerSms){
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.fragmentManagerSms = fragmentManagerSms;
         try {
             jsonObject=new JSONObject(Omoyo.shared.getString("shop", "shop"));
-             jsonArray=jsonObject.getJSONArray("shop_item");
+             jsonArray=jsonObject.getJSONArray("shop_bitmap_gallery");
+
         }
         catch(JSONException e){
 
@@ -113,12 +117,14 @@ public class Shop_Page_Adapter_Class extends RecyclerView.Adapter<Shop_Page_Adap
                 holder.circular_for_call.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        try {
-                            Omoyo.addtoCall(jsonObject);
-                            makeCallToShop(jsonObject.getString("shop_mobile_number"));
-                        } catch (JSONException ex) {
 
-                        }
+                            Omoyo.addtoCall(jsonObject);
+                            Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("type_of", 505);
+                            bundle.putString("object",jsonObject.toString());
+                            dialog_for_shop_page.setArguments(bundle);
+                            dialog_for_shop_page.show(fragmentManagerSms, "h");
                     }
                 });
 
@@ -126,14 +132,14 @@ public class Shop_Page_Adapter_Class extends RecyclerView.Adapter<Shop_Page_Adap
                     @Override
                     public void onClick(View view) {
                         try {
-                            Omoyo.addtoSms(jsonObject);
                             Dialog_For_Shop_Page dialog_for_shop_page = new Dialog_For_Shop_Page();
                             Bundle bundle = new Bundle();
                             bundle.putInt("type_of", 0);
-                            bundle.putString("shop_number", jsonObject.getString("shop_mobile_number"));
+                            bundle.putString("shop_number", jsonObject.getJSONArray("shop_contact_number").getJSONObject(0).getString("contact_number"));
                             bundle.putString("shop_id", jsonObject.getString("shop_id"));
                             dialog_for_shop_page.setArguments(bundle);
                             dialog_for_shop_page.show(fragmentManagerSms, "h");
+                            Omoyo.addtoSms(jsonObject);
                         } catch (JSONException ex) {
 
                         }
@@ -146,55 +152,55 @@ public class Shop_Page_Adapter_Class extends RecyclerView.Adapter<Shop_Page_Adap
                 holder.include_for_address.setVisibility(View.GONE);
                 holder.include_for_communication.setVisibility(View.VISIBLE);
                 break;
+            case 4:
+                holder.include_for_item.setVisibility(View.GONE);
+                holder.include_for_address.setVisibility(View.VISIBLE);
+                holder.include_for_description.setVisibility(View.GONE);
+                holder.include_for_communication.setVisibility(View.GONE);
+                holder.include_for_google_map.setVisibility(View.GONE);
+                try{
+                    StringBuilder stringBuilder = new StringBuilder();
+                    JSONArray jsonArray = jsonObject.getJSONArray("shop_item");
+                    for(int i =0 ;i<jsonArray.length();i++){
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String item_name = jsonObject.getString("item_name").substring(0,1).toUpperCase()+jsonObject.getString("item_name").
+                                substring(1, jsonObject.getString("item_name").length());
+                        stringBuilder.append(item_name+"   ");
+                    }
+                    holder.text_view_for_address.setText(stringBuilder.toString());
+                }
+                catch(JSONException ex){
+
+                }
+                break;
             default:
-                Log.d("TAG","NUll");
+                holder.include_for_item.setVisibility(View.GONE);
+                holder.include_for_address.setVisibility(View.VISIBLE);
+                holder.include_for_description.setVisibility(View.GONE);
+                holder.include_for_communication.setVisibility(View.GONE);
+                holder.include_for_google_map.setVisibility(View.GONE);
+                holder.text_view_for_address.setVisibility(View.GONE);
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(position);
+                    Glide.with(context).load(jsonObject.getString("url")).asBitmap().into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            holder.card_view_for_address_of_shop.setBackgroundDrawable(new BitmapDrawable(
+                                    context.getResources(), resource));
+                        }
+                    });
+
+                }
+                catch(JSONException jx){
+                    //Mint.initAndStartSession(MyActivity.this, "57d9f2e8");
+                }
         }
-        if(position>3){
-            holder.include_for_item.setVisibility(View.VISIBLE);
-            holder.include_for_address.setVisibility(View.GONE);
-            holder.include_for_description.setVisibility(View.GONE);
-            holder.include_for_communication.setVisibility(View.GONE);
-            holder.include_for_google_map.setVisibility(View.GONE);
-             try{
-                 JSONObject jsonObject1 = jsonArray.getJSONObject(position-4);
-                 holder.text_view_for_item_name.setText(jsonObject1.getString("item_name"));
-                 holder.text_view_for_item_offer.setText(jsonObject1.getString("item_offer"));
-                 holder.text_view_for_item_description.setText(jsonObject1.getString("item_description"));
-                 holder.text_view_for_item_price.setText(jsonObject1.getString("item_price"));
-                 Glide.with(context).load(jsonObject1.getString("item_bitmap_url")).asBitmap()
-                         .into(new SimpleTarget<Bitmap>(Omoyo.screendisplay.getWidth(), 250) {
-                             @Override
-                             public void onResourceReady(Bitmap bitmap,
-                                                         GlideAnimation<? super Bitmap> arg1) {
 
-                                 holder.card_for_item_of_shop.setBackgroundDrawable(new BitmapDrawable(
-                                         context.getResources(), bitmap));
-
-
-                             }
-
-                             @Override
-                             public void onLoadStarted(Drawable placeholder) {
-                                 super.onLoadStarted(placeholder);
-                                 //  Omoyo.toast("Started",getApplicationContext());
-                             }
-
-                             @Override
-                             public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                 super.onLoadFailed(e, errorDrawable);
-                                 // Omoyo.toast(e.getMessage(),getApplicationContext());
-                             }
-                         });
-             }
-             catch(JSONException ex){
-
-             }
-        }
     }
 
     @Override
     public int getItemCount() {
-        return 4 + jsonArray.length();
+        return 5 + jsonArray.length();
     }
 
     public  class ViewHolder extends RecyclerView.ViewHolder {
@@ -212,9 +218,10 @@ public class Shop_Page_Adapter_Class extends RecyclerView.Adapter<Shop_Page_Adap
         private TextView text_view_for_item_offer;
         private TextView text_view_for_item_description;
         private CardView card_for_item_of_shop;
-
+        private CardView card_view_for_address_of_shop;
         public ViewHolder(View v) {
             super(v);
+            card_view_for_address_of_shop = ButterKnife.findById(v,R.id.card_view_for_address_of_shop);
             include_for_communication = ButterKnife.findById(v,R.id.include_for_communication);
             include_for_address = ButterKnife.findById(v,R.id.include_for_address);
             include_for_google_map = ButterKnife.findById(v,R.id.include_for_map);
@@ -232,29 +239,9 @@ public class Shop_Page_Adapter_Class extends RecyclerView.Adapter<Shop_Page_Adap
 
         }
     }
-    private void makeCallToShop(String number){
-
-        CallToOMOYooStateListener phoneListener = new CallToOMOYooStateListener();
-        TelephonyManager telephonyManager =
-                (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CALL_STATE);
-        try {
-            String uri = "tel:"+number;
-            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
-            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(callIntent);
-        }catch(Exception e) {
-            Log.d("TAG","Error:"+e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
 
-    private class CallToOMOYooStateListener extends android.telephony.PhoneStateListener{
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            super.onCallStateChanged(state, incomingNumber);
-            Log.d("TAGFORCALL",incomingNumber+"STATEOFCALL "+state);
-        }
-    }
+
+
+
 }

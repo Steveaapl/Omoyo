@@ -89,6 +89,10 @@ public class firstpage extends Activity {
     FloatingActionButton gpsLocation;
     @Bind(R.id.process_bar_for_button)
     ProgressView progressView;
+    @Bind(R.id.button_for_existing_user)
+    android.widget.Button button_for_existing_user;
+    @Bind(R.id.button_for_term_and_condition)
+    android.widget.Button button_for_term_and_condition;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 10;
     private static final String TAG = "MainActivity";
     protected Location mLastLocation;
@@ -121,7 +125,6 @@ public class firstpage extends Activity {
                         Omoyo.toast("No GeoCoder Avilabe",getApplicationContext());
                         return;
                     }
-
                     if (clickForLocation) {
                         progressbarnetworkcheck.setVisibility(View.VISIBLE);
                         startServiceLocationAddress();
@@ -233,10 +236,9 @@ done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (googleApiClient.isConnected()) {
-                    if(statusCheck()){
+                    if (statusCheck()) {
 
-                    }
-                    else {
+                    } else {
                         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                         startServiceLocationAddress();
                         progressbarnetworkcheck.setVisibility(View.VISIBLE);
@@ -245,13 +247,24 @@ done.setOnClickListener(new View.OnClickListener() {
                     Log.d("TAG", "GoogleApiClient");
                 } else {
                     clickForLocation = true;
-                  //  statusCheck();
-                    Log.d("TAG","GoogleApiClient!");
+                    //  statusCheck();
+                    Log.d("TAG", "GoogleApiClient!");
                 }
             }
         });
 
-
+         button_for_existing_user.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View view) {
+                      if(Omoyo.shared.getBoolean("user_status",false)){
+                            startActivity(new Intent(context, MainActivity.class));
+                            overridePendingTransition(R.anim.activity_transition_forword_in,R.anim.activity_transition_forword_out);
+                                                                      }
+                      else{
+                          snackBar(6);
+                      }
+                                                 }
+                                                                               });
 
     }
 
@@ -309,14 +322,11 @@ done.setOnClickListener(new View.OnClickListener() {
                     final String data = response.body().string();
                     Omoyo.edit.putString("location", data);
                     Omoyo.edit.commit();
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             progressbarnetworkcheck.setVisibility(View.INVISIBLE);
-                           // startActivity(new Intent(context, MainActivity.class));
                             gcmRegistration();
-                            //  Omoyo.toast("Response:"+data,getApplicationContext());
                         }
                     });
                 }
@@ -336,8 +346,7 @@ done.setOnClickListener(new View.OnClickListener() {
                 overridePendingTransition(R.anim.activity_transition_forword_in,R.anim.activity_transition_forword_out);
             }
         } else {
-            Omoyo.toast("Service not supported for GCM", getApplicationContext());
-            
+                  //Google Play Service need to be updated;
         }
     }
 
@@ -420,7 +429,6 @@ done.setOnClickListener(new View.OnClickListener() {
                        progressbarnetworkcheck.setVisibility(View.INVISIBLE);
                         snackBar(1);
                         Omoyo.InternetCheck=false;
-                       // Omoyo.toast("Error - In the Network ",getApplicationContext());
                     }
                 });
             }
@@ -694,6 +702,11 @@ else
         {
             linearlayoutforlocation.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.ZoomIn).duration(500).playOn(linearlayoutforlocation);
+        }
+        if(i==6 && Omoyo.InternetCheck){
+            textView.setText(getResources().getString(R.string.please_login_again));
+            textViewAction.setText(getResources().getString(R.string.welcome));
+            snackbar.setDuration(Snackbar.LENGTH_SHORT);
         }
         snackbar.setActionTextColor(getResources().getColor(android.R.color.holo_blue_dark));
         if(Omoyo.InternetCheck || i==1)

@@ -74,6 +74,13 @@ public class GcmMessage extends GcmListenerService {
                 Omoyo.edit.putString("data_for_faq", jsonObjectForData.getJSONArray("data_for_faq").toString());
                 Omoyo.edit.commit();
             }
+            if(jsonObject.getString("type_of").equals("7")){
+                Log.d("TAGFORGCM", jsonObjectForData.toString());
+                Omoyo.edit.putString("system_notification", jsonObjectForData.getJSONArray("system_notification").toString());
+                Omoyo.edit.commit();
+                //
+            }
+
         }
         catch(JSONException jsonex){
 
