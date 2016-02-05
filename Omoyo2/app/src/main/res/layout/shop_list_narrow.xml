@@ -32,16 +32,7 @@
                 android:src="@mipmap/ic_launcher"
                 android:layout_gravity="start"
                 />
-            <TextView
-                android:id="@+id/shopcount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:textSize="15sp"
-                android:gravity="end"
-                android:textColor="@android:color/white"
-                android:text="@string/numberofshop"
-                />
+
 
 
         </LinearLayout>

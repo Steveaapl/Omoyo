@@ -13,7 +13,7 @@
     <string name="varified">Varified</string>
     <string name="alreadyvarified">Yours SmartPhone is Already Varified</string>
     <string name="logout_successfully">Logout Successfully</string>
-    <string name="exitfromtheapp">Want to Exit From OMOYoo !</string>
+    <string name="exitfromtheapp">Want to Exit From Deligo !</string>
     <string name="exit">Exit!</string>
     <string name="offer_upload">Upload Pic Of Offer</string>
     <string name="image_view_of_offer_upload_content_description">Image of the offer</string>
@@ -28,12 +28,12 @@
     <string name="about">About</string>
     <string name="faq">FAQ</string>
     <string name="version_of_app">Version 1.0</string>
-    <string name="copy_right" translatable="true"> \u00A9 2016 OMOYoo Inc.</string>
+    <string name="copy_right" translatable="true"> \u00A9 2016 Deligo Inc.</string>
     <string name="all_right_reserved">All right reserved.</string>
     <string name="licenses">LICENSES</string>
     <string name="loaded_soon">FAQ will be loaded soon</string>
     <string name="happy_to_contact">We will Happy to hear you. \n Make a call to us.</string>
-    <string name="call_us">Call to OMOYoo!</string>
+    <string name="call_us">Call to Deligo!</string>
     <string name="write_your_query_here"> Write your query here \n We will love to Answer you </string>
     <string name="submit_your_query">Submit your query</string>
     <string name="successfully_submit">Successfully submit.</string>
@@ -59,4 +59,11 @@
     <string name="please_login_again">Please Select Area Manually then Login</string>
     <string name="system_notification">Notification</string>
     <string name="loading">Loading .......</string>
+    <string name="map_view">Map View</string>
+    <string name="diroffer">Offer</string>
+    <string name="dircategory">Category</string>
+    <string name="shop">Shop</string>
+    <string name="product">Product</string>
+    <string name="message_for_login">Please Login to view the shop </string>
+    <string name="cancle">Cancle</string>
 </resources>

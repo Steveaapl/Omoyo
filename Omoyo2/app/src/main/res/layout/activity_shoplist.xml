@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:background="@color/appcolor"
     android:orientation="vertical"
-    tools:context="com.example.muditi.omoyo.shoplist">
+    tools:context="com.example.muditi.deligoo.shoplist">
 
 
 

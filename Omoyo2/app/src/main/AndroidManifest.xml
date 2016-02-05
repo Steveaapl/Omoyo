@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.muditi.omoyo">
+    package="com.google.muditi.deligoo">
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -31,13 +31,16 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true"
+        android:name="com.google.muditi.deligoo.Google_analytics_class"
+        >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".firstpage"
+            android:name="com.google.muditi.deligoo.firstpage"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
@@ -47,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.google.muditi.deligoo.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
             android:launchMode="singleTop">
@@ -63,18 +66,17 @@
                 android:resource="@xml/search" />
         </activity>
         <activity
+            android:name="com.google.muditi.deligoo.shoppage"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:name=".shoppage"
             android:label="@string/title_activity_shoppage">
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".Search" />
         </activity>
         <activity
-            android:name=".shoplist"
+            android:name="com.google.muditi.deligoo.shoplist"
             android:label="@string/title_activity_shoplist"
-            android:launchMode="singleTop"
-            >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -87,18 +89,18 @@
                 android:resource="@xml/search2" />
         </activity>
         <activity
-            android:name=".subshopcategory"
+            android:name="com.google.muditi.deligoo.subshopcategory"
             android:label="@string/title_activity_subshopcategory" />
 
         <service
-            android:name=".GcmMessage"
+            android:name="com.google.muditi.deligoo.GcmMessage"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".Registrationid"
+            android:name="com.google.muditi.deligoo.Registrationid"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
@@ -117,18 +119,18 @@
         </receiver>
 
         <service
-            android:name=".TokenRefress"
+            android:name="com.google.muditi.deligoo.TokenRefress"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name=".AddressOfUserByGPS"
+            android:name="com.google.muditi.deligoo.AddressOfUserByGPS"
             android:exported="false" />
 
         <activity
-            android:name=".SmsVarification"
+            android:name="com.google.muditi.deligoo.SmsVarification"
             android:label="@string/title_activity_sms_varification" />
 
         <meta-data
@@ -136,7 +138,7 @@
             android:value="AIzaSyBA9YGUisvoIkRnT2G9hL25zDGph08WV3c" />
 
         <activity
-            android:name=".Search"
+            android:name="com.google.muditi.deligoo.Search"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop">
             <intent-filter>
@@ -152,24 +154,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Help"
+            android:name="com.google.muditi.deligoo.Help"
             android:label="@string/title_activity_help"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".HelpDescriptionActivity"
+            android:name="com.google.muditi.deligoo.HelpDescriptionActivity"
             android:label="@string/title_activity_help_description"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".License"
+            android:name="com.google.muditi.deligoo.License"
             android:label="@string/title_activity_license"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Offer"
+            android:name="com.google.muditi.deligoo.Offer"
             android:label="@string/title_activity_offer"
-            android:theme="@style/AppTheme"
             android:launchMode="singleTop"
-            >
-
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -181,16 +181,60 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-
         </activity>
         <activity
-            android:name=".Marked"
+            android:name="com.google.muditi.deligoo.Marked"
             android:label="@string/title_activity_marked"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".Log_Activity"
+            android:name="com.google.muditi.deligoo.Log_Activity"
             android:label="@string/title_activity_log_"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.google.muditi.deligoo.MapView"
+            android:label="@string/title_activity_map_view"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/search3" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+
+        <receiver
+            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+
+
+
     </application>
 
 </manifest>

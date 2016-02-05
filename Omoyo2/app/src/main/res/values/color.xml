@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="appcolor">#16A085</color>
+    <color name="appcolor1">#16A085</color>
+    <color name="appcolor">#446CBE</color>
     <color name="purple">#9C27B0</color>
     <color name="firstpageareaselect">#45000000</color>
     <color name="white">@android:color/white</color>
@@ -38,6 +39,7 @@
     <color name="ebonyclay">#22313F</color>
     <color name="waxflower">#F1A9A0</color>
     <color name="junglegreen">#26C281</color>
+    <color name="hummingbird">#C5EFF7</color>
     <array name="rainbow">
         <item>@color/white</item>
     </array>

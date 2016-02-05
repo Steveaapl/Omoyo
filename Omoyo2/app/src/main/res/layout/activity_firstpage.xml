@@ -1,12 +1,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.muditi.omoyo.firstpage"
+    tools:context="com.example.muditi.deligoo.firstpage"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appcolor"
     android:id="@+id/relativelayout_parent_first_page"
+    android:gravity="center"
     >
 
                 <ScrollView
@@ -30,7 +31,7 @@
                     android:fitsSystemWindows="true"
         >
         <ImageView
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="100dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:src="@mipmap/ic_launcher"
@@ -56,7 +57,7 @@
             android:id="@+id/linearlayoutforlocation"
             android:alpha="0"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
+            android:layout_height="220dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
@@ -77,13 +78,9 @@
                 app:spn_arrowColor="@color/appcolor"
                 android:layout_weight="1"
                 android:popupBackground="@color/firstpageareaselect"
-                app:spn_dividerColor="@color/appcolor"
+                app:spn_dividerColor="@color/hummingbird"
                 app:spn_dividerHeight="3dp"
                 app:spn_arrowAnimClockwise="true"
-                app:spn_label="@string/select_your_city"
-                app:spn_labelTextColor="@android:color/white"
-                app:spn_labelTextSize="15dp"
-                app:spn_labelEnable="true"
                 >
 
 
@@ -103,13 +100,9 @@
                 app:spn_arrowColor="@color/appcolor"
                 android:layout_weight="1"
                 android:popupBackground="@color/firstpageareaselect"
-                app:spn_dividerColor="@color/appcolor"
+                app:spn_dividerColor="@color/hummingbird"
                 app:spn_dividerHeight="3dp"
                 app:spn_arrowAnimClockwise="true"
-                app:spn_label="@string/select_your_area"
-                app:spn_labelTextColor="@android:color/white"
-                app:spn_labelTextSize="15dp"
-                app:spn_labelEnable="true"
                 >
 
             </com.rey.material.widget.Spinner>
@@ -221,8 +214,8 @@
 </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/gpsLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         app:backgroundTint="@android:color/transparent"
         android:src="@mipmap/ic_location_on_white_48dp"
         android:clickable="true"
@@ -246,5 +239,4 @@
         android:layout_alignParentEnd="true"
         android:gravity="right|bottom"
         />
-
 </RelativeLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="ga_sessionTimeout">300</integer>
+
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <string name="ga_trackingId">UA-73340480-1</string>
+
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    <screenName  name="com.google.muditi.deligoo.firstpage">First Page</screenName>
+    <screenName  name="com.google.muditi.deligoo.MainActivity">Main Activity</screenName>
+    <screenName  name="com.google.muditi.deligoo.shoppage">Shop Page</screenName>
+    <screenName  name="com.google.muditi.deligoo.SmsVarification">Sms Varification</screenName>
+    <screenName  name="com.google.muditi.deligoo.Help">Help</screenName>
+    <screenName  name="com.example.muditi.deligoo.HelpDescriptionActivity">Help Description Activity</screenName>
+    <screenName  name="com.example.muditi.deligoo.License">License</screenName>
+    <screenName  name="com.example.muditi.deligoo.Offer">Offer</screenName>
+    <screenName  name="com.example.muditi.deligoo.Marked">Marked</screenName>
+    <screenName  name="com.example.muditi.deligoo.MapView">Map View</screenName>
+    <screenName  name="com.example.muditi.deligoo.Log_Activity">Log_Activity</screenName>
+</resources>

@@ -1,0 +1,26 @@
+package com.google.muditi.deligoo;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+
+import com.example.muditi.deligoo.R;
+
+/**
+ * Created by muditi on 03-12-2015.
+ */
+public class lightpop extends DialogFragment {
+
+    public lightpop(){
+
+    }
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder light=new AlertDialog.Builder(getActivity());
+        light.setView(getActivity().getLayoutInflater().inflate(R.layout.lightpop, null));
+        return light.create();
+    }
+}

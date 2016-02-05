@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/relative_layout_for_sms_varification"
-    tools:context="com.example.muditi.omoyo.SmsVarification">
+    tools:context="com.example.muditi.deligoo.SmsVarification">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

@@ -5,9 +5,16 @@
 <group android:checkableBehavior="single" >
 
     <item
+        android:id="@+id/map_view"
+        android:checked="false"
+        android:icon="@mipmap/ic_pin_drop_white_48dp"
+        android:title="@string/map_view"
+        />
+
+    <item
         android:id="@+id/offers"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_center_focus_weak_white_48dp"
         android:title="@string/offers"
         app:actionLayout="@layout/navigation_view_cutom_item_view"
         />
@@ -15,35 +22,35 @@
     <item
         android:id="@+id/are_you_a_shop"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_center_focus_weak_white_48dp"
         android:title="@string/are_you_a_shop"
         android:checkable="true"
         />
     <item
         android:id="@+id/favourites"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_favorite_white_48dp"
         android:title="@string/favourites"
         app:actionLayout="@layout/navigation_view_cutom_item_view"
         />
     <item
         android:id="@+id/call_log"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_phone_white_48dp"
         android:title="@string/call_log"
         app:actionLayout="@layout/navigation_view_cutom_item_view"
         />
     <item
         android:id="@+id/message_log"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_message_white_48dp"
         android:title="@string/messsge_log"
         app:actionLayout="@layout/navigation_view_cutom_item_view"
         />
     <item
         android:id="@+id/notification_point"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_add_alert_white_48dp"
         android:title="@string/notification_point"
         app:actionLayout="@layout/navigation_view_cutom_item_view"
         />
@@ -51,21 +58,26 @@
     <item
         android:id="@+id/help"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_live_help_white_48dp"
         android:title="@string/help"
         />
     <item
         android:id="@+id/rate_us"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_grade_white_48dp"
         android:title="@string/rate_us"
         />
     <item
         android:id="@+id/social_media"
         android:checked="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_center_focus_weak_white_48dp"
         android:title="@string/social_connections"
         />
-
+    <item
+        android:id="@+id/share"
+        android:checked="false"
+        android:icon="@mipmap/ic_center_focus_weak_white_48dp"
+        android:title="@string/share"
+        />
 </group>
 </menu>

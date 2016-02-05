@@ -6,7 +6,7 @@
     android:id="@+id/text_view_for_quick_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textColor="@color/ebonyclay"
+    android:textColor="@color/white"
     android:textSize="20sp"
     android:gravity="center_horizontal|center_vertical"
     />

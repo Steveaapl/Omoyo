@@ -7,7 +7,7 @@
     android:id="@+id/iconof"
     android:layout_width="0dp"
     android:layout_height="match_parent"
-    android:src="@mipmap/ic_launcher"
+    android:src="@mipmap/ic_language_white_36dp"
     android:layout_weight="1"
     android:layout_gravity="left|center_vertical"
     />

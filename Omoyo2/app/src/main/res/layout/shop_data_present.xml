@@ -18,6 +18,6 @@
         layout="@layout/google_map_position_of_shop"
         />
     <include android:id="@+id/include_for_item_of_shop"
-                 layout="@layout/include_shop_item"
+                 layout="@layout/shop_image_layout"
         />
 </RelativeLayout>
